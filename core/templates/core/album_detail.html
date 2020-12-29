@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block body %}
+<section id="album" class="my-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="ablum-container">
+            <div class="album-wrap">
+              <h4>{{album.name}}'s album</h4>
+                <ul class="row">
+                {% for image in album_images %}
+                <li class="col-3">
+                  <p>{{image.title}}</p>
+                  <img loading="lazy" src="{{image.image.url}}" alt="" class="img-thumbnail">
+                  <small class="text-muted">uploaded:<span class="ml-1">{{image.created|date:"b d, Y"|title}}</span></small>
+                </li>  
+                {% endfor %}
+                </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+{% endblock body %}

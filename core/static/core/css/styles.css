@@ -1,0 +1,91 @@
+:root {
+    --primary: #64707d;
+    --text-primary: #32343c;
+    --text-secondary:#9c9fab;
+    --text-accent: #ff6e0a;
+}
+
+body {
+    font-family: "Montserrat",sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #333;
+    margin: 0;
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    list-style: none;
+}
+
+a, a:hover {
+    text-decoration: none;
+}
+
+img {
+    cursor: pointer;
+}
+
+.navbar a {
+    color: var(--text-secondary);
+}
+
+.navbar a:hover {
+    color: var(--text-primary);
+}
+
+.text__sm {
+    font-size: 14px;
+}
+
+.text__lg {
+    font-size: 26px;
+    font-weight: 500;
+}
+
+.text__secondary {
+    color: var(--text-secondary);
+}
+
+.text__accent {
+    color: var(--text-accent);
+}
+
+.icons {
+    font-size: 1.125rem;
+    padding: 5px 7px;
+    margin: 0 5px;
+    color: var(--text-secondary);
+}
+
+.lg-title {
+    font-size: 2.6rem;
+    margin-bottom: 0;
+}
+
+#title {
+    font-family: "Lato", sans-serif;
+    font-weight: 900;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    margin-top: 15px;
+}
+
+main {
+    padding-top: 50px;
+    min-height: 100vh;
+}
+
+.navbar-brand span {
+    font-weight: 550;
+}
+
+.img__thumbnail {
+    width: 60px;
+    height: 60px;
+}

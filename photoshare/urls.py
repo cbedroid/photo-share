@@ -4,9 +4,9 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('core.urls')),
-     path("account/", include("users.urls")),
+    path("admin/", admin.site.urls),
+    path("", include("core.urls")),
+    path("account/", include("users.urls")),
 ]
 
 media_url = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
