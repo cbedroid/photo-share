@@ -13,6 +13,13 @@
       <div class="col-4">
         <div class="album card p-1">
           <div class="album__header">
+            <div class="image-upload">
+              <label for="file-input">
+                <img src="{% get_media_prefix %}gallery/default_image.png" width="50px" height="50px">
+              </label>
+
+              <input id="file-input" type="file" style="display:none;" />
+            </div>
             <p>
               {# change this into an anchor tag for profile #}
               <span><i class="fa fa-user icons"></i>{{album.user.username}}</span>

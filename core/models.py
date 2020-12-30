@@ -10,7 +10,7 @@ class DateTime(models.Model):
 
 
 class Gallery(models.Model):
-    title = models.CharField(max_length=75, blank=True)
+    title = models.CharField(max_length=50, blank=True)
     image = models.ImageField(upload_to="gallery")
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
@@ -20,7 +20,7 @@ class Gallery(models.Model):
 
 
 class Album(DateTime):
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     images = models.ManyToManyField(Gallery, related_name="album_image", blank=True)
     public = models.BooleanField(default=True)

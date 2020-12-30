@@ -23,7 +23,7 @@
                     {% if album_image %}
                     <img src="{{album_image.url}}" alt="{{album}} cover image" class="img__thumbnail">
                     {% else %}
-                    <img src="{% get_media_prefix %}gallery/default_album_image.png" alt="{{album}} cover image" class="img__thumbnail">
+                    <img src="{% get_media_prefix %}gallery/default_image.png" alt="{{album}} cover image" class="img__thumbnail">
 
                     {% endif %}
                     {% endwith %}
@@ -38,14 +38,24 @@
         <div class="col-12 col-md-9">
           <div class="card">
             <div class="card-body">
-              <form method="POST">
+              <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <fieldset class="form-group">
                   <legend class="border-bottom mb-4">
                     <i class="far fa-images"></i>
-                    Add New Album
+                    {{form_title}}
                   </legend>
                   {{ form|crispy }}
+                  <div class="image-upload">
+                    <div class="row">
+                      {% for gallery_form in gallery_formset %}
+                      <div class="col-4">
+                        {{ gallery_form|crispy }}
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+
                 </fieldset>
                 <div class="form-group">
                   <button class="btn btn-outline-info" type="submit">Add</button>
