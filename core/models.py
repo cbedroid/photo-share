@@ -22,7 +22,7 @@ class Gallery(models.Model):
 class Album(DateTime):
     name = models.CharField(max_length=80)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    images = models.ManyToManyField(Gallery, related_name="album_image")
+    images = models.ManyToManyField(Gallery, related_name="album_image", blank=True)
     public = models.BooleanField(default=True)
     slug = models.SlugField(blank=True)
 

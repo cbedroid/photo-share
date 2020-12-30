@@ -8,6 +8,8 @@
     <hr>
     <div class="row">
       {% for album in albums %}
+      {# Only show album if it's public or it belongs to current user#}
+      {% if request.user == album.user or album.public %}
       <div class="col-4">
         <div class="album card p-1">
           <div class="album__header">
@@ -20,15 +22,16 @@
           </div>
           <div class="album__content">
             {% for image in album.get_images %}
-              {% if forloop.counter <= 6 %}
-                <img class="img__thumbnail" src="{{image.image.url}}" alt="{{album}} {{image}} photo">
-              {% endif %}
-              {% endfor %}
+            {% if forloop.counter <= 6 %}
+            <img class="img__thumbnail" src="{{image.image.url}}" alt="{{album}} {{image}} photo">
+            {% endif %}
+            {% endfor %}
           </div>
           <div class="album__footer mt-1">
-          <p><a href="{{album.get_absolute_url}}">view album</a></p>
+            <p><a href="{{album.get_absolute_url}}">view album</a></p>
           </div>
         </div>
+        {% endif %}
         {% endfor %}
       </div>
     </div>

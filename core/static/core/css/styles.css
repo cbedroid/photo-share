@@ -1,3 +1,7 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 :root {
     --primary: #64707d;
     --text-primary: #32343c;
@@ -29,6 +33,12 @@ img {
     cursor: pointer;
 }
 
+.navbar-nav span {
+    vertical-align: middle !important;
+    align-content: center;
+    height: 100%;
+}
+
 .navbar a {
     color: var(--text-secondary);
 }
@@ -56,8 +66,7 @@ img {
 
 .icons {
     font-size: 1.125rem;
-    padding: 5px 7px;
-    margin: 0 5px;
+    padding: 0 5px;
     color: var(--text-secondary);
 }
 

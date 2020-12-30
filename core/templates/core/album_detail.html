@@ -8,6 +8,8 @@
         <div class="col-12">
           <div class="ablum-container">
             <div class="album-wrap">
+              {# Only show album if it's public or it belongs to current user#}
+              {% if request.user == album.user or album.public %}
               <h4>{{album.name}}'s album</h4>
                 <ul class="row">
                 {% for image in album_images %}
@@ -18,6 +20,10 @@
                 </li>  
                 {% endfor %}
                 </ul>
+              {% else %}
+              <h1 class="text-center"> This Album is Private</h1>
+              <a href="{% url 'core:index' %}" class="btn btn-outline-info">Home</a>
+              {% endif %}
             </div>
           </div>
         </div>
