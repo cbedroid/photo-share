@@ -10,7 +10,7 @@ class DateTime(models.Model):
 
 
 class Gallery(models.Model):
-    title = models.CharField(max_length=50, blank=True)
+    title = models.CharField(max_length=50)
     image = models.ImageField(upload_to="gallery")
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)

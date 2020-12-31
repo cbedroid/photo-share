@@ -40,6 +40,7 @@
             <div class="card-body">
               <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
+                {{ gallery_formset.management_form }}
                 <fieldset class="form-group">
                   <legend class="border-bottom mb-4">
                     <i class="far fa-images"></i>
@@ -49,13 +50,31 @@
                   <div class="image-upload">
                     <div class="row">
                       {% for gallery_form in gallery_formset %}
-                      <div class="col-4">
-                        {{ gallery_form|crispy }}
-                      </div>
-                      {% endfor %}
+                        <div class="col-4">
+                          {{ gallery_form }}
+                        </div>
+                       {% endfor %}
                     </div>
-                  </div>
 
+                    <script type='text/javascript'>
+                     window.onload =()=>{
+                      $('.image-upload__media').map(function(){
+                          const input = $(this).find('input')[0];
+                          const label = $(this).find('p')[0]
+                        
+                          $(input).on('change', function(){
+                              console.log('Changed',input); 
+                          try{
+                          const filename = input.files[0]['name'];
+                          console.log({filename,label})
+                          label.innerText = filename;
+                          }catch(e){
+                              console.log('Error',e);
+                          }})
+                      })
+                     }
+                  </script>
+                  </div>
                 </fieldset>
                 <div class="form-group">
                   <button class="btn btn-outline-info" type="submit">Add</button>

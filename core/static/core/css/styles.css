@@ -94,6 +94,22 @@ main {
     font-weight: 550;
 }
 
+.img__upload-thumbnail {
+    display: block;
+    background: whitesmoke;
+    margin-top: 5px;
+    padding: 4px 7px 4px 12px;
+    margin: 5px auto;
+    border-radius: 7px;
+    width: calc(100% - 50px);
+    max-height: 100px;
+}
+
+.img__upload-label {
+    text-align: center;
+    font-weight: 500;
+}
+
 .img__thumbnail {
     width: 60px;
     height: 60px;

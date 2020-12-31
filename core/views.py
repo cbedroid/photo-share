@@ -38,19 +38,36 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
     form_class = AlbumForm
     template_name = "core/album_form.html"
 
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs() 
+        kwargs['request'] = self.request
+        return kwargs
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["current_albums"] = Album.objects.filter(user=self.request.user)
-        context['form_title'] = "Add New Album"
-
-        gallery_form = formset_factory(GalleryForm, extra=3)
-        context['gallery_formset'] = gallery_form
+        GallerySet = formset_factory(GalleryForm,extra=2,min_num=3,max_num=3)
+        if self.request.POST:
+            gallery_form_set = GallerySet(
+                self.request.POST,
+                self.request.FILES,
+                prefix="gallery"
+                )
+        else:
+            gallery_form_set = GallerySet(prefix="gallery")
+            context['form_title'] = "Add New Album"
+            context["current_albums"] = Album.objects.filter(user=self.request.user)
+        
+        context['gallery_formset'] = gallery_form_set
         return context
 
-
-    def form_valid(self, form):
+    def form_valid(self, form,*args,**kwargs):
+        context = self.get_context_data()
+        gallery_form = context['gallery_formset']
+        gallery_form.is_valid()
         form.instance.user = self.request.user
-        return super().form_valid(form)
+        return super().form_invalid(form)
+        #return super().form_valid(form)
 
 
 class AlbumUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
