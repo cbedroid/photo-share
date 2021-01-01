@@ -38,9 +38,10 @@
         <div class="col-12 col-md-9">
           <div class="card">
             <div class="card-body">
-              <form method="POST" enctype="multipart/form-data">
+            
+              <form action="" method="POST" enctype="multipart/form-data" >
                 {% csrf_token %}
-                {{ gallery_formset.management_form }}
+                {{ formset.management_form }}
                 <fieldset class="form-group">
                   <legend class="border-bottom mb-4">
                     <i class="far fa-images"></i>
@@ -49,9 +50,9 @@
                   {{ form|crispy }}
                   <div class="image-upload">
                     <div class="row">
-                      {% for gallery_form in gallery_formset %}
+                      {% for gallery_form in formset %}
                         <div class="col-4">
-                          {{ gallery_form }}
+                          {{ gallery_form|crispy }}
                         </div>
                        {% endfor %}
                     </div>
@@ -63,10 +64,8 @@
                           const label = $(this).find('p')[0]
                         
                           $(input).on('change', function(){
-                              console.log('Changed',input); 
                           try{
                           const filename = input.files[0]['name'];
-                          console.log({filename,label})
                           label.innerText = filename;
                           }catch(e){
                               console.log('Error',e);

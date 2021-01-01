@@ -4,10 +4,6 @@ from django.utils.text import slugify
 from django.contrib.auth.models import User
 
 
-class DateTime(models.Model):
-    created = models.DateTimeField(auto_now=False, auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
-
 
 class Gallery(models.Model):
     title = models.CharField(max_length=50)
@@ -19,12 +15,14 @@ class Gallery(models.Model):
         return self.title
 
 
-class Album(DateTime):
+class Album(models.Model):
     name = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     images = models.ManyToManyField(Gallery, related_name="album_image", blank=True)
     public = models.BooleanField(default=True)
     slug = models.SlugField(blank=True)
+    created = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     class Meta:
         ordering = ["-created"]

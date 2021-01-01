@@ -10,7 +10,10 @@ from django.views.generic import (
     DeleteView,
 )
 
-from .forms import AlbumForm,GalleryForm,GalleryFormSet
+from .forms import (
+    AlbumForm,
+    GalleryForm,
+)
 from django.forms import formset_factory
 from .models import Album, Gallery
 
@@ -38,46 +41,63 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
     form_class = AlbumForm
     template_name = "core/album_form.html"
 
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs() 
-        kwargs['request'] = self.request
-        return kwargs
-
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
-        GallerySet = formset_factory(GalleryForm,extra=2,min_num=3,max_num=3)
+        GalleryFormSet = formset_factory(GalleryForm, extra=3, min_num=0, max_num=3)
+
         if self.request.POST:
-            gallery_form_set = GallerySet(
+            gallery_form_set = GalleryFormSet(
                 self.request.POST,
-                self.request.FILES,
+                self.request.FILES, 
                 prefix="gallery"
-                )
+            )
         else:
-            gallery_form_set = GallerySet(prefix="gallery")
-            context['form_title'] = "Add New Album"
-            context["current_albums"] = Album.objects.filter(user=self.request.user)
-        
-        context['gallery_formset'] = gallery_form_set
+            gallery_form_set = GalleryFormSet(prefix="gallery")
+            context["form_title"] = "Add New Album"
+            context["current_albums"] = Album.objects.filter(
+                user=self.request.user
+            )
+
+        context["formset"] = gallery_form_set
         return context
 
-    def form_valid(self, form,*args,**kwargs):
-        context = self.get_context_data()
-        gallery_form = context['gallery_formset']
-        gallery_form.is_valid()
-        form.instance.user = self.request.user
-        return super().form_invalid(form)
-        #return super().form_valid(form)
+    def form_valid(self, form, *args, **kwargs):
+        if form.is_valid():
+
+            # Retrieve Gallery object from form context
+            context = self.get_context_data()
+            gallery_form = context["formset"]
+
+            # Create Album's object
+            form.instance.user = self.request.user
+            self.object = form.save(commit=False)
+            self.object.user = form.instance.user
+            self.object = form.save()
+
+            for gform in gallery_form:
+                # Validate and add Gallery's images to Album
+                if gform.is_valid():
+                    title = gform.cleaned_data.get("title")
+                    image = gform.cleaned_data.get("image")
+
+                    if title and image:
+                        image_obj = gform.save()
+                        image_obj = Gallery.objects.get(title=image_obj.title)
+                        self.object.images.add(image_obj)
+
+        return super().form_valid(form)
 
 
 class AlbumUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Album
-    fields = ['name','public']
+    fields = ["name", "public"]
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["current_albums"] = Album.objects.filter(user=self.request.user)
-        context['form_title'] = "Update Album"
+        context["form_title"] = "Update Album"
+        context["current_albums"] = Album.objects.filter(
+            user=self.request.user
+         )
         return context
 
     def form_valid(self, form):
