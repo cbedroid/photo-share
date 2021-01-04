@@ -34,7 +34,7 @@ class AlbumForm(forms.ModelForm):
         """
         album = Album.objects.filter(name__iexact=data)
         if self.crud_type == "create" and album.exists():
-            raise ValidationError("Sorry, This album already exists!")
+            raise ValidationError("Sorry, This album already exist!")
         return data
 
     def save(self, commit=True):
