@@ -4,8 +4,8 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Normally, This would be hiding using an environment variable
-# For this application, this I will leave this expose for code review purpose
+# Normally, This would be hidden using an environment variable
+# For this application, I will leave this expose for code review purpose
 SECRET_KEY = "@+7ed_hj1v@c3hbr(1abq1%e(2wvxp(^w3pfaf=%j0-bji*-eg"
 
 # SECURITY WARNING: don't run with debug turned on in production!
