@@ -2,39 +2,48 @@
 {% load static %}
 
 {% block body %}
-<section id="index-main-content">
+<section id="index-main" class="spacing-top">
   <div class="main-content-container container my-2">
-    <h3>Album</h3>
+    <h3 class="content-title">
+      <span>PhotoShare Alb</span>
+      <i class="icon-logo far fa-images"></i>
+      <span class=>ms</span>
+    </h3>
     <hr>
     <div class="row">
       {% for album in albums %}
       {# Only show album if it's public or it belongs to current user#}
       {% if request.user == album.user or album.public %}
-      <div class="col-4">
-        <div class="album card p-1">
-          <div class="album__header">
-
+      <div class="col-6 col-sm-4">
+        <div class="card shadow h-100">
+          <div class="card-header p-2">
             <p>
               {# change this into an anchor tag for profile #}
-              <span><i class="fa fa-user icons"></i>{{album.user.username}}</span>
+              <span class="badge bg-info badge-link"> <a href="{{album.get_absolute_url}}">{{album}}</a> </span>
               <span class="mx-1">-</span>
-              <span><a href="{{album.get_absolute_url}}">{{album}}</a></span>
+              <small class="font-italic text__secondary"><i class="fa fa-user icons mr-1"></i>{{album.user.username}} </small>
             </p>
           </div>
-          <div class="album__content">
+          <div class="card__content card-body">
             {% for image in album.get_images %}
-            {% if forloop.counter <= 6 %}
-            <img class="img__thumbnail" src="{{image.image.url}}" alt="{{album}} {{image}} photo">
-            {% endif %}
+              {% if forloop.counter <= 4 %}
+              <a href="{{image.image.url}}">
+                <img class="img__thumbnail" src="{{image.image.url}}" alt="{{album}} {{image}} photo">
+              </a>
+              {% endif %}
+              {% empty %}
+               <p class="text__secondary my-3 py-1">No images available</p>
             {% endfor %}
-          </div>
-          <div class="album__footer mt-1">
-            <p><a href="{{album.get_absolute_url}}">view album</a></p>
+            <div class="card__footer mt-1">
+              <a class="btn btn-outline-warning btn-block" href="{{album.get_absolute_url}}">view album</a>
+            </div>
+            <div class="clearfix"></div>
           </div>
         </div>
-        {% endif %}
-        {% endfor %}
       </div>
+      {% endif %}
+      {% endfor %}
     </div>
-  </section>
-  {% endblock body %}
+  </div>
+</section>
+{% endblock body %}

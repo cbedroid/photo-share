@@ -2,32 +2,43 @@
 {% load static %}
 
 {% block body %}
-<section id="album" class="my-5">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="ablum-container">
-            <div class="album-wrap">
-              {# Only show album if it's public or it belongs to current user#}
-              {% if request.user == album.user or album.public %}
-              <h4>{{album.name}}'s album</h4>
-                <ul class="row">
-                {% for image in album_images %}
-                <li class="col-3">
-                  <p>{{image.title}}</p>
-                  <img loading="lazy" src="{{image.image.url}}" alt="" class="img-thumbnail">
-                  <small class="text-muted">uploaded:<span class="ml-1">{{image.created|date:"b d, Y"|title}}</span></small>
-                </li>  
-                {% endfor %}
-                </ul>
-              {% else %}
-              <h1 class="text-center"> This Album is Private</h1>
-              <a href="{% url 'core:index' %}" class="btn btn-outline-info">Home</a>
-              {% endif %}
-            </div>
-          </div>
-        </div>
+<section id="album-detail" class="spacing-top px-2">
+  <div class="content-container">
+    {% if request.user == album.user or album.public %}
+    {# Only show album if it's public or it belongs to current user#}
+
+    <!-- Content Header-->
+    <div class="header d-flex justify-content-between px-1">
+      <h4>{{album.name}}'s album </h4>
+
+      {% if request.user == album.user %}
+      <div class="user-action">
+        <a href="{% url 'core:album-update' album.slug %}" class="btn btn-outline-info">update album</a>
+        <a href="{% url 'core:album-delete' album.slug %}" class="btn btn-outline-danger">delete album</a>
       </div>
+      {% endif %}
     </div>
+    <!-- End Content Header-->
+    <hr>
+
+    <ul class="row my-3">
+      {% for image in album_images %}
+      <li class="col-3 img__items p-2">
+        <p class="text-center text-ellipsis fw-bold">{{image.title}}</p>
+        <img loading="lazy" src="{{image.image.url}}" alt="" class="img-fluid img__md">
+        <small class="text-muted">uploaded:<span class="ml-1">{{image.created|date:"b d, Y"|title}}</span></small>
+        <div class="image-action">
+          <a href="{{image.image.url}}" download="{{image.get_download_title}}" class="btn btn-success btn-block">
+            <i class="fas fa-download mx-1"></i>
+          </a>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <h1 class="text-center"> This Album is Private</h1>
+    <a href="{% url 'core:index' %}" class="btn btn-outline-info">Home</a>
+    {% endif %}
+  </div>
 </section>
 {% endblock body %}

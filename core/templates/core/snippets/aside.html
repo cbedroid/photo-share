@@ -1,0 +1,78 @@
+{% with request.user.album_set.all as user_albums  %}
+<aside id="album-sidebar" class="sidebar col-wrapper h-100">
+        <!-- SideBar Header -->
+        <nav class="navbar navbar-expand-sm reversed-expand d-block">
+          <div class="header">
+            <div class="header__action fw-med d-flex justify-content-around">
+              <a class="hlight" href="{% url 'core:index' %}">
+                <i class="fa fa-home"></i>
+                Home
+              </a>
+              <a class="hlight" href="{% url 'core:album-create' %}">
+                <i class="fa fa-plus-circle"></i>
+                Add
+              </a>
+              <!-- / End SideBar Header -->
+              <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-nav" aria-controls="sidebar-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+              </button>
+            </div>
+            <hr>
+          </div>
+          <div class="collapse navbar-collapse" id="sidebar-nav">
+            <!-- SideBar Menu -->
+            <ul class="vertical-nav w-100">
+              <li class="sidebar__heading mb-4">Menu</li>
+              
+              {% for albums in user_albums %}
+              <!--SUBMENU-->
+              <li class="submenu sidebar__submenu">
+                <a class="submenu__toggler text-white d-flex justify-content-between" aria-expanded="false" href="#">
+                  <span><i class="fa fa-image"></i>
+                    <span class="submenu__title">{{albums}}</span>
+                  </span>
+                  <span><small class="icon-badge badge bg-danger rounded-circle"> {{albums.get_total_images}}</small>
+                    <i class="caret fa fa-angle-down"></i>
+                  </span>
+                </a>
+
+                <!--Submenu Content-->
+                <ul class="submenu__content content collapse">
+                  <li class="content__action">
+                    <h3 class="badge badge-link bg-primary float-right">
+                      <a class="badge-link__text text-white" href="{{albums.get_absolute_url }}">view album</a>
+                    </h3>
+                    <div class="clearfix"></div>
+                  </li>
+                  <li class="submenu__content-image-container">
+                    {% for image in albums.get_images %}
+                    <li class="submenu__content-image-content hlight">
+                      <p class="text-ellipsis">{{image}}</p>
+                      <a href="{{image.image.url}}">
+                        <img src="{{image.image.url}}" alt="{{image}} image" class="img__thumbnail" style="width:30px;height:30px">
+                      </a>
+                    </li>
+                    {% endfor %}
+                  </li>
+                </ul>
+                <!--End Submenu Content-->
+              </li>
+              {% empty %}
+              <li class="submenu sidebar__submenu text-center">
+              <p> You have no album</p>
+              <a href="{% url 'core:album-create' %}" class="btn btn-success fw-bold my-1">
+               <i class="fas fa-photo mx-1"></i>
+                  Create an Ablum
+               </a>
+                </li> 
+              <!--end submenu-->
+              {% endfor %}
+                <li class="submenu sidebar__submenu">
+                </li>    
+            </ul>
+              
+            <!-- /Menu -->
+          </div>
+        </nav>
+      </aside>
+{% endwith %}

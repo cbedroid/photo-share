@@ -11,6 +11,11 @@ urlpatterns = [
         name="album-update",
     ),
     re_path(
+        r"album/delete/(?P<slug>.*)/$",
+        views.AlbumDeleteView.as_view(),
+        name="album-delete",
+    ),
+    re_path(
         r"album/(?P<slug>.*)/$", views.AlbumDetailView.as_view(), name="album-detail"
     ),
 ]

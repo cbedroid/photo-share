@@ -1,13 +1,13 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-md navbar-white bg-white shadow-sm">
+<nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% url 'core:index' %}"><span class="text__lg text__accent">PhotoShare</span></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse"  id="main-nav">
-      <div class="navbar-nav justify-content-md-center text__sm w-75">
+    <div class="collapse navbar-collapse d-md-flex justify-content-md-between w-100"  id="main-nav">
+      <div class="navbar-nav text__sm">
         <a class="nav-link active" aria-current="page" href="{% url 'core:index' %}">Home</a>
         <a class="nav-link" href="#">Stories</a>
         <a class="nav-link" href="#">Capabilites</a>
@@ -16,6 +16,7 @@
       </div>
       <div class="navbar-nav">
         {% if request.user.is_authenticated  %}
+          <p class="nav-link">{{request.user.username}}</p>
           <a class="nav-link" href="{% url 'core:album-create' %}">
           <span><i class="fa fa-plus-circle icons"></i></span> 
           <span>album</span></a>
