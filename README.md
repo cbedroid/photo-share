@@ -20,5 +20,5 @@ Users should be able to log in (User sign up and password reset is not necessary
 ### Web API Requirements
 
 Create the RESTful API endpoints:
-Get a list of albums for a user
-Get a list of photos for an album.
+* Get a list of albums for a user
+* Get a list of photos for an album.

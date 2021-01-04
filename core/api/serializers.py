@@ -58,7 +58,7 @@ class GallerySerializer(serializers.ModelSerializer):
             # then exclude itself
             qs = qs.exclude(pk=self.instance.pk)
         if qs.exists():
-            raise serializers.ValidationError("Sorry, that image title. Try again")
+            raise serializers.ValidationError("Sorry, that image title is already taken. Try again")
         return value
 
 
