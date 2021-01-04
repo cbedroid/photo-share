@@ -11,7 +11,7 @@ from rest_framework.generics import (
 
 
 class UserCreateListView(mixins.CreateModelMixin, ListAPIView):
-    # List View to GET and POST an Image
+    # List View to GET and POST an User
     # api/image/ --> GET (list)
     # api/album/create --> POST
     lookup_field = "pk"
@@ -37,7 +37,7 @@ class UserCreateListView(mixins.CreateModelMixin, ListAPIView):
 
 
 class UserRetrieveUpdateDestroyView(RUD):
-    # Base View to GET,PUT,PATCH, and Destroy Album
+    # Base View to GET,PUT,PATCH, and Destroy an User
     # api/album/<pk>
     queryset = User.objects.all()
     lookup_field = "pk"
@@ -77,7 +77,7 @@ class GalleryCreateListView(mixins.CreateModelMixin, ListAPIView):
 
 
 class GalleryRetrieveUpdateDestroyView(RUD):
-    # Base View to GET,PUT,PATCH, and Destroy Album
+    # Base View to GET,PUT,PATCH, and Destroy Image
     # api/album/<pk>
     queryset = Gallery.objects.all()
     lookup_field = "pk"
@@ -92,7 +92,7 @@ class GalleryRetrieveUpdateDestroyView(RUD):
 
 
 class AlbumCreateListView(mixins.CreateModelMixin, ListAPIView):
-    # List View to GET and POST a album
+    # List View to GET and POST an Album
     # api/album/ --> GET (list)
     # api/album/create --> POST
     lookup_field = "pk"
@@ -117,7 +117,7 @@ class AlbumCreateListView(mixins.CreateModelMixin, ListAPIView):
 
 
 class AlbumRetrieveUpdateDestroyView(RUD):
-    # Base View to GET,PUT,PATCH, and Destroy Album
+    # Base View to GET,PUT,PATCH, and Destroy an Album
     # api/album/<pk>
     queryset = Album.objects.all()
     lookup_field = "pk"

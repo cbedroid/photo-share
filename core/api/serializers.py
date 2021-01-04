@@ -32,33 +32,6 @@ class AlbumSerializer(serializers.ModelSerializer):
         return value
 
 
-class AlbumSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Album
-        fields = "__all__"
-
-    def to_representation(self, instance):
-        # Converting the timezone DateFields
-        # into a string representation date format
-        representation = super().to_representation(instance)
-        date_format = "%m-%d-%Y"
-        representation["updated"] = instance.updated.strftime(date_format)
-        representation["created"] = instance.created.strftime(date_format)
-        return representation
-
-    def validate_name(self, value):
-        # validate Albums name are not the same
-        qs = Album.objects.filter(name__iexact=value)
-        if self.instance:
-            # if the object is actually the object itself
-            # then exclude itself
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise serializers.ValidationError(
-                "Sorry, that album name has already been used "
-            )
-        return value
-
 
 class GallerySerializer(serializers.ModelSerializer):
     class Meta:
