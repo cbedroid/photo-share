@@ -86,5 +86,5 @@ class UserSerializer(serializers.ModelSerializer):
             # then exclude itself
             qs = qs.exclude(pk=self.instance.pk)
         if qs.exists():
-            raise serializers.ValidationError("Sorry, taht user does not exist")
+            raise serializers.ValidationError("Sorry, that user does not exist")
         return value
