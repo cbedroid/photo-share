@@ -97,7 +97,6 @@ class GalleryForm(forms.ModelForm):
             raise ValidationError("No image found")
 
         if image and not title:
-            print("Validation Image Not title")
             raise ValidationError("Image missing title")
         return data
 

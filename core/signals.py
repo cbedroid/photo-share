@@ -9,7 +9,6 @@ def removeDeleteGallery(sender, instance, **kwargs):
     """ Deletes Image file from filesystem """
     try:
         if instance.image:
-            print("\nRemoving Image")
             if os.path.isfile(instance.image.path):
                 os.remove(instance.image.path)
     except:

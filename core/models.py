@@ -8,17 +8,27 @@ from django.conf import settings
 class Gallery(models.Model):
     title = models.CharField(max_length=50)
     image = models.ImageField(upload_to="gallery")
+    slug = models.SlugField(blank=False,editable=False)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.image.url)
+        super().save(*args, **kwargs)
+
+
     def get_user(self):
         album = self.album_image.first()
         if album:
             return album.user.username
         return ""
+
+    # def get_absolute_url(self):
+    #     return reverse("core:album-detail", kwargs={"slug": self.slug})
+
 
     def get_download_title(self):
         user = self.get_user()
@@ -31,7 +41,7 @@ class Album(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     images = models.ManyToManyField(Gallery, related_name="album_image", blank=True)
     public = models.BooleanField(default=True)
-    slug = models.SlugField(blank=True, editable=False)
+    slug = models.SlugField(blank=False, editable=False)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
