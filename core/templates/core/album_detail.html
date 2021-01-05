@@ -9,7 +9,7 @@
 
     <!-- Content Header-->
     <div class="header d-flex justify-content-between px-1">
-      <h4>{{album.name}}'s album </h4>
+      <h4 class="content-title">{{album.name}}'s album </h4>
 
       {% if request.user == album.user %}
       <div class="user-action">
@@ -21,24 +21,29 @@
     <!-- End Content Header-->
     <hr>
 
-    <ul class="row my-3">
-      {% for image in album_images %}
-      <li class="col-3 img__items p-2">
-        <p class="text-center text-ellipsis fw-bold">{{image.title}}</p>
-        <img loading="lazy" src="{{image.image.url}}" alt="" class="img-fluid img__md">
-        <small class="text-muted">uploaded:<span class="ml-1">{{image.created|date:"b d, Y"|title}}</span></small>
-        <div class="image-action">
-          <a href="{{image.image.url}}" download="{{image.get_download_title}}" class="btn btn-success btn-block">
-            <i class="fas fa-download mx-1"></i>
-          </a>
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <h1 class="text-center"> This Album is Private</h1>
-    <a href="{% url 'core:index' %}" class="btn btn-outline-info">Home</a>
-    {% endif %}
+    <div class="album-content my-3">
+      <ul class="mx-1 text-center">
+        {% for image in album_images %}
+        <li class="col-3 img__items p-2">
+          <p class="text-center text-ellipsis fw-bold">{{image.title}}</p>
+          <img loading="lazy" src="{{image.image.url}}" alt="" class="img-fluid img__md">
+          <small class="text-muted">uploaded:<span class="ml-1">{{image.created|date:"b d, Y"|title}}</span></small>
+          <div class="image-action">
+            <a href="{{image.image.url}}" download="{{image.get_download_title}}" class="btn btn-success btn-block">
+              <i class="fas fa-cloud-download-alt mx-1"></i>
+
+              <span>download</span>
+              <div class="clearfix"></div>
+            </a>
+          </div>
+        </li>
+        {% endfor %}
+      </ulcla>
+      {% else %}
+      <h1 class="text-center"> This Album is Private</h1>
+      <a href="{% url 'core:index' %}" class="btn btn-outline-info">Home</a>
+      {% endif %}
+    </div>
   </div>
 </section>
 {% endblock body %}

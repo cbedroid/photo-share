@@ -74,5 +74,28 @@
             <!-- /Menu -->
           </div>
         </nav>
+      <script type='text/javascript'>
+        window.onload =()=>{
+        // SideBar JS
+        const toggler = $('.submenu__toggler');
+        $(toggler).on('click touchstart',function(e){
+          e.preventDefault();
+          const is_expanded =  $(this).attr('aria-expanded');
+          // Reset toggler and content
+          $('.submenu__content').addClass('collapse').removeClass('fade-in')
+          $(toggler).attr('aria-expanded','false')
+          $('.caret').removeClass('fa-angle-up').addClass('fa-angle-down')
+
+          // Expand submenu content
+          const content = $(this).siblings('.submenu__content').first()
+          if (is_expanded == false || is_expanded === "false"){
+            $(this).attr('aria-expanded','true');
+            $(content).toggleClass('collapse').addClass('fade-in');
+            $(this).find('.caret').removeClass('fa-angle-down').addClass('fa-angle-up')
+          }
+        })
+        }
+      </script>
       </aside>
+
 {% endwith %}
