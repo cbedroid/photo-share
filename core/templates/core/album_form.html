@@ -112,25 +112,5 @@
     <!--/Album Content Form -->
   </div>
   <!-- End Album-->
-  <script type='text/javascript'>
-      window.onload =()=>{
-      
-      // Custom Image widget for input file
-      const inputs = $('.image-upload').find('input[type=file]')
-      const input_ids = $(inputs).map(function(){return $(this).attr('id')})
-      const image_labels = $('.image-upload').find('label').each(
-          (i,c)=>{
-             $(c).attr('for',input_ids[i])
-      })
-
-      $(inputs).on('change',function(){
-        const filename = this.files[0]['name']
-        
-        const custom_label = $(this).siblings('label').find('p');
-        $(custom_label).text(filename)
-        })
-
-      }
-      </script>
 </section>
 {% endblock body %}

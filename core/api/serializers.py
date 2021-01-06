@@ -32,7 +32,6 @@ class AlbumSerializer(serializers.ModelSerializer):
         return value
 
 
-
 class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
@@ -58,7 +57,9 @@ class GallerySerializer(serializers.ModelSerializer):
             # then exclude itself
             qs = qs.exclude(pk=self.instance.pk)
         if qs.exists():
-            raise serializers.ValidationError("Sorry, that image title is already taken. Try again")
+            raise serializers.ValidationError(
+                "Sorry, that image title is already taken. Try again"
+            )
         return value
 
 

@@ -75,8 +75,11 @@
           </div>
         </nav>
       <script type='text/javascript'>
-        window.onload =()=>{
-        // SideBar JS
+        window.onload = () =>{
+
+        /**
+          * ASIDE SIDEBAR SCRIPT  
+        **/
         const toggler = $('.submenu__toggler');
         $(toggler).on('click touchstart',function(e){
           e.preventDefault();
@@ -94,6 +97,32 @@
             $(this).find('.caret').removeClass('fa-angle-down').addClass('fa-angle-up')
           }
         })
+        /** 
+          * ASIDE SIDEBAR SCRIPT  
+        **/
+
+        /** 
+          * CUSTOM IMAGE UPLOAD FORM SCRIPT 
+        **/ 
+        const inputs = $('.image-upload').find('input[type=file]')
+        if (inputs){
+        const input_ids = $(inputs).map(function(){return $(this).attr('id')})
+        const image_labels = $('.image-upload').find('label').each(
+            (i,c)=>{
+              $(c).attr('for',input_ids[i])
+      })
+
+      $(inputs).on('change',function(){
+        const filename = this.files[0]['name']
+        
+        const custom_label = $(this).siblings('label').find('p');
+        $(custom_label).text(filename)
+        })
+        }
+        /**
+         * CUSTOM IMAGE UPLOAD FORM SCRIPT END 
+         **/ 
+
         }
       </script>
       </aside>
