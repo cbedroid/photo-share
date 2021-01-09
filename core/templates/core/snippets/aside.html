@@ -1,5 +1,5 @@
 {% with request.user.album_set.all as user_albums  %}
-<aside id="album-sidebar" class="sidebar col-wrapper h-100">
+<aside id="gallery-sidebar" class="sidebar col-wrapper h-100">
         <!-- SideBar Header -->
         <nav class="navbar navbar-expand-sm reversed-expand d-block">
           <div class="header">
@@ -8,7 +8,7 @@
                 <i class="fa fa-home"></i>
                 Home
               </a>
-              <a class="hlight" href="{% url 'core:album-create' %}">
+              <a class="hlight" href="{% url 'core:gallery-create' %}">
                 <i class="fa fa-plus-circle"></i>
                 Add
               </a>
@@ -31,7 +31,7 @@
                   <span><i class="fa fa-image"></i>
                     <span class="submenu__title">{{albums}}</span>
                   </span>
-                  <span><small class="icon-badge badge bg-danger rounded-circle"> {{albums.get_total_images}}</small>
+                  <span><small class="icon-badge badge bg-danger rounded-circle"> {{albums.photo_set.count}}</small>
                     <i class="caret fa fa-angle-down"></i>
                   </span>
                 </a>
@@ -40,7 +40,7 @@
                 <ul class="submenu__content content collapse">
                   <li class="content__action">
                     <h3 class="badge badge-link bg-primary float-right">
-                      <a class="badge-link__text text-white" href="{{albums.get_absolute_url }}">view album</a>
+                      <a class="badge-link__text text-white" href="{{albums.get_absolute_url }}">view gallery</a>
                     </h3>
                     <div class="clearfix"></div>
                   </li>
@@ -59,8 +59,8 @@
               </li>
               {% empty %}
               <li class="submenu sidebar__submenu text-center">
-              <p> You have no album</p>
-              <a href="{% url 'core:album-create' %}" class="btn btn-success fw-bold my-1">
+              <p> You have no gallery</p>
+              <a href="{% url 'core:gallery-create' %}" class="btn btn-success fw-bold my-1">
                <i class="fas fa-photo mx-1"></i>
                   Create an Ablum
                </a>

@@ -4,30 +4,31 @@
 
 {% block body %}
 <section class="main-container">
-  <!-- Album-->
-  <div class="album col-wrapper px-1">
-    <!-- Album Header -->
+  <!-- gallery-->
+  <div class="gallery col-wrapper px-1">
+    <!-- gallery Header -->
     <div class="album__header">
       <h3 class="content-title">
         <i class="far fa-images"></i>
-        Album Collections
+        gallery Collections
       </h3>
       <hr>
-      <ul id="album-collection" class="d-flex flex-row">
-        {% for album in user_albums %}
+      <ul id="gallery-collection" class="d-flex flex-row">
+        {% for gallery in user_albums %}
         <li class="mx-2 text-center">
           <div class="card shadow">
             <div class="card-body p-1">
               <div class="card-title border-bottom">
-                <p class="text-ellipsis my-1">{{album.name}}</p>
+                <p class="text-ellipsis my-1">{{gallery.name}}</p>
               </div>
-              <a href="{{album.get_absolute_url}}">
+              <a href="{{gallery.get_absolute_url}}">
                 <div class="img__wrapper">
-                  {% with album.get_images.0.image as album_image %}
+                  {% with gallery.images.first.image as album_image %}
+                  {# Using gallery First image as gallery Cover #}
                   {% if album_image %}
-                  <img src="{{album_image.url}}" alt="{{album}} cover image" class="img__sm img-fluid">
+                  <img src="{{album_image.url}}" alt="{{gallery}} cover image" class="img__sm img-fluid">
                   {% else %}
-                  <img src="{% get_media_prefix %}gallery/default_image.png" alt="{{album}} cover image" class="img__thumbnail">
+                  <img src="{% get_media_prefix %}Photo/default_image.png" alt="{{gallery}} cover image" class="img__thumbnail">
 
                   {% endif %}
                   {% endwith %}
@@ -39,31 +40,31 @@
         {% endfor %}
       </ul>
     </div>
-    <!-- /Album Header -->
+    <!-- /gallery Header -->
 
-    <!-- Album Content Form -->
+    <!-- gallery Content Form -->
     <div class="album__content album__form">
       <div class="card">
         <div class="card-body">
           <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ formset.management_form }}
-            <!-- Album Form -->
+            <!-- gallery Form -->
             <fieldset class="form-group">
               <legend class="title border-bottom mb-4">
                 <i class="far fa-images"></i>
                 {% if crud_type == 'update' %}
-                Update Album
+                Update gallery
                 {% else %}
-                Create New Album
+                Create New gallery
                 {% endif %}
               </legend>
               <div class="form-group">
                 {{ form|crispy }}
               </div>
-              <!-- /Album Form -->
+              <!-- /gallery Form -->
 
-              <!-- Gallery Form -->
+              <!-- Photo Form -->
               <div class="image-upload row">
                 {% for gallery_form in formset %}
                 <div class="col-9 col-sm-4 mb-2">
@@ -109,8 +110,8 @@
         </div>
       </div>
     </div>
-    <!--/Album Content Form -->
+    <!--/gallery Content Form -->
   </div>
-  <!-- End Album-->
+  <!-- End gallery-->
 </section>
 {% endblock body %}

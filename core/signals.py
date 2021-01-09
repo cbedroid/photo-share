@@ -1,14 +1,14 @@
 import os
 from django.dispatch import receiver
 from PIL import Image
-from .models import Gallery
+from .models import Photo
 from django.db.models.signals import (
     post_delete,
     post_save,
 )
 
 
-@receiver(post_save, sender=Gallery)
+@receiver(post_save, sender=Photo)
 def resizeImage(sender, instance, **kwargs):
     """ Resize large ulpoaded image """
     """
@@ -34,12 +34,3 @@ def resizeImage(sender, instance, **kwargs):
         pass
 
 
-@receiver(post_delete, sender=Gallery)
-def removeDeleteGallery(sender, instance, **kwargs):
-    """ Deletes Image file from filesystem """
-    try:
-        if instance.image:
-            if os.path.isfile(instance.image.path):
-                os.remove(instance.image.path)
-    except:
-        pass

@@ -2,27 +2,27 @@
 {% load static %}
 
 {% block body %}
-<section id="album-detail" class="spacing-top px-2">
+<section id="allery-detail" class="spacing-top px-2">
   <div class="content-container">
-    {% if request.user == album.user or album.public %}
-    {# Only show album if it's public or it belongs to current user#}
+    {% if request.user == gallery.user or gallery.public %}
+    {# Only show gallery if it's public or it belongs to current user#}
 
     <!-- Content Header-->
     <div class="header d-flex justify-content-between px-1">
-      <h4 class="content-title">{{album.name}}'s album </h4>
+      <h4 class="content-title">{{gallery.name}}'s gallery </h4>
 
-      {% if request.user == album.user %}
+      {% if request.user == gallery.user %}
       <div class="user-action">
-        <a href="{% url 'core:album-update' album.slug %}" class="btn btn-outline-info">update album</a>
-        <a href="{% url 'core:album-delete' album.slug %}" class="btn btn-outline-danger">delete album</a>
+        <a href="{% url 'core:gallery-update' gallery.slug %}" class="btn btn-outline-info">update gallery</a>
+        <a href="{% url 'core:gallery-delete' gallery.slug %}" class="btn btn-outline-danger">delete gallery</a>
       </div>
       {% endif %}
     </div>
     <!-- End Content Header-->
     <hr>
-    <div class="album-content my-3">
+    <div class="gallery-content my-3">
       <ul class="text-center row">
-        {% for image in album_images %}
+        {% for image in gallery.photo_set.all %}
         <li class="col-3 img__items p-2">
           <p class="text-center text-ellipsis fw-bold">{{image.title}}</p>
           <img loading="lazy" src="{{image.image.url}}" alt="" class="img-fluid img__md">
@@ -39,7 +39,7 @@
         {% endfor %}
       </ulcla>
       {% else %}
-      <h1 class="text-center"> This Album is Private</h1>
+      <h1 class="text-center"> This gallery is Private</h1>
       <a href="{% url 'core:index' %}" class="btn btn-outline-info">Home</a>
       {% endif %}
     </div>
