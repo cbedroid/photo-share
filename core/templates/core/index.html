@@ -11,37 +11,35 @@
     </h3>
     <hr>
     <div class="row">
-      {% for album in albums %}
-      {# Only show album if it's public or it belongs to current user#}
-      {% if request.user == album.user or album.public %}
+      {% for gallery in galleries %}
+      {# Only show gallery if it's public or it belongs to current user#}
       <div class="col-6 col-sm-4">
         <div class="card shadow h-100">
           <div class="card-header p-2">
             <p>
               {# change this into an anchor tag for profile #}
-              <span class="badge bg-info badge-link"> <a href="{{album.get_absolute_url}}">{{album}}</a> </span>
+              <span class="badge bg-info badge-link"> <a href="{{gallery.get_absolute_url}}">{{gallery}}</a> </span>
               <span class="mx-1">-</span>
-              <small class="font-italic text__secondary"><i class="fa fa-user icons mr-1"></i>{{album.user.username}} </small>
+              <small class="font-italic text__secondary"><i class="fa fa-user icons mr-1"></i>{{gallery.user.username}} </small>
             </p>
           </div>
           <div class="card__content card-body">
-            {% for image in album.get_images %}
+            {% for image in gallery.photo_set.all %}
               {% if forloop.counter <= 4 %}
               <a href="{{image.image.url}}">
-                <img class="img__thumbnail" src="{{image.image.url}}" alt="{{album}} {{image}} photo">
+                <img class="img__thumbnail" src="{{image.image.url}}" alt="{{gallery}} {{image}} photo">
               </a>
               {% endif %}
               {% empty %}
                <p class="text__secondary my-3 py-1">No images available</p>
             {% endfor %}
             <div class="card__footer mt-2">
-              <a class="btn btn-outline-warning btn-block" href="{{album.get_absolute_url}}">view album</a>
+              <a class="btn btn-outline-warning btn-block" href="{{gallery.get_absolute_url}}">view gallery</a>
             </div>
             <div class="clearfix"></div>
           </div>
         </div>
       </div>
-      {% endif %}
       {% endfor %}
     </div>
   </div>

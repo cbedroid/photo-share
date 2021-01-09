@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Album, Gallery
+from .models import Gallery, Photo
 
 
 class DateCreatedAdmin(admin.ModelAdmin):
@@ -9,14 +9,14 @@ class DateCreatedAdmin(admin.ModelAdmin):
     )
 
 
-class AlbumAdmin(DateCreatedAdmin):
-    filter_horizontal = ["images"]
+class GalleryAdmin(DateCreatedAdmin):
 
     list_display = [
         "name",
         "user",
+        "public"
     ]
 
 
-admin.site.register(Album, AlbumAdmin)
-admin.site.register(Gallery, DateCreatedAdmin)
+admin.site.register(Gallery, GalleryAdmin)
+admin.site.register(Photo, DateCreatedAdmin)
