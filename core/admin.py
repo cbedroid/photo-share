@@ -11,11 +11,7 @@ class DateCreatedAdmin(admin.ModelAdmin):
 
 class GalleryAdmin(DateCreatedAdmin):
 
-    list_display = [
-        "name",
-        "user",
-        "public"
-    ]
+    list_display = ["name", "user", "public"]
 
 
 admin.site.register(Gallery, GalleryAdmin)

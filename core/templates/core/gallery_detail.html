@@ -8,11 +8,11 @@
     {# Only show gallery if it's public or it belongs to current user#}
 
     <!-- Content Header-->
-    <div class="header d-flex justify-content-between px-1">
+    <div class="header d-flex justify-content-between flex-wrap px-1">
       <h4 class="content-title">{{gallery.name}}'s gallery </h4>
 
       {% if request.user == gallery.user %}
-      <div class="user-action">
+      <div class="user-action  btn-group-sm mt-1 mt-sm-0 ">
         <a href="{% url 'core:gallery-update' gallery.slug %}" class="btn btn-outline-info">update gallery</a>
         <a href="{% url 'core:gallery-delete' gallery.slug %}" class="btn btn-outline-danger">delete gallery</a>
       </div>
@@ -21,23 +21,27 @@
     <!-- End Content Header-->
     <hr>
     <div class="gallery-content my-3">
-      <ul class="text-center row">
+      <ul class="text-center row  no-gutters ">
         {% for image in gallery.photo_set.all %}
-        <li class="col-3 img__items p-2">
+        <li class="col col-sm-4 col-md-3">
+          <div class="card card-body img__items p- mb-1">
           <p class="text-center text-ellipsis fw-bold">{{image.title}}</p>
-          <img loading="lazy" src="{{image.image.url}}" alt="" class="img-fluid img__md">
+          <a href="{{image.image.url}}">
+            <img loading="lazy" src="{{image.image.url}}" alt="" class="img-fluid img__md">
+          </a>
+
           <small class="text-muted">uploaded:<span class="ml-1">{{image.created|date:"b d, Y"|title}}</span></small>
           <div class="image-action">
-            <a href="{{image.image.url}}" download="{{image.get_download_title}}" class="btn btn-success btn-block">
+            <a href="{{image.image.url}}" download="{{image.get_download_title}}" class="btn btn-success btn-block px-1">
               <i class="fas fa-cloud-download-alt mx-1"></i>
-
-              <span>download</span>
+              <small><b>download</b></small>
               <div class="clearfix"></div>
             </a>
           </div>
+          </div>
         </li>
         {% endfor %}
-      </ulcla>
+      </ul>
       {% else %}
       <h1 class="text-center"> This gallery is Private</h1>
       <a href="{% url 'core:index' %}" class="btn btn-outline-info">Home</a>

@@ -9,17 +9,17 @@ class TestUrls(SimpleTestCase):
         self.assertEquals(resolve(url).func.view_class, HomeListView)
 
     def test_album_detail_url_is_resolved(self):
-        url = reverse("core:album-detail", kwargs={"slug": "some_slug"})
-        self.assertEquals(resolve(url).func.view_class, AlbumDetailView)
+        url = reverse("core:gallery-detail", kwargs={"slug": "some_slug"})
+        self.assertEquals(resolve(url).func.view_class, GalleryDetailView)
 
     def test_album_create_url_is_resolved(self):
-        url = reverse("core:album-create")
-        self.assertEquals(resolve(url).func.view_class, AlbumCreateView)
+        url = reverse("core:gallery-create")
+        self.assertEquals(resolve(url).func.view_class, GalleryCreateView)
 
     def test_album_update_url_is_resolved(self):
-        url = reverse("core:album-update", kwargs={"slug": "some_slug"})
-        self.assertEquals(resolve(url).func.view_class, AlbumUpdateView)
+        url = reverse("core:gallery-update", kwargs={"slug": "some_slug"})
+        self.assertEquals(resolve(url).func.view_class, GalleryUpdateView)
 
     def test_album_delete_url_is_resolved(self):
-        url = reverse("core:album-delete", kwargs={"slug": "some_slug"})
-        self.assertEquals(resolve(url).func.view_class, AlbumDeleteView)
+        url = reverse("core:gallery-delete", kwargs={"slug": "some_slug"})
+        self.assertEquals(resolve(url).func.view_class, GalleryDeleteView)

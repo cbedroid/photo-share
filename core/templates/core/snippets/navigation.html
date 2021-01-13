@@ -1,6 +1,6 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm">
+<nav id="main-nav" class="navbar navbar-expand-md navbar-light bg-light shadow-sm">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% url 'core:index' %}"><span class="text__lg text__accent">PhotoShare</span></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,7 +19,7 @@
           <p class="nav-link">{{request.user.username}}</p>
           <a class="nav-link" href="{% url 'core:gallery-create' %}">
           <span><i class="fa fa-plus-circle icons"></i></span> 
-          <span>Gallery</span></a>
+          <span>new</span></a>
           <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
         {% else %}
           <a class="nav-link" href="{% url 'account_login' %}">Login</a>

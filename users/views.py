@@ -1,2 +1,2 @@
 from django.shortcuts import render
-from .models import Album, Gallery
+from .models import Gallery, Photo
