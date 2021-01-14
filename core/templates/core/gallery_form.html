@@ -3,29 +3,19 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-<section class="main-container mx-2">
+<section class="main-container mx-n2">
   <!-- gallery-->
-  <div class="gallery col-wrapper px-1">
-    <!-- gallery Header -->
-    <div class="album__header">
-      <h3 class="content-title">
-        <i class="far fa-images"></i>
-        Gallery Collections
-      </h3>
-      <hr>
-    </div>
+  <div class="gallery col-wrapper">
     <!-- /gallery Header -->
 
     <!-- gallery Content Form -->
-    <div class="album__content album__form ">
-      <div class="card px-2">
-        <div class="card-body">
+    <div class="album__content album__form w-100 ">
           <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ formset.management_form }}
             <!-- gallery Form -->
             <fieldset class="form-group">
-              <legend class="title border-bottom mb-4">
+              <legend class="content-title border-bottom mb-4">
                 <i class="far fa-images"></i>
                 {% if form.instance.id %}
                 Update gallery
@@ -39,10 +29,10 @@
               <!-- /gallery Form -->
 
               <!-- Photo Form -->
-              <div class="image-upload row">
+              <div class="image-upload row no-gutters">
                 {% for gallery_form in formset %}
-                <div class="col-9 col-sm-4 mb-2">
-                  <div class="card">
+                <div class="col-4 mb-2">
+                  <div class="card mx-1">
                     <div class="card-body">
                       {{gallery_form.title}}
                         {% if gallery_form.title.errors %}
@@ -73,8 +63,6 @@
             </div>
           </form>
         </div>
-      </div>
-    </div>
     <!--/gallery Content Form -->
   </div>
   <!-- End gallery-->

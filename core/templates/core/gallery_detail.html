@@ -2,19 +2,24 @@
 {% load static %}
 
 {% block body %}
-<section id="allery-detail" class="spacing-top mx-2 px-2">
+<section id="allery-detail" class="spacing-top mx-2">
   <div class="content-container">
     {% if request.user == gallery.user or gallery.public %}
     {# Only show gallery if it's public or it belongs to current user#}
 
     <!-- Content Header-->
-    <div class="header d-flex justify-content-between px-1">
-      <h4 class="content-title">{{gallery.name}}'s gallery </h4>
+    <div class="header d-flex flex-column flex-sm-row justify-content-around">
+      <h4 class="content-title mb-1 w-100">{{gallery.name}}'s gallery </h4>
 
       {% if request.user == gallery.user %}
-      <div class="user-action">
-        <a href="{% url 'core:gallery-update' gallery.user.username|slugify gallery.slug %}" class="btn btn-outline-info">update gallery</a>
-        <a href="{% url 'core:gallery-delete' gallery.user.username|slugify gallery.slug %}" class="btn btn-outline-danger">delete gallery</a>
+      <div class="user-action d-flex mt-2 mt-sm-0 w-100">
+        <a href="{% url 'core:gallery-update' gallery.user.username|slugify gallery.slug %}" class="btn btn-outline-info">update 
+          <span class="d-none d-sm-inline-block">gallery </span>
+        </a>
+        <span class="spacer mx-1"> </span>
+        <a href="{% url 'core:gallery-delete' gallery.user.username|slugify gallery.slug %}" class="btn btn-outline-danger">delete 
+          <span class="d-none d-sm-inline-block">gallery </span>
+          </a>
 
       </div>
       {% endif %}
@@ -22,26 +27,34 @@
     <!-- End Content Header-->
     <hr>
     <div class="gallery-content my-3">
-      <ul class="text-center row">
+      <ul class="text-center row no-gutters">
         {% for image in gallery.photo_set.all %}
-        <li class="col-3 img__items p-2">
-          <p class="text-center text-ellipsis fw-bold">{{image.title}}</p>
-          <img loading="lazy" src="{{image.image.url}}" alt="" class="img-fluid img__md">
-          <small class="text-muted">uploaded:<span class="ml-1">{{image.created|date:"b d, Y"|title}}</span></small>
-          <div class="image-action">
-            <a  class="btn btn-success btn-block " href="image.image.url}}" download="{{image.get_download_title}}" >
-              <i class="fas fa-cloud-download-alt mx-1"></i>
-              <span>download</span>
-              <div class="clearfix"></div>
-            </a>
-            {% if request.user.is_authenticated and request.user == gallery.user %}
-              <a  class="btn btn-danger btn-block" href="{% url  'core:photo-delete' image.pk %}" >
-              <i class="fas fa-trash-alt mx-1"></i>
-              <span>delete</span>
-              <div class="clearfix"></div>
-            </a>
-            {% endif %}
-              
+        <li class="col-6 col-sm-3">
+          <div class="card m-1">
+            <div class="card-body p-1">
+              <p class="text-center text-ellipsis fw-bold">{{image.title}}</p>
+              <a href="{{image.image.url}}">
+              <img loading="lazy" src="{{image.image.url}}" alt="{{image.title}} photo" class="img-fluid img-thumbnail" style="min-height:125px">
+              </a>
+              <small class="text-muted text-left"> <i class="fas fa-clock"></i>
+                <span class="d-none d-md-inline-block mr-1">uploaded:</span>
+                <span>{{image.created|date:"b d, Y"|title}}</span>
+                </small>
+              <div class="image-action">
+                <a class="btn btn-success btn-block px-1 " href="image.image.url}}" download="{{image.get_download_title}}" >
+                  <i class="fas fa-cloud-download-alt mx-1 p-0"></i>
+                  <span>download</span>
+                  <div class="clearfix"></div>
+                </a>
+                {% if request.user.is_authenticated and request.user == gallery.user %}
+                  <a  class="btn btn-danger btn-block px-1" href="{% url  'core:photo-delete' image.pk %}" >
+                  <i class="fas fa-trash-alt mx-1 p-0"></i>
+                  <span>delete</span>
+                  <div class="clearfix"></div>
+                </a>
+                {% endif %}
+              </div>
+            </div>
           </div>
         </li>
         {% endfor %}
