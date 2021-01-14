@@ -1,7 +1,7 @@
 import re
 from django.contrib.auth.models import User
 from .serializers import AlbumSerializer, GallerySerializer, UserSerializer
-from core.models import Album, Gallery
+from core.models import Gallery, Photo
 from rest_framework.generics import (
     mixins,
     ListAPIView,
@@ -13,7 +13,7 @@ from rest_framework.generics import (
 class UserCreateListView(mixins.CreateModelMixin, ListAPIView):
     # List View to GET and POST an User
     # api/image/ --> GET (list)
-    # api/album/create --> POST
+    # api/Gallery/create --> POST
     lookup_field = "pk"
     serializer_class = UserSerializer
     permission_classes = []
@@ -38,7 +38,7 @@ class UserCreateListView(mixins.CreateModelMixin, ListAPIView):
 
 class UserRetrieveUpdateDestroyView(RUD):
     # Base View to GET,PUT,PATCH, and Destroy an User
-    # api/album/<pk>
+    # api/Gallery/<pk>
     queryset = User.objects.all()
     lookup_field = "pk"
     serializer_class = UserSerializer
@@ -54,13 +54,13 @@ class UserRetrieveUpdateDestroyView(RUD):
 class GalleryCreateListView(mixins.CreateModelMixin, ListAPIView):
     # List View to GET and POST an Image
     # api/image/ --> GET (list)
-    # api/album/create --> POST
+    # api/Gallery/create --> POST
     lookup_field = "pk"
     serializer_class = GallerySerializer
     permission_classes = []
 
     def get_queryset(self, *args, **kwargs):
-        qs = Gallery.objects.all()
+        qs = Photo.objects.all()
         query = self.request.GET.get("q")
         if query is not None:
             return qs.filter(title__iexact=query)
@@ -78,8 +78,8 @@ class GalleryCreateListView(mixins.CreateModelMixin, ListAPIView):
 
 class GalleryRetrieveUpdateDestroyView(RUD):
     # Base View to GET,PUT,PATCH, and Destroy Image
-    # api/album/<pk>
-    queryset = Gallery.objects.all()
+    # api/Gallery/<pk>
+    queryset = Photo.objects.all()
     lookup_field = "pk"
     serializer_class = GallerySerializer
     permission_classes = []
@@ -92,15 +92,15 @@ class GalleryRetrieveUpdateDestroyView(RUD):
 
 
 class AlbumCreateListView(mixins.CreateModelMixin, ListAPIView):
-    # List View to GET and POST an Album
-    # api/album/ --> GET (list)
-    # api/album/create --> POST
+    # List View to GET and POST an Gallery
+    # api/Gallery/ --> GET (list)
+    # api/Gallery/create --> POST
     lookup_field = "pk"
     serializer_class = AlbumSerializer
     permission_classes = []
 
     def get_queryset(self, *args, **kwargs):
-        qs = Album.objects.all()
+        qs = Gallery.objects.all()
         query = self.request.GET.get("q")
         if query is not None:
             return qs.filter(name__iexact=query)
@@ -117,9 +117,9 @@ class AlbumCreateListView(mixins.CreateModelMixin, ListAPIView):
 
 
 class AlbumRetrieveUpdateDestroyView(RUD):
-    # Base View to GET,PUT,PATCH, and Destroy an Album
-    # api/album/<pk>
-    queryset = Album.objects.all()
+    # Base View to GET,PUT,PATCH, and Destroy an Gallery
+    # api/Gallery/<pk>
+    queryset = Gallery.objects.all()
     lookup_field = "pk"
     serializer_class = AlbumSerializer
     permission_classes = []

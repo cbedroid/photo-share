@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-<section id="index-main" class="spacing-top">
+<section id="index-main" class="spacing-top w-100">
   <div class="main-content-container container my-2">
     <h3 class="content-title">
       <span>PhotoShare Alb</span>
@@ -10,35 +10,41 @@
       <span class=>ms</span>
     </h3>
     <hr>
-    <div class="row">
+    <div class="row no-gutters">
       {% for gallery in galleries %}
       {# Only show gallery if it's public or it belongs to current user#}
-      <div class="col-6 col-sm-4">
-        <div class="card shadow h-100">
-          <div class="card-header p-2">
-            <p>
-              {# change this into an anchor tag for profile #}
-              <span class="badge bg-info badge-link"> <a href="{{gallery.get_absolute_url}}">{{gallery}}</a> </span>
-              <span class="mx-1">-</span>
-              <small class="font-italic text__secondary"><i class="fa fa-user icons mr-1"></i>{{gallery.user.username}} </small>
-            </p>
-          </div>
-          <div class="card__content card-body">
-            {% for image in gallery.photo_set.all %}
-              {% if forloop.counter <= 4 %}
-              <a href="{{image.image.url}}">
-                <img class="img__thumbnail" src="{{image.image.url}}" alt="{{gallery}} {{image}} photo">
-              </a>
-              {% endif %}
-              {% empty %}
-               <p class="text__secondary my-3 py-1">No images available</p>
-            {% endfor %}
-            <div class="card__footer mt-2">
-              <a class="btn btn-outline-warning btn-block" href="{{gallery.get_absolute_url}}">view gallery</a>
-            </div>
-            <div class="clearfix"></div>
-          </div>
+      <div class="col-6 col-sm-4 col md-3">
+      <div class="card shadow m-1 ">
+        <div class="card-header p-1">
+          <p>
+            {# change this into an anchor tag for profile #}
+            <span class="badge bg-info badge-link text-ellipsis text-middle">
+             <a href="{{gallery.get_absolute_url}}">{{gallery}}</a> 
+             </span>
+            <span class="mx-1 ">-</span>
+            <small class="font-italic text__secondary text-ellipsis"><i class="fa fa-user icons mr-1"></i>{{gallery.user.username}} </small>
+            <br>
+          </p>
+            <small>{{gallery.photo_set.count}} image{{ gallery.photo_set.count|pluralize:"s" }}</small>
         </div>
+        <div class="card__content card-body">
+          {% with  gallery.photo_set.first as cover %}
+            {% if cover %}
+                <a href="{{cover.image.url}}">
+                  <img class="img-thumbnail py-1" src="{{cover.image.url}}" alt="{{gallery}} {{image}} photo">
+                </a>
+              {% else %}
+                <a href="{{gallery.default_cover}}">
+                  <img class="img-thumbnail py-1" src="{{gallery.default_cover}}" alt="{{gallery}} {{image}} photo">
+                </a>
+            {% endif %}
+          {% endwith %}
+          <div class="card__footer mt-2">
+            <a class="btn btn-outline-warning btn-block" href="{{gallery.get_absolute_url}}"><small>view gallery</small></a>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
       </div>
       {% endfor %}
     </div>

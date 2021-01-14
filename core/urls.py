@@ -3,23 +3,29 @@ from . import views
 
 app_name = "core"
 urlpatterns = [
-    
     re_path(
-        r"album/detail/(?P<slug>.*)/$",
-        views.AlbumDetailView.as_view(),
-        name="album-detail",
+        r"^gallery/detail/(?P<owner>.*)/(?P<slug>.*)/$",
+        views.GalleryDetailView.as_view(),
+        name="gallery-detail",
     ),
     re_path(
-        r"album/update/(?P<slug>.*)/$",
-        views.AlbumUpdateView.as_view(),
-        name="album-update",
+        r"^gallery/update/(?P<owner>.*)/(?P<slug>.*)/$",
+        views.GalleryUpdateView.as_view(),
+        name="gallery-update",
     ),
     re_path(
-        r"album/delete/(?P<slug>.*)/$",
-        views.AlbumDeleteView.as_view(),
-        name="album-delete",
+        r"^gallery/delete/(?P<owner>.*)/(?P<slug>.*)/$",
+        views.GalleryDeleteView.as_view(),
+        name="gallery-delete",
     ),
-    re_path(r"album/new/$", views.AlbumCreateView.as_view(), name="album-create"),
-
+    re_path(
+        r"^gallery/new/$", views.GalleryCreateView.as_view(), name="gallery-create"
+    ),
+    # re_path(r"^photo/delete/(?P<pk>\d+)/$",views.deletePhoto,name="photo-delete"),
+    re_path(
+        r"^photo/delete/(?P<pk>\d+)/$",
+        views.PhotoDeleteView.as_view(),
+        name="photo-delete",
+    ),
     path("", views.HomeListView.as_view(), name="index"),
 ]

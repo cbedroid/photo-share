@@ -1,96 +1,124 @@
-{% with request.user.album_set.all as user_albums  %}
-<aside id="gallery-sidebar" class="sidebar col-wrapper h-100">
-        <!-- SideBar Header -->
-        <nav class="navbar navbar-expand-sm reversed-expand d-block">
-          <div class="header">
-            <div class="header__action fw-med d-flex justify-content-around">
-              <a class="hlight" href="{% url 'core:index' %}">
-                <i class="fa fa-home"></i>
-                Home
-              </a>
-              <a class="hlight" href="{% url 'core:gallery-create' %}">
-                <i class="fa fa-plus-circle"></i>
-                Add
-              </a>
-              <!-- / End SideBar Header -->
-              <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-nav" aria-controls="sidebar-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-              </button>
-            </div>
-            <hr>
-          </div>
-          <div class="collapse navbar-collapse" id="sidebar-nav">
-            <!-- SideBar Menu -->
-            <ul class="vertical-nav w-100">
-              <li class="sidebar__heading mb-4">Menu</li>
-              
-              {% for albums in user_albums %}
-              <!--SUBMENU-->
-              <li class="submenu sidebar__submenu">
-                <a class="submenu__toggler text-white d-flex justify-content-between" aria-expanded="false" href="#">
-                  <span><i class="fa fa-image"></i>
-                    <span class="submenu__title">{{albums}}</span>
-                  </span>
-                  <span><small class="icon-badge badge bg-danger rounded-circle"> {{albums.photo_set.count}}</small>
-                    <i class="caret fa fa-angle-down"></i>
-                  </span>
-                </a>
+{% with request.user.gallery_set.all as user_gallery %}
+<section id="gallery-sidebar">
+  <div class="mobile-slider-wrapper p-2 float-right">
+    <label for="mobile_slider">
+      <i class="fa fa-bars"></i>
+    </label>
+  </div>
+  <div class="clearfix"></div>
+  <aside class="sidebar col-wrapper">
+    <!-- SideBar Header -->
+    <nav class="navbar navbar-expand reversed-expand d-block px-0">
 
-                <!--Submenu Content-->
-                <ul class="submenu__content content collapse">
-                  <li class="content__action">
-                    <h3 class="badge badge-link bg-primary float-right">
-                      <a class="badge-link__text text-white" href="{{albums.get_absolute_url }}">view gallery</a>
-                    </h3>
-                    <div class="clearfix"></div>
-                  </li>
-                  <li class="submenu__content-image-container">
-                    {% for image in albums.get_images %}
-                    <li class="submenu__content-image-content hlight">
-                      <p class="text-ellipsis">{{image}}</p>
-                      <a href="{{image.image.url}}">
-                        <img src="{{image.image.url}}" alt="{{image}} image" class="img__thumbnail" style="width:30px;height:30px">
-                      </a>
-                    </li>
-                    {% endfor %}
-                  </li>
-                </ul>
-                <!--End Submenu Content-->
-              </li>
-              {% empty %}
-              <li class="submenu sidebar__submenu text-center">
-              <p> You have no gallery</p>
-              <a href="{% url 'core:gallery-create' %}" class="btn btn-success fw-bold my-1">
-               <i class="fas fa-photo mx-1"></i>
-                  Create an Ablum
-               </a>
-                </li> 
-              <!--end submenu-->
-              {% endfor %}
-                <li class="submenu sidebar__submenu">
-                </li>    
-            </ul>
-              
-            <!-- /Menu -->
-          </div>
-        </nav>
-      <script type='text/javascript'>
+      <div class="header">
+        <div class="header__action fw-med d-flex justify-content-around">
+          <a class="hlight mhide" href="{% url 'core:index' %}">
+            <i class="fa fa-home"> <b>Home</b> </i>
+          </a>
+          <a class="hlight mvis mvis__fr" href="{% url 'core:gallery-create' %}">
+            <i class="fa fa-plus-circle"> <b>New</b> </i>
+          </a>
+          <!-- / End SideBar Header -->
+        </div>
+        <hr>
+      </div>
+
+      <div class="inner-nav sidebar" id="sidebar-nav">
+        <!-- SideBar Menu -->
+
+        {% if request.user.is_authenticated %}
+        <p class="sidebar__heading mvis mvis__fr mb-4">Menu</p>
+        {% else %}
+        <a href="{% url 'account_login' %}" class="sidebar__heading mvis mvis__fr mb-4">Login</a>
+        {% endif %}
+
+        <ul class="sidebar__main-wrapper w-100">
+          {% for gallery_album in user_gallery %}
+          <!--SUBMENU-->
+          <li class="sidebar__detail detail">
+            <!--aside preview items -->
+
+            <div class="detail__preview mvis hlight mb-1 w-100 d-none">
+              <small class="text-ellipsis text-right d-block" style="width:70px;">{{gallery_album}}</small>
+              <a href="{{gallery_album.get_absolute_url}}">
+                <img src="{{gallery_album.photo_set.first.image.url}}" alt="{{gallery_album}} cover image" class="img__thumbnail" style="width:50px;height:40px">
+              </a>
+            </div>
+
+            <div class="detail__gallery mhide w-100">
+              <a class="detail__gallery-toggler text-white d-flex justify-content-between mb-1" aria-expanded="false" href="#">
+                <span><i class="fa fa-image"></i>
+                  <span class="submenu__title">{{gallery_album}}</span>
+                </span>
+                <span><small class="icon-badge badge bg-danger rounded-circle"> {{gallery_album.photo_set.count}}</small>
+                  <i class="caret fa fa-angle-down"></i>
+                </span>
+              </a>
+
+              <!--Submenu Gallery List Item-->
+              <ul class="detail__submenu submenu collapse">
+                <li class="detail__submenu-item">
+                  <p class="badge badge-link bg-primary float-right my-2">
+                    <a class="badge-link__text text-white" href="{{gallery_album.get_absolute_url }}">view gallery</a>
+                  </p>
+                  <div class="clearfix"></div>
+                </li>
+                <!--Submenu Photo Item-->
+                <li class="submenu__gallery-list my-2">
+                  {% for image in gallery_album.photo_set.all %}
+                  <div class="submenu__gallery-content hlight">
+                    <small class="text-ellipsis">{{image}}</small>
+                    <a href="{{image.image.url}}">
+                      <img src="{{image.image.url}}" alt="{{image}} image" class="img__thumbnail" style="width:30px;height:30px">
+                    </a>
+                  </div>
+                  {% endfor %}
+                </li>
+              </ul>
+            </div>
+            <!--End Submenu Content-->
+          </li>
+          {% empty %}
+          <li class="submenu sidebar__submenu text-center">
+            <p> You have no gallery</p>
+            <a href="{% url 'core:gallery-create' %}" class="btn btn-success fw-bold my-1">
+              <i class="fas fa-photo mx-1"></i>
+              Create an Ablum
+            </a>
+          </li>
+          <!--end submenu-->
+          {% endfor %}
+          <li class="submenu sidebar__submenu">
+          </li>
+        </ul>
+
+        <!-- /Menu -->
+      </div>
+
+    </nav>
+    <script type='text/javascript'>
         window.onload = () =>{
 
         /**
           * ASIDE SIDEBAR SCRIPT  
         **/
-        const toggler = $('.submenu__toggler');
+         $('#site-main').on('click touch',function(){
+           // Checked means closed
+           $('#mobile_slider').prop('checked',true);
+
+         })
+
+        const toggler = $('.detail__gallery-toggler');
         $(toggler).on('click touchstart',function(e){
           e.preventDefault();
           const is_expanded =  $(this).attr('aria-expanded');
           // Reset toggler and content
-          $('.submenu__content').addClass('collapse').removeClass('fade-in')
+          $('.detail__submenu').addClass('collapse').removeClass('fade-in')
           $(toggler).attr('aria-expanded','false')
           $('.caret').removeClass('fa-angle-up').addClass('fa-angle-down')
 
           // Expand submenu content
-          const content = $(this).siblings('.submenu__content').first()
+          const content = $(this).siblings('.detail__submenu').first()
           if (is_expanded == false || is_expanded === "false"){
             $(this).attr('aria-expanded','true');
             $(content).toggleClass('collapse').addClass('fade-in');
@@ -125,6 +153,7 @@
 
         }
       </script>
-      </aside>
+  </aside>
+</section>
 
 {% endwith %}

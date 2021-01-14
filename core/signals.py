@@ -29,8 +29,5 @@ def resizeImage(sender, instance, **kwargs):
                 output_size = (400, 300)
                 image = image.resize(output_size, Image.ANTIALIAS)
                 image.save(instance.image.path)
-                print("image resized")
     except:
         pass
-
-

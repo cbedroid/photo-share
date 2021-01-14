@@ -5,32 +5,32 @@ from . import views
 app_name = "api"
 urlpatterns = [
     # Retrieve and update
-    # Album
+    # Gallery
     re_path(
-        r"^album/(?P<pk>\d+)/?$",
+        r"^Gallery/(?P<pk>\d+)/?$",
         views.AlbumRetrieveUpdateDestroyView.as_view(),
-        name="album-retrieveupdate",
+        name="Gallery-retrieveupdate",
     ),
     # searches and lookups
-    re_path(r"^album/", views.AlbumCreateListView.as_view(), name="album-listcreate"),
     re_path(
-        r"^album/?(?P<q>.*)/?$",
-        views.AlbumCreateListView.as_view(),
-        name="album-listupdate",
+        r"^Gallery/", views.AlbumCreateListView.as_view(), name="Gallery-listcreate"
     ),
-    # Gallery
+    re_path(
+        r"^Gallery/?(?P<q>.*)/?$",
+        views.AlbumCreateListView.as_view(),
+        name="Gallery-listupdate",
+    ),
+    # Photo
     re_path(
         r"^image/(?P<pk>\d+)/?$",
         views.GalleryRetrieveUpdateDestroyView.as_view(),
-        name="gallery-retrieveupdate",
+        name="Photo-retrieveupdate",
     ),
-    re_path(
-        r"^image/", views.GalleryCreateListView.as_view(), name="gallery-listcreate"
-    ),
+    re_path(r"^image/", views.GalleryCreateListView.as_view(), name="Photo-listcreate"),
     re_path(
         r"^image/?(?P<q>.*)/?$",
         views.GalleryCreateListView.as_view(),
-        name="gallery-listupdate",
+        name="Photo-listupdate",
     ),
     # User
     re_path(

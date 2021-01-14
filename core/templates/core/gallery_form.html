@@ -3,48 +3,22 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-<section class="main-container">
+<section class="main-container mx-2">
   <!-- gallery-->
   <div class="gallery col-wrapper px-1">
     <!-- gallery Header -->
     <div class="album__header">
       <h3 class="content-title">
         <i class="far fa-images"></i>
-        gallery Collections
+        Gallery Collections
       </h3>
       <hr>
-      <ul id="gallery-collection" class="d-flex flex-row">
-        {% for gallery in user_albums %}
-        <li class="mx-2 text-center">
-          <div class="card shadow">
-            <div class="card-body p-1">
-              <div class="card-title border-bottom">
-                <p class="text-ellipsis my-1">{{gallery.name}}</p>
-              </div>
-              <a href="{{gallery.get_absolute_url}}">
-                <div class="img__wrapper">
-                  {% with gallery.images.first.image as album_image %}
-                  {# Using gallery First image as gallery Cover #}
-                  {% if album_image %}
-                  <img src="{{album_image.url}}" alt="{{gallery}} cover image" class="img__sm img-fluid">
-                  {% else %}
-                  <img src="{% get_media_prefix %}Photo/default_image.png" alt="{{gallery}} cover image" class="img__thumbnail">
-
-                  {% endif %}
-                  {% endwith %}
-                </div>
-              </a>
-            </div>
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
     </div>
     <!-- /gallery Header -->
 
     <!-- gallery Content Form -->
-    <div class="album__content album__form">
-      <div class="card">
+    <div class="album__content album__form ">
+      <div class="card px-2">
         <div class="card-body">
           <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -53,7 +27,7 @@
             <fieldset class="form-group">
               <legend class="title border-bottom mb-4">
                 <i class="far fa-images"></i>
-                {% if crud_type == 'update' %}
+                {% if form.instance.id %}
                 Update gallery
                 {% else %}
                 Create New gallery
@@ -71,27 +45,18 @@
                   <div class="card">
                     <div class="card-body">
                       {{gallery_form.title}}
+                        {% if gallery_form.title.errors %}
+                        <ul class="title-errors alert-danger">
+                          {{gallery_form.title.errors|unordered_list}}
+                        </ul>
+                        {% endif %}
                       {{gallery_form.image.label|safe}}
                       {{gallery_form.image}}
-                      {% if gallery_form.errors %}
-                      <ul class="errorlist bg-danger text-dark">
-                        {% if gallery_form.non_field_errors %}
-                        <li>{{ gallery_form.non_field_errors }}</li>
+                      {% if gallery_form.image.errors %}
+                        <ul class="image-errors alert-danger ">
+                          {{gallery_form.image.errors|unordered_list}}
+                        </ul>
                         {% endif %}
-                        {% for field in gallery_form %}
-                        {% if field.errors %}
-                        <li>
-                          {{ field.label }}
-                          <ul class="errorlist">
-                            {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                          </ul>
-                        </li>
-                        {% endif %}
-                        {% endfor %}
-                      </ul>
-                      {% endif %}
                     </div>
                   </div>
                 </div>
@@ -99,7 +64,7 @@
               </div>
             </fieldset>
             <div class="form-group">
-              {% if crud_type == 'update' %}
+              {% if form.instance.id %}
               <button class="btn btn-outline-warning" type="submit">Update</button>
               {% else %}
               <button class="btn btn-outline-info" type="submit">Add</button>

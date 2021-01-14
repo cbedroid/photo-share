@@ -2,64 +2,55 @@ import re
 from django import forms
 from django.utils.html import mark_safe
 from django.core.exceptions import ValidationError
-from .models import Album, Gallery
-
-
-class AlbumForm(forms.ModelForm):
-    def __new__(cls, *args, **kwargs):
-        cls.request = kwargs.pop("request", None)
-        cls.crud_type = kwargs.pop("crud_type", None)
-        return super().__new__(cls)
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request", None)
-        self.crud_type = kwargs.pop("crud_type", None)
-        super().__init__(*args, **kwargs)
-
-    class Meta:
-        model = Album
-        fields = ["name", "public"]
-
-    def clean_name(self):
-        name = self.cleaned_data.get("name", "")
-        data = re.sub(r"\s{1,}", " ", name).strip()
-
-        """ 
-            Adding Album uniqueness here in clean's method instead 
-            of adding it to the Album model.
-
-            This way each users can have an album with the same name as other users,
-            but each user can only have one album with a specific name
-            Data cleaning will be handle by Model's form class
-        """
-        album = Album.objects.filter(name__iexact=data)
-        if self.crud_type == "create" and album.exists():
-            raise ValidationError("Sorry, This album already exist!")
-        return data
-
-    def save(self, commit=True):
-        data = super().save(commit=False)
-        if commit:
-            form = super().save(commit=True)
-            self.save_m2m()
-        return data
-
-
-class GalleryBaseFormSet(forms.BaseFormSet):
-    titles = []
-
-    def clean(self):
-        if any(self.errors):
-            return
-
-        for index, form in enumerate(self.forms):
-            title = form.cleaned_data.get("title")
-            image = form.cleaned_data.get("iamge")
-            self.titles.append(title)
+from django.forms.models import inlineformset_factory
+from .models import Gallery, Photo
 
 
 class GalleryForm(forms.ModelForm):
-    custom_label = """
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        # Helper variable that user to pass the current Gallery's
+        # form.instance to PhotoForm's clean method when Gallery is updating
+        self.gallery_update_obj = kwargs.pop("gallery_update_obj", None)
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Gallery
+        fields = ["name", "public"]
+
+    name = forms.CharField(
+        required=True,
+        label="Gallery name",
+        widget=forms.TextInput(attrs={"placeholder": "Enter a gallery title"}),
+    )
+
+    def clean_name(self):
+        name = self.cleaned_data.get("name", "")
+        name = re.sub(r"\s{1,}", " ", name).strip()
+
+        """ 
+            Adding Gallery uniqueness here in clean's method instead 
+            of adding it to the Gallery model.
+
+            This way each users can have an Gallery with the same name as other users,
+            but each user can only have one Gallery with a specific name
+            Data cleaning will be handle by Model's form class
+        """
+        # Added uniqueness for user here
+        gallery_obj = Gallery.objects.filter(name__iexact=name, user=self.request.user)
+        if self.instance.id:
+            # Exclude form instance itself from existing queryset
+            gallery_obj = gallery_obj.exclude(pk=self.instance.id)
+
+        # If form does not have an id, then a new Gallery is being created,
+        #  otherwise it being updated.
+        if gallery_obj.exists():
+            raise ValidationError("Sorry, This Gallery already exist!")
+        return name
+
+
+class PhotoForm(forms.ModelForm):
+    CUSTOM_IMAGE_LABEL = """
         <label class="image-label">
             <div class="img__upload-wrapper">
                 <img class="img-fluid" src="https://icon-library.net/images/upload-photo-icon/upload-photo-icon-21.jpg"/>
@@ -68,40 +59,48 @@ class GalleryForm(forms.ModelForm):
         </label>"""
 
     class Meta:
-        model = Gallery
+        model = Photo
         fields = "__all__"
 
     title = forms.CharField(
-        required=False,
+        required=True,
         label=False,
         widget=forms.TextInput(
             attrs={"placeholder": "Image title", "class": "text-center"}
         ),
     )
-    image = forms.ImageField(required=False, label=custom_label, widget=forms.FileInput)
+    image = forms.ImageField(
+        required=True, label=CUSTOM_IMAGE_LABEL, widget=forms.FileInput
+    )
 
-    def clean(self):
-        data = super().clean()
-        titles = GalleryBaseFormSet.titles
-        user = AlbumForm.request.user
-        title = data.get("title", None)
-        image = data.get("image", None)
+    def clean_title(self):
+        title = self.cleaned_data.get("title")
 
-        if title:
-            title = re.sub(r"\s{1,}", " ", title).strip()
-            title_exist = Album.objects.filter(images__title=title, user=user)
+        if not title:
+            raise ValidationError("Sorry, This photo must have a title")
+        title = re.sub(r"\s{1,}", " ", title).strip()
+
+        # Not checking Photo title if form does NOT have an instance id.
+        # If there is no form id, then the form was called from CreateView,
+        #  so the Gallery is here will be new.
+        gallery_id = self.instance.gallery_id
+        if gallery_id:
+            # First, get the Gallery's object by pk
+            # Check whether this gallery objects has
+            #  a photo with this photo title
+            #
+            title_exist = Photo.objects.filter(
+                title__iexact=title, gallery__pk=gallery_id
+            )
             if title_exist.exists():
                 raise ValidationError("Sorry, This image title is already taken")
+        return title
 
-        if image is None and title:
-            raise ValidationError("No image found")
 
-        if image and not title:
-            raise ValidationError("Image missing title")
-        return data
-
-    def save(self, commit=True):
-        data = super().save(commit=False)
-        if commit:
-            data = super().save(commit=True)
-        return data
+GalleryFormSet = inlineformset_factory(
+    Gallery,
+    Photo,
+    form=PhotoForm,
+    fields=["title", "image"],
+    extra=3,
+)
