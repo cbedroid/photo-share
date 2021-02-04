@@ -28,4 +28,5 @@ urlpatterns = [
         name="photo-delete",
     ),
     path("", views.HomeListView.as_view(), name="index"),
+    path("testing/", views.testing, name="testing"),
 ]

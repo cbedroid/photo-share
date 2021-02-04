@@ -1,9 +1,10 @@
 import re
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib import messages
-from .models import Gallery, Photo
+from django.http import HttpResponse
 from django.utils.text import slugify
-from django.contrib.auth.models import User
+from .models import Gallery, Photo, Category
+from django.contrib.auth.models import User, AnonymousUser
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from .forms import GalleryForm, PhotoForm, GalleryFormSet
@@ -18,9 +19,15 @@ from django.views.generic import (
 )
 
 
+def get_current_user(request):
+    if request.user.is_authenticated:
+        return request.user
+
+
 class HomeListView(ListView):
     model = Gallery
     template_name = "core/index.html"
+    queryset = Gallery.objects.all()
     context_object_name = "galleries"
     paginate_by = 25
 
@@ -30,8 +37,24 @@ class HomeListView(ListView):
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
             # This will also fix any pagination error when logic occured in template.
-            return Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
-        return Gallery.objects.filter(public=True)
+            qs = Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
+        qs = Gallery.objects.filter(public=True)
+
+        # Preform lookup searches in all Gallery's related field
+        search = self.request.GET.get("q")
+        if search:
+            qs = Gallery.objects.query_search(search, qs)
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # top 10 category used
+        context["by_search"] = self.request.GET.get("q", False)
+        context["top_category"] = Category.objects.annotate(
+            c=Count("gallery")
+        ).order_by("-c")[:10]
+        return context
 
 
 class GalleryDetailView(DetailView):
@@ -41,14 +64,37 @@ class GalleryDetailView(DetailView):
     slug_url_kwarg = "slug"
 
     # Throws 404 if gallery is private
-
     def get_queryset(self):
-        if self.request.user.is_authenticated:
-            # Filtering gallery base on ownership and its public status.
-            # This will return a gallery if it is access by "non_owner" AND it is "public"
-            #  or if it's access by owner, then disregard the gallery's "public" status.
-            return Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
-        return Gallery.objects.filter(public=True)
+        # Filtering gallery base on ownership and its public status.
+        # This will return a gallery if it is access by "non_owner" AND it is "public"
+        #  or if it's access by owner, then disregard the gallery's "public" status.
+        return Gallery.objects.filter(
+            Q(public=True) | Q(user=get_current_user(self.request))
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        related_gallery = self.object.category.gallery_set
+
+        if related_gallery.exists():
+            # Filter galleries by creator or its public status
+
+            # Include all public or galleries belonging to the current user
+            related_gallery = related_gallery.filter(
+                Q(public=True) | Q(user=get_current_user(self.request))
+            )
+
+            # Exclude the current gallery from the queryset
+            related_gallery = related_gallery.exclude(name=self.object.name)
+
+            # Limiting the total number of related_gallery to display in template
+            related_gallery_total = related_gallery.count()
+            if related_gallery_total >= 20:
+                related_gallery = related_gallery[:20]
+
+        context["photo_set"] = self.object.photo_set.all()
+        context["related_gallery"] = related_gallery
+        return context
 
 
 class CRUDView(LoginRequiredMixin):
@@ -135,6 +181,9 @@ class GalleryCreateView(CRUDView, CreateView):
 
 
 class GalleryUpdateView(CRUDView, UserPassesTestMixin, UpdateView):
+    form_class = GalleryForm
+    formset_class = GalleryFormSet
+
     def test_func(self):
         """ Test whether the Gallery belongs to the current user"""
         gallery = self.get_object()
@@ -219,3 +268,11 @@ class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         """ Test whether the Photo belongs to the current user"""
         photo = self.get_object()
         return self.request.user == photo.gallery.user
+
+
+def testing(request):
+    context = {
+        "gallery": Gallery.objects.all(),
+        "photo": Photo.objects.all(),
+    }
+    return render(request, "core/testing.html", context)

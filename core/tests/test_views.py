@@ -1,3 +1,4 @@
+import re
 import os
 import shutil
 from django.conf import settings
@@ -5,6 +6,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 from django.core.files.uploadedfile import SimpleUploadedFile
 from core.models import *
 
@@ -14,6 +16,8 @@ settings.MEDIA_ROOT = media_root
 
 
 class TestView(TestCase):
+    category_choices = Category.CATEGORY_LIST
+
     def create_user(
         self,
         username="test_user_1",
@@ -30,9 +34,7 @@ class TestView(TestCase):
 
     def create_gallery(self, user, name="test_gallery_1"):
         return Gallery.objects.create(
-            name=name,
-            user=user,
-            public=True,
+            name=name, user=user, public=True, category=self.test_category
         )
 
     def fake_image(self, name):
@@ -46,9 +48,20 @@ class TestView(TestCase):
             title=title, image=self.fake_image(title), gallery=gallery
         )
 
+    def create_category(self):
+        # Create all categories for testing
+        for index in range(len(self.category_choices)):
+            Category.objects.create(
+                name=index,
+                label="s",
+            )
+
     def setUp(self):
         self.client = Client()
+        self.create_category()
+        self.test_category = Category.objects.first()
 
+        # Test Users
         self.user_1 = {
             "username": "test_user_1",
             "password": "test_password",
@@ -61,28 +74,31 @@ class TestView(TestCase):
         }
         self.test_user_1 = self.create_user(**self.user_1)
         self.test_user_2 = self.create_user(**self.user_2)
+
+        # Test Galleries
         self.test_gallery_1 = self.create_gallery(
             self.test_user_1, name="test_gallery_1"
         )
         self.test_gallery_2 = self.create_gallery(
             self.test_user_2, name="test_gallery_2"
         )
+
+        # Test Photos
         self.test_photo_1 = self.create_photo(self.test_gallery_1, title="test_image_1")
         self.test_photo_2 = self.create_photo(self.test_gallery_2, title="test_image_2")
 
         self.default_formset = {
             "name": "new_gallery",
+            "category": ["0"],
             "public": "on",
-            "photo-TOTAL_FORMS": "3",
+            "photo-TOTAL_FORMS": "2",
             "photo-INITIAL_FORMS": "0",
-            "photo-MAX_NUM_FORMS": "1000",
             "photo-MIN_NUM_FORMS": "0",
+            "photo-MAX_NUM_FORMS": "1000",
             "photo-0-title": "",
             "photo-0-image": "",
             "photo-1-title": "",
             "photo-1-image": "",
-            "photo-2-title": "",
-            "photo-2-image": "",
         }
 
         self.login_url = reverse("account_login")
@@ -186,6 +202,9 @@ class TestView(TestCase):
         # test gallery name update successfully (No image )
         response = client.post(self.update_url, self.default_formset, follow=True)
         gallery = Gallery.objects.get(pk=self.test_gallery_1.pk)
+        download_file = "/home/cbedroid/Downloads/test_django.html"
+        with open(download_file, "wb") as testhtml:
+            testhtml.write(response.content)
         self.assertEquals(response.status_code, 200)
         self.assertEquals(gallery.name, "new_gallery")
 
@@ -198,6 +217,7 @@ class TestView(TestCase):
             name="Wo_bu_zhidao",
             user=self.test_user_1,
             public=True,
+            category=self.test_category,
         )
         # test gallery was updated with new image new
         formset = self.default_formset.copy()
@@ -328,7 +348,9 @@ class TestView(TestCase):
 
         gallery = self.test_gallery_1.name
         response = client.get(self.delete_url)
-        delete_msg = f'Are you sure you want to delete Gallery "{gallery}"'
+        # Remove this until project is finish.
+        # delete_msg is subject change through out the development and may cause false failure
+        delete_msg = "Are you sure you want to delete this gallery?"
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, delete_msg)
 
