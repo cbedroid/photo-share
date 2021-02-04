@@ -1,0 +1,561 @@
+@import "variables"
+@import "mixins"
+
+
+
+*, *::before, *::after
+  box-sizing: border-box
+
+
+
+body
+  width: 100%
+  height: 100%
+  font-family: "Montserrat", sans-serif
+  font-size: 16px
+  line-height: 1.5
+  color: #333
+  background: #fff
+  margin: 0
+  overflow-x: hidden
+
+.scrollbar
+  &--hz::-webkit-scrollbar 
+    height: 2px
+    transition: all 300ms ease-in-out
+  &--hz:hover::-webkit-scrollbar
+    height: 2px
+    background: grey
+  &--vt::-webkit-scrollbar 
+    transition: all 300ms ease-in-out
+    width: 2px
+  &--vt:hover::-webkit-scrollbar
+    width: 2px
+    background: grey
+
+
+/* Typography */
+
+h1,h2,h3,h4,h5,h6,p
+  margin: 0 
+
+.text-responsive
+  font-size: clamp(28px, 5vw, 52px) !important
+
+
+.fw-bold
+  font-weight: 700
+
+.fw-med
+  font-weight: 500
+
+.fw-light
+  font-weight: 300
+
+
+.text__sm 
+  font-size: 14px
+
+.text__lg 
+  font-size: 26px
+  font-weight: 500
+
+.text__secondary 
+  color: $text-secondary
+
+.text__accent 
+  color: $text-accent
+
+.text-ellipsis 
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+  max-width: 100%
+
+
+.text-shadow-dark 
+  text-shadow: 2px 5px 5px rgba(0,0,0,.8)
+
+.text-shadow-md
+  text-shadow: 2px 5px 5px rgba(0,0,0,.5)
+
+.text-shadow-lt
+  text-shadow: 2px 5px 5px rgba(0,0,0,.3)
+
+/* Typography */
+
+
+/* Base Css */
+ul 
+  padding: 0
+
+li 
+  list-style: none
+
+
+a, a:hover 
+  text-decoration: none
+  color: inherit
+
+img 
+  cursor: pointer
+
+a,button,.btn
+  cursor: pointer !important
+
+/* End Base Css */
+  
+/* Modules */
+
+
+.pos-relative
+  position: relative
+
+.group-vert-center
+  *
+    vertical-align: center
+
+.clear-top
+  margin-top: 30px
+
+.theme-ws
+  background: whitesmoke
+
+.flex.expanded
+  display: i
+
+.flex-around 
+  display: flex
+  justify-content: space-around
+  align-items: center
+  width: 100%
+  vertical-align: middle
+
+.flex-between 
+  display: flex
+  justify-content: space-between
+  align-items: center
+  vertical-align: middle
+  width: 100%
+
+.flex-evenly
+  display: flex
+  justify-content: space-between
+  align-items: center
+  vertical-align: middle
+  
+
+.flex-center 
+  display: flex
+  justify-content: center
+  align-items: center
+  vertical-align: middle
+  width: 100%
+
+.dropdown
+  transition: all ease-in-out
+
+.dropdown.expanded
+  display: flex
+  flex-direction: row
+  *
+    padding: 2px 5px
+
+
+
+form
+  input[type="text"], input[type="email"], input[type="password"],
+    color: #000
+    padding: 2px 4px
+    outline: 1px solid transparent 
+    border: 1px solid #c3c3c3
+    border-radius: 2px 
+    &:focus
+      box-shadow: 0 0 4px rgb(12,202,240)
+
+.alert
+  position: relative
+  display: block
+  padding: 10px 35px 10px 15px 
+  background: rgba(255,0,0,.65)
+  width: fit-content
+  color: #1c1c1c
+  border-radius: 3px
+  text-align: center
+  &-danger
+    color: #fff
+    background: rgba(255,0,0,.65)
+  &-warning
+    background: rgba(245,225,0,.85)
+  &-success
+    background: rgba(0,225,80,.55)
+
+  .close
+    position: absolute
+    right: 0
+    top: 0
+    display: inline-block 
+    width: calc(1.5rem + 5px)
+    height: calc(1.5rem + 5px)
+    background: transparent
+    padding: 0px 8px
+    color: inherit
+    font-size: 1.5rem
+    &:hover,&:focus
+      border: none
+      outline: none
+      color: #7c7c7c
+
+
+.content-title
+  font-size: 1.425rem
+  font-family: "Lato", sans-serif
+  font-weight: 900
+
+.card
+  padding: 6px 
+  border: 1px solid rgba(211,204,204,.3)
+  border-radius: 2px
+
+
+.overlay 
+  display: block
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 500
+  &--bgdrk
+    background: rgba(0, 0, 0, 0.3)
+  &--hovershow .overlay__content
+    visibility: hidden
+    background: rgba(0,0,0,.5)
+  &--hovershow:hover .overlay__content
+    height: 100%
+    visibility: visible
+
+.col-wrapper 
+  display: block
+  height: 100%
+  padding: 10px 15px
+  margin-left: 5px
+  margin-right: 5px
+
+.img-wrapper
+  max-width: 100%
+  overflow: hidden
+  img
+    width: 100%
+  &--h200
+    max-height: 200px 
+  &--h300
+    max-height: 300px
+  &--h400
+    max-height: 400px
+
+.img__upload-wrapper
+  img
+    display: block
+    width: 300px 
+  
+.trans-300
+  transition: all 300ms  ease-in-out
+  
+
+.social-share
+  &__img
+    width: 750px
+  .share-card .share__icon
+    font-size: 3rem
+
+.badge
+  box-shadow: 3px 2px 8px rgba(0,0,0,.3)
+  box-sizing: border-box
+  cursor: pointer
+  &:hover
+    text-shadow: 0px 0px 8px rgba(0,0,0,.3)
+    box-shadow: 3px 2px 10px rgba(0,0,0,.5)
+  &--shw
+    &:hover
+      box-shadow: 3px 2px 20px rgba(255,255,255,.2)
+
+.cta 
+  display: inline
+  cursor: pointer
+  padding: 8px 
+  border-radius: 5px
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+  font-weight: 500
+  letter-spacing: .115ch
+  transition:  200ms ease-in-out
+  transition-property: border
+  text-align: center
+  vertical-align: center
+  +bootstrap-normal-button()
+  +bootstrap-outline-button()
+  &--full-block
+    cursor: pointer
+    width: 100%
+    padding: 2px 4px
+    text-align: center
+  &--px-plus
+    *
+      padding: 4px 24px
+
+  &--navigation
+    transition:  300ms ease-in-out
+    &:hover
+      @extend .text__accent
+      box-shadow: 0px 0px 16px rgba(255,255,255,.2)
+
+
+.content-container
+  display: block
+  width: 100%
+
+#galleryset-form
+  select[name="category"]
+    padding: 4px 8px  
+    border-radius: 3px 
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+
+#photoset-form
+  label 
+    img
+      display: block
+      margin: 0 auto
+      padding: 4px !important
+      max-height: 150px
+      
+  input[type="file"]
+    display: none !important
+
+  .photo-form
+    display: block
+    width: 100%
+
+/* End Modules */
+
+
+/* Main Styles */
+
+.photo-list 
+  &.collapse
+    visibility: hidden
+    opacity: 0
+    height: 0
+    transition: visibility 0s, opacity 0.2s ease-in-out
+
+.hover-dark
+  &:hover
+    background: $text-primary 
+
+#main-nav .nav__list
+  .nav-item
+    width: fit-content
+    &.active
+      color: $text-accent
+      border-bottom: 2px solid $text-accent
+    &:hover
+      color: $text-accent
+
+
+#gallery-sidebar
+  position: absolute
+  top: 0
+  left: -85%
+  display: flex
+  flex-direction: column
+  width: 0
+  height: 100%
+  transition: 300ms ease-in-out
+  transition-property: left, right, opacity, width
+  z-index: 600
+  .wrapper
+    display: flex
+    flex-direction: column
+    background: $color-primary-dark 
+    color: #fff
+    box-sizing: border-box
+    padding: 20px 15px 
+    width: 100%
+    height: 100%
+    overflow-y: auto
+    z-index: 600
+
+  
+#aside_checkbox:checked ~ #main #gallery-sidebar
+  position: absolute
+  top: -10px
+  left: 0
+  display: flex
+  width: 35%
+  min-height: calc(100vh - 80px) /* to clear header navigation*/
+  height: 100%
+  box-sizing: border-box
+  opacity: 1
+
+  
+#aside_checkbox:checked ~ #main-overlay::before
+  content: ""
+  position: fixed
+  top: 0  
+  left: 0
+  display: flex
+  flex-direction: column
+  width: 100%
+  height: 100%
+  background: rgba(0,0,0,.5) !important
+  z-index: 600
+
+
+.search-tray
+  color: #ccc
+  font-weight: 400
+  position: relative
+  border: .5px solid #ccc !important
+  border-radius: 7px
+  padding: 0 5px
+  *
+    transition: all 300ms ease-in-out
+    transform-style: preserve-3d
+  input[type="text"]
+    padding: 2px 10px 2px 2px
+    color: #a3a3a3
+    font-style: italic
+    border: none !important
+    outline-width: .5px  !important
+    outline-color: transparent !important
+    opacity: .2
+    &:hover,&:active,&:focus
+      border: none !important
+      outline : none !important
+      box-shadow: none !important
+      opacity: 1
+  &--icon
+    button
+      font-size: 1.125rem
+      color: #ccc
+      position: absolute
+      top: 0
+      right: 0
+      display: grid
+      align-items: center
+      justify-content: end
+      height: 100%
+      padding: 2px 5px
+      z-index: 500
+
+  &--collapse
+    .search_bar
+      width: 60px
+      height: 30px
+      &::placeholder
+        opacity: 0
+      &:focus
+        position: relative
+        width: 100%
+        z-index: 400
+        padding-right: 30px
+        &::placeholder
+          opacity: 1
+    &:hover
+      .search_bar
+        position: relative
+        width: 100%
+        z-index: 400
+        &::placeholder
+          opacity: 1
+
+.preview
+  &--toggler
+    padding: 7px 9px
+    border-radius: 3px
+    cursor: pointer
+    transition: all 300ms ease-in-out
+    &:hover
+      background: rgba(92, 118, 153,.675)
+      box-shadow: 2px 2px 8px rgba(255,255,255,.2)
+
+.photo-count
+  display: grid
+  height: 100%
+  width: 100%
+  place-items: center
+ 
+
+#intro-hero
+  display: block
+  width: 100%
+  height: 400px
+  background-color: #000
+  background-attachment: absolute
+  background-repeat: no-repeat no-repeat
+  background-size: cover
+  background-position: 10% 60%
+  .content
+    width: 65%
+    transform: translateY(40%)
+    margin-left: 30px
+    &__cta
+      width: fit-content
+
+#site-navigation 
+  background: white
+  top: 0
+  left: 0
+  position: relative
+  z-index: 700
+
+
+#mini-nav
+  top: 0
+  left: 0
+  position: sticky
+  z-index: 700
+
+
+.search_bar
+  padding: 5px 7px
+  border: 2px solid $text-secondary
+  border-radius: 7px
+ 
+/* Main Style End */
+
+
+@media (min-width:750)
+  .clear-flex
+    clear: both
+    display: block
+    background: yellow !important
+  
+
+@media (max-width: $sm-breakpoint)
+  .mobile-show
+    display: block !important
+    visibility: visible !important
+
+  #intro-hero
+    display: block
+    width: 100%
+    height: 250px
+    background-color: #000
+    background-attachment: absolute
+    background-repeat: no-repeat no-repeat
+    background-size: cover
+    background-position: 10% 60%
+    .content
+      transform: translateY(30%)
+
+  .collapse
+    visibility: hidden
+    opacity: 0
+    height: 0
+    transition: visibility 0s, opacity 0.2s ease-in-out
+
+  #aside_checkbox:checked ~ #main #gallery-sidebar
+    width: 60%
+
