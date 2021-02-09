@@ -1,4 +1,4 @@
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers
 from django.urls import path, re_path, include
 from . import views
 
@@ -14,9 +14,3 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("", include(router.urls)),
 ]
-
-
-# for url in router.urls:
-#     if all( x in str(url) for x in ["gallery"]):
-#         print('URL:',url)
-

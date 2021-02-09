@@ -80,7 +80,8 @@
       <div class="row wrapper">
         <ul class="photo grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
           {% for photo in photo_set %}
-          <li class="photo__card py-1 shadow-lg">
+          <li class="photo__card py-1 shadow-lg hover:shadow-2xl ">
+            <h4 class="photo__title py-1 text-center text-ellipsis text-sm sm:text-base font-semibold font-serif">{{photo.title}}</h4>
             <!-- Photo Image-->
             <div class="photo__image">
               <a href="{{photo.image.url}}">
@@ -123,7 +124,8 @@
             </div>
             <!-- -->
             <!--Photo share action-->
-            <div class="share-action flex-between space-x-1">
+            <div class="clear-both"></div>
+            <div class="share-action flex-between space-x-1 relative bottom-0 left-0">
               {% if request.user.is_authenticated and request.user == gallery.user %}
               <a class="cta cta--red cta--full-block" href="{% url 'core:photo-delete' photo.pk %}">
                 <i class="fas fa-trash"></i>
@@ -150,7 +152,7 @@
   </div>
   <!-- -->
 
-  <section id="related_gallery" class="mt-32">
+  <section id="related_gallery" class="mt-24">
     <div class="container p-1 sm:p-6">
       <div class="row">
         <h5 class="fw-bold pb-3 text-2xl border-b-2 border-gray-300">Related Gallery</h5>

@@ -89,7 +89,7 @@ class TestView(TestCase):
 
         self.default_formset = {
             "name": "new_gallery",
-            "category": ["0"],
+            "category": ["1"],
             "public": "on",
             "photo-TOTAL_FORMS": "2",
             "photo-INITIAL_FORMS": "0",

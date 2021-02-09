@@ -8,6 +8,7 @@
   {# TODO: Add Aside on the right for large screen. There is too much extra space #}
   <div class="content-container container p-3 pb-5 sm:p-6 w-100">
     <!-- gallery Content Form -->
+
     <form action="" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       {{ formset.management_form }}

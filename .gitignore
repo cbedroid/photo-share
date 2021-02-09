@@ -5,6 +5,9 @@ local_settings.py
 #db.sqlite3 # allow database to upload to github
 db.sqlite3-journal
 
+#Sass 
+*.sass-cache/
+.sass-cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

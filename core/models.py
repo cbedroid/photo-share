@@ -98,7 +98,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def choicefield_filter(cls,lookup):
+    def choicefield_filter(cls, lookup):
         """Choicefield lookup filter"""
         lookup = str(lookup)
         reverse_dict_category = dict(map(reversed, Category.CATEGORY_LIST))
@@ -107,11 +107,8 @@ class Category(models.Model):
             lookup = None
         return cls.objects.filter(Q(name=value) | Q(name=lookup))
 
-
-
     def get_absolute_url(self):
         return reverse("core:index") + f"?q={self.slug}"
-
 
     def __str__(self):
         return self.get_name_display()
