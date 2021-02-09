@@ -1,12 +1,8 @@
 import re
 from django.db.models import Q
-from django.utils.text import slugify
 from django.contrib.auth.models import User
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from core.models import Gallery, Photo, Category
+from rest_framework.viewsets import GenericViewSet
+from core.models import Gallery, Photo
 from .serializers import *
 from . import permissions
 from .mixins import CRUDMixins

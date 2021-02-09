@@ -1,11 +1,8 @@
-from django.db.models import Q
-from django.utils.text import slugify
 from rest_framework import pagination
 from rest_framework import mixins, status
-from django.contrib.auth.models import User
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from core.models import Gallery, Photo, Category
+from core.models import Gallery, Photo
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework.mixins import (
     ListModelMixin as ListMM,
