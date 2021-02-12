@@ -3,68 +3,69 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-<section class="main-container mx-n2">
+<section class="gallery-form-section clear-top theme-ws">
   <!-- gallery-->
-  <div class="gallery col-wrapper">
-    <!-- /gallery Header -->
-
+  {# TODO: Add Aside on the right for large screen. There is too much extra space #}
+  <div class="content-container container p-3 pb-5 sm:p-6 w-100">
     <!-- gallery Content Form -->
-    <div class="album__content album__form w-100 ">
-          <form action="" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ formset.management_form }}
-            <!-- gallery Form -->
-            <fieldset class="form-group">
-              <legend class="content-title border-bottom mb-4">
-                <i class="far fa-images"></i>
-                {% if form.instance.id %}
-                Update gallery
-                {% else %}
-                Create New gallery
-                {% endif %}
-              </legend>
-              <div class="form-group">
-                {{ form|crispy }}
-              </div>
-              <!-- /gallery Form -->
 
-              <!-- Photo Form -->
-              <div class="image-upload row no-gutters">
-                {% for gallery_form in formset %}
-                <div class="col-4 mb-2">
-                  <div class="card mx-1">
-                    <div class="card-body">
-                      {{gallery_form.title}}
-                        {% if gallery_form.title.errors %}
-                        <ul class="title-errors alert-danger">
-                          {{gallery_form.title.errors|unordered_list}}
-                        </ul>
-                        {% endif %}
-                      {{gallery_form.image.label|safe}}
-                      {{gallery_form.image}}
-                      {% if gallery_form.image.errors %}
-                        <ul class="image-errors alert-danger ">
-                          {{gallery_form.image.errors|unordered_list}}
-                        </ul>
-                        {% endif %}
-                    </div>
-                  </div>
-                </div>
-                {% endfor %}
-              </div>
-            </fieldset>
-            <div class="form-group">
-              {% if form.instance.id %}
-              <button class="btn btn-outline-warning" type="submit">Update</button>
-              {% else %}
-              <button class="btn btn-outline-info" type="submit">Add</button>
-              {% endif %}
-              <a class="btn btn-outline-danger" href="{% url 'core:index' %}">Cancel</a>
-            </div>
-          </form>
+    <form action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ formset.management_form }}
+      <!-- Gallery  Form -->
+      <fieldset id="galleryset-form" class="gallery-form space-y-8">
+        <legend class="content-title border-bottom mb-4">
+          <i class="far fa-images"></i>
+          {% if form.instance.id %}
+          Update Gallery
+          {% else %}
+          Create Gallery
+          {% endif %}
+        </legend>
+        <div class="form-group space-y-4 w-100">
+          {{ form|crispy }}
         </div>
-    <!--/gallery Content Form -->
+      </fieldset>
+      <!-- End Gallery Form -->
+
+      <!-- Photo Form -->
+      <fieldset id="photoset-form" class="mt-2">
+        <div class="card-wrapper grid grid-cols-2 space-x-2 max-w-xl">
+          {% for gallery_form in formset %}
+          <!-- Form {{forloop.counter}}-->
+          <div class="photoform__card card bg-white shadow-md">
+            <div class="card__body text-center">
+              {{gallery_form.title}}
+              {% if gallery_form.title.errors %}
+              <ul class="title-errors alert-danger">
+                {{gallery_form.title.errors|unordered_list}}
+              </ul>
+              {% endif %}
+              {{gallery_form.image.label|safe}}
+              {{gallery_form.image}}
+              {% if gallery_form.image.errors %}
+              <ul class="image-errors alert-danger">
+                {{gallery_form.image.errors|unordered_list}}
+              </ul>
+              {% endif %}
+            </div>
+          </div>
+          <!-- -->
+          {% endfor %}
+        </div>
+      </fieldset>
+
+      <div class="cta--btn-group align-center space-x-3 mt-4">
+        {% if form.instance.id %}
+        <input class="cta cta--outline-yellow" type="submit" value="Update" style="padding:4px 16px">
+        {% else %}
+        <input class="cta cta--outline-cyan" type="submit" value="Add" style="padding:4px 16px">
+        {% endif %}
+        <a class="cta cta--outline-red" href="{% url 'core:index' %}" style="padding:6px 16px">Cancel</a>
+      </div>
+    </form>
   </div>
+  <!--/gallery Content Form -->
   <!-- End gallery-->
 </section>
 {% endblock body %}

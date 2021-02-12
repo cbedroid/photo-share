@@ -1,159 +1,97 @@
-{% with request.user.gallery_set.all as user_gallery %}
+{% load core_extras %}
+{% comment %}
+Loading custom template tag 'get_user_gallery' to get all of galleries
+belonging to the current user. It critical that we filter the data on
+the server side (NOT CLIENT SIDE) to prevent us from accidently exposing
+any other user's data
+
+-- See core_extra.py for more information
+{% endcomment %}
+{% get_user_gallery %}
+
 <section id="gallery-sidebar">
-  <div class="mobile-slider-wrapper p-2 float-right">
-    <label for="mobile_slider">
-      <i class="fa fa-bars"></i>
-    </label>
-  </div>
-  <div class="clearfix"></div>
-  <aside class="sidebar col-wrapper">
-    <!-- SideBar Header -->
-    <nav class="navbar navbar-expand reversed-expand d-block px-0">
-
-      <div class="header">
-        <div class="header__action fw-med d-flex justify-content-around">
-          <a class="hlight mhide" href="{% url 'core:index' %}">
-            <i class="fa fa-home"> <b>Home</b> </i>
-          </a>
-          <a class="hlight mvis mvis__fr" href="{% url 'core:gallery-create' %}">
-            <i class="fa fa-plus-circle"> <b>New</b> </i>
-          </a>
-          <!-- / End SideBar Header -->
-        </div>
-        <hr>
-      </div>
-
-      <div class="inner-nav sidebar" id="sidebar-nav">
-        <!-- SideBar Menu -->
-
+  <div class="wrapper">
+    <div id="aside-header" class="header">
+      <!--Aside Header-->
+      <div class="header__menu grid grid-cols-2">
+        <a href="{% url 'core:index' %}" class="cta cta--navigation">
+          <i class="fa fa-home"></i>
+          Home
+        </a>
         {% if request.user.is_authenticated %}
-        <p class="sidebar__heading mvis mvis__fr mb-4">Menu</p>
+        <a href="{% url 'core:gallery-create' %}" class="cta cta--navigation">
+          <i class="fa fa-plus-circle"></i>
+          Create
+        </a>
         {% else %}
-        <a href="{% url 'account_login' %}" class="sidebar__heading mvis mvis__fr mb-4">Login</a>
+        <a href="{% url 'account_login' %}" class="cta cta--navigation">
+          <i class="fa fa-user-circle"></i>
+          Login
+        </a>
         {% endif %}
-
-        <ul class="sidebar__main-wrapper w-100">
-          {% for gallery_album in user_gallery %}
-          <!--SUBMENU-->
-          <li class="sidebar__detail detail">
-            <!--aside preview items -->
-
-            <div class="detail__preview mvis hlight mb-1 w-100 d-none">
-              <small class="text-ellipsis text-right d-block" style="width:70px;">{{gallery_album}}</small>
-              <a href="{{gallery_album.get_absolute_url}}">
-                <img src="{{gallery_album.photo_set.first.image.url}}" alt="{{gallery_album}} cover image" class="img__thumbnail" style="width:50px;height:40px">
-              </a>
-            </div>
-
-            <div class="detail__gallery mhide w-100">
-              <a class="detail__gallery-toggler text-white d-flex justify-content-between mb-1" aria-expanded="false" href="#">
-                <span><i class="fa fa-image"></i>
-                  <span class="submenu__title">{{gallery_album}}</span>
-                </span>
-                <span><small class="icon-badge badge bg-danger rounded-circle"> {{gallery_album.photo_set.count}}</small>
-                  <i class="caret fa fa-angle-down"></i>
-                </span>
-              </a>
-
-              <!--Submenu Gallery List Item-->
-              <ul class="detail__submenu submenu collapse">
-                <li class="detail__submenu-item">
-                  <p class="badge badge-link bg-primary float-right my-2">
-                    <a class="badge-link__text text-white" href="{{gallery_album.get_absolute_url }}">view gallery</a>
-                  </p>
-                  <div class="clearfix"></div>
-                </li>
-                <!--Submenu Photo Item-->
-                <li class="submenu__gallery-list my-2">
-                  {% for image in gallery_album.photo_set.all %}
-                  <div class="submenu__gallery-content hlight">
-                    <small class="text-ellipsis">{{image}}</small>
-                    <a href="{{image.image.url}}">
-                      <img src="{{image.image.url}}" alt="{{image}} image" class="img__thumbnail" style="width:30px;height:30px">
-                    </a>
-                  </div>
-                  {% endfor %}
-                </li>
-              </ul>
-            </div>
-            <!--End Submenu Content-->
-          </li>
-          {% empty %}
-          <li class="submenu sidebar__submenu text-center">
-            <p> You have no gallery</p>
-            <a href="{% url 'core:gallery-create' %}" class="btn btn-success fw-bold my-1">
-              <i class="fas fa-photo mx-1"></i>
-              Create an Ablum
-            </a>
-          </li>
-          <!--end submenu-->
-          {% endfor %}
-          <li class="submenu sidebar__submenu">
-          </li>
-        </ul>
-
-        <!-- /Menu -->
       </div>
+    </div>
+    <!-- End Aside Header-->
+    <ul class="gallery gallery--list">
+      {% for gallery in user_gallery %}
+      <li class="gallery__item text-white mt-1">
+        <div class="content content--collapsible pl-2 sm:pl-12">
+          <!--Preview section-->
+          <div class="preview preview--toggler flex flex-between" data-toggler="true" data-dropdown-target="photolist-{{forloop.counter}}">
+            <!-- preview left-->
+            <div class="preview__left inline space-x-1">
+              <i class="fa fa-image"></i>
+              <p class="gallery__title inline">{{gallery}}</p>
+            </div>
+            <!-- preview right-->
+            <div class="preview__right inline-block space-x-2">
+              <small class="photo_total badge bg-red-600 text-white rounded-full inline-block w-5 h-5 align-middle">
+                <span class="photo-count">{{gallery.photo_set.count}}</span>
+              </small>
+              <i class="preview__toggler fa fa-caret-down align-middle"></i>
+            </div>
+          </div>
+          <!-- End Preview-->
 
-    </nav>
-    <script type='text/javascript'>
-        window.onload = () =>{
+          <!--Submenu Photo -->
+          <div class="photo-menu photo-menu--collapse mt-1">
+            <ul class="photo-list flex flex-col collapse space-y-2 pl-8" data-expanded="false" data-target="photolist-{{forloop.counter}}">
+              <a href="{{gallery.get_absolute_url}}" class="cta cta--blue badge badge--shw float-left text-xs my-1">view gallery</a>
+              <div class="clear-both"></div>
+              {% for photo in gallery.photo_set.all %}
+              <li class="photo-list__item font-thin hover-dark text-sm flex flex-between hover-dark p-1">
+                <p class="text-ellipsis">{{photo}}</p>
+                <a class="" href="{{photo.image.url}}">
+                  <img class="block max-w-8 max-h-8 h-auto w-auto" src="{{photo.image.url}}" alt="{{gallery}} {{photo}} image">
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <!--End Preview section-->
+        </div>
+      </li>
+      {% empty %}
+      {% if request.user.is_authenticated %}
+        <li class="mt-5 p-3 grid place-items-center">
+          <h2 class="sm:text-2xl font-serif">You have no gallery
+            <i class="fa fa-frown px-1"></i>
+          </h2>
+          <a href="{% url 'core:gallery-create'%}" class="cta cta--outline-green mt-3">
+            Create a gallery
+          </a>
+        </li>
+        {% else %}
+        <li class="mt-5 p-3 grid place-items-center">
+          <h2 class="sm:text-2xl font-serif">Login now and create your galleries
+          </h2>
+          <a href="{% url 'core:gallery-create'%}" class="cta cta--outline-blue cta--full-block mt-3">
+            Login
+          </a>
+        </li>
+        {% endif %}
+      {% endfor %}
 
-        /**
-          * ASIDE SIDEBAR SCRIPT  
-        **/
-         $('#site-main').on('click touch',function(){
-           // Checked means closed
-           $('#mobile_slider').prop('checked',true);
-
-         })
-
-        const toggler = $('.detail__gallery-toggler');
-        $(toggler).on('click touchstart',function(e){
-          e.preventDefault();
-          const is_expanded =  $(this).attr('aria-expanded');
-          // Reset toggler and content
-          $('.detail__submenu').addClass('collapse').removeClass('fade-in')
-          $(toggler).attr('aria-expanded','false')
-          $('.caret').removeClass('fa-angle-up').addClass('fa-angle-down')
-
-          // Expand submenu content
-          const content = $(this).siblings('.detail__submenu').first()
-          if (is_expanded == false || is_expanded === "false"){
-            $(this).attr('aria-expanded','true');
-            $(content).toggleClass('collapse').addClass('fade-in');
-            $(this).find('.caret').removeClass('fa-angle-down').addClass('fa-angle-up')
-          }
-        })
-        /** 
-          * ASIDE SIDEBAR SCRIPT  
-        **/
-
-        /** 
-          * CUSTOM IMAGE UPLOAD FORM SCRIPT 
-        **/ 
-        const inputs = $('.image-upload').find('input[type=file]')
-        if (inputs){
-        const input_ids = $(inputs).map(function(){return $(this).attr('id')})
-        const image_labels = $('.image-upload').find('label').each(
-            (i,c)=>{
-              $(c).attr('for',input_ids[i])
-      })
-
-      $(inputs).on('change',function(){
-        const filename = this.files[0]['name']
-        
-        const custom_label = $(this).siblings('label').find('p');
-        $(custom_label).text(filename)
-        })
-        }
-        /**
-         * CUSTOM IMAGE UPLOAD FORM SCRIPT END 
-         **/ 
-
-        }
-      </script>
-  </aside>
+    </div>
+  </div>
 </section>
-
-{% endwith %}

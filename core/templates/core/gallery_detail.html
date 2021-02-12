@@ -1,69 +1,201 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load core_extras %}
+{% load social_share %}
+
+
+
+
+{% block meta %}
+<!-- sharing meta tags for soical media  -->
+<meta name="title" content="PhotoShare">
+<meta name="description" content="Take us on your software engineer journey. Share your experiences with other engineers and help bring awareness to the software engineer's community. Start today and let your voice be heard!">
+<meta name="url" content="https://cbedroid.github.io/Survey-Page/">
+<meta name="image" content="https://cbedroid.github.io/Survey-Page/assets/images/meta_image.jpg">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:url" content="https://cbedroid.github.io/Survey-Page/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cbedroid - Software Engineer Survey">
+<meta property="og:description" content="Take us on your software engineer journey. Share your experiences with other engineers and help bring awareness to the software engineer's community. Start today and let your voice be heard!">
+<meta property="og:image" content="https://cbedroid.github.io/Survey-Page/assets/images/meta_image.jpg">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://cbedroid.github.io/Survey-Page/">
+<meta name="twitter:title" content="Cbedroid - Software Engineer Survey">
+<meta name="twitter:description" content="Take us on your software engineer journey. Share your experiences with other engineers and help bring awareness to the software engineer's community. Start today and let your voice be heard!">
+<meta name="twitter:image" content="https://cbedroid.github.io/Survey-Page/assets/images/meta_image.jpg">
+<!-- <meta name="twitter:image" content="{{gallery.photo_set.first.image.url}} "> -->
+<meta name="twitter:card" content="summary_large_image">
+{% endblock meta %}
+
 
 {% block body %}
-<section id="allery-detail" class="spacing-top mx-2">
-  <div class="content-container">
-    {% if request.user == gallery.user or gallery.public %}
-    {# Only show gallery if it's public or it belongs to current user#}
+<section id="gallery-section" class="theme-ws clear top mx-2 pb-2">
+  <!-- Gallery Header-->
+  <div class="header p-6 space-y-6">
+    <div class="header__title flex-between">
+      <div class="header__content header__content--left">
+        <h4 class="pb-1 text-2xl"><b>{{gallery}}</b></h4>
+        <p class="pb-1">
+          <i class="fas fa-user-circle"></i>
+          {{gallery.user}}
+        </p>
+      </div>
+      <div class="header__content header__content--right">
+        <div class="header__action text-xl text-gray-400">
+          <a href="#" class="border-2 border-gray-100 p-2 px-4 hover:text-red-600">
+            <i class="fa fa-heart"></i>
+          </a>
+          <a href="#" class="border-2 border-gray-200 p-2 px-4 hover:text-blue-300">
+            <i class="fa fa-share-square"></i>
+          </a>
+        </div>
+      </div>
+    </div>
 
-    <!-- Content Header-->
-    <div class="header d-flex flex-column flex-sm-row justify-content-around">
-      <h4 class="content-title mb-1 w-100">{{gallery.name}}'s gallery </h4>
-
+    <!-- header user__actions -->
+    <div class="user__action flex-between mt-2 w-100">
+      <h4><span class="badge rounded-full py-2 px-4 hover:text-black hover: {{gallery.category.get_label_display}}">{{gallery.category.get_name_display|title}}</span></h4>
       {% if request.user == gallery.user %}
-      <div class="user-action d-flex mt-2 mt-sm-0 w-100">
-        <a href="{% url 'core:gallery-update' gallery.user.username|slugify gallery.slug %}" class="btn btn-outline-info">update 
-          <span class="d-none d-sm-inline-block">gallery </span>
+      <div class=action__btn>
+        <a href="{% url 'core:gallery-update' gallery.user.username|slugify gallery.slug %}" class="cta cta--outline-blue badge">update
+          <span class="hidden sm:inline-block">gallery </span>
         </a>
         <span class="spacer mx-1"> </span>
-        <a href="{% url 'core:gallery-delete' gallery.user.username|slugify gallery.slug %}" class="btn btn-outline-danger">delete 
-          <span class="d-none d-sm-inline-block">gallery </span>
-          </a>
-
+        <a href="{% url 'core:gallery-delete' gallery.user.username|slugify gallery.slug %}" class="cta cta--outline-red badge">delete
+          <span class="hidden sm:inline-block">gallery </span>
+        </a>
       </div>
       {% endif %}
     </div>
-    <!-- End Content Header-->
-    <hr>
-    <div class="gallery-content my-3">
-      <ul class="text-center row no-gutters">
-        {% for image in gallery.photo_set.all %}
-        <li class="col-6 col-sm-3">
-          <div class="card m-1">
-            <div class="card-body p-1">
-              <p class="text-center text-ellipsis fw-bold">{{image.title}}</p>
-              <a href="{{image.image.url}}">
-              <img loading="lazy" src="{{image.image.url}}" alt="{{image.title}} photo" class="img-fluid img-thumbnail" style="min-height:125px">
+  </div>
+  <!-- -->
+  <hr>
+
+  <!-- Photo Collections -->
+  <div id="photo-collection" class="px-1 sm:px-2">
+    <div class="container p-1 sm:p-6">
+      <div class="row wrapper">
+        <ul class="photo grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+          {% for photo in photo_set %}
+          <li class="photo__card py-1 shadow-lg hover:shadow-2xl ">
+            <h4 class="photo__title py-1 text-center text-ellipsis text-sm sm:text-base font-semibold font-serif">{{photo.title}}</h4>
+            <!-- Photo Image-->
+            <div class="photo__image">
+              <a href="{{photo.image.url}}">
+                <img class="img-fluid" src="{{photo.image.url}}" alt="{{photo.gallery}} {{photo}} photo">
               </a>
-              <small class="text-muted text-left"> <i class="fas fa-clock"></i>
-                <span class="d-none d-md-inline-block mr-1">uploaded:</span>
-                <span>{{image.created|date:"b d, Y"|title}}</span>
-                </small>
-              <div class="image-action">
-                <a class="btn btn-success btn-block px-1 " href="image.image.url}}" download="{{image.get_download_title}}" >
-                  <i class="fas fa-cloud-download-alt mx-1 p-0"></i>
-                  <span>download</span>
-                  <div class="clearfix"></div>
-                </a>
-                {% if request.user.is_authenticated and request.user == gallery.user %}
-                  <a  class="btn btn-danger btn-block px-1" href="{% url  'core:photo-delete' image.pk %}" >
-                  <i class="fas fa-trash-alt mx-1 p-0"></i>
-                  <span>delete</span>
-                  <div class="clearfix"></div>
-                </a>
-                {% endif %}
+            </div>
+            <!-- -->
+            <!-- Photo Details -->
+            <div class="detail flex flex-col sm:flex-row -between sm:space-x-1 w-100 p-1">
+              <small class="detail__date w-50 sm:flex-1 sm:text-left">
+                <i class="fa fa-clock mr-1"></i>
+                {{photo.created|date:"M d, Y"}}
+              </small>
+              <small class="detail__user text-ellipsis nowrap sm:text-right sm:flex-1" style="max-width:calc(100% / 2);">
+                <i class="fa fa-user mr-1"></i>
+                <span class="text-truncated">{{gallery.user}}</span>
+              </small>
+            </div>
+            <!-- -->
+            <!--Photo share-->
+            <div class="share__hidden hidden row align-content-center">
+              <div class="social-share bg-white shadow-lg py-2">
+                <div class="social-share__img-wrapper flex-center w-100">
+                  <img src="{{photo.image.url}}" class="social-share__img">
+                </div>
+                <div class="grid grid-cols-6 gap-4 my-1 p-2">
+                  <div class="share-card col-span-6 sm:col-start-2 sm:col-span-4">
+                    <div class="share-card__content p-2 sm:p-4">
+                      <h4 class="text-lg sm:text-2xl font-semibold">Share {{photo}} to your social media account</h4>
+                      <p class="fw-med italic">created by {{photo.gallery.user}}</p>
+                      <div class="share-card__link flex flex-row space-x-4 justify-center w-100 mt-2">
+                        {% post_to_twitter 'Post your amazing photo using Photo-Share' photo.image.url '<i class="fa fa-twitter share__icon"></i>' 'cta cta--blue cta--full-block' %}
+                        {% post_to_facebook photo.image.url '<i class="fa fa-facebook share__icon"></i>' 'cta cta--blue mx-2 cta--full-block' %}
+                        {% post_to_gplus photo.image.url '<i class="fab fa-google-plus-square share__icon"></i>' 'cta cta--red cta--full-block' %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <h1 class="text-center"> This gallery is Private</h1>
-      <a href="{% url 'core:index' %}" class="btn btn-outline-info">Home</a>
-      {% endif %}
+            <!-- -->
+            <!--Photo share action-->
+            <div class="clear-both"></div>
+            <div class="share-action flex-between space-x-1 relative bottom-0 left-0">
+              {% if request.user.is_authenticated and request.user == gallery.user %}
+              <a class="cta cta--red cta--full-block" href="{% url 'core:photo-delete' photo.pk %}">
+                <i class="fas fa-trash"></i>
+              </a>
+              {% else %}
+              <a class="cta cta--red cta--full-block" href="#">
+                <i class="fas fa-heart"></i>
+              </a>
+              {% endif %}
+
+              <a class="cta cta--blue cta--full-block test_popup" href="#">
+                <i class="fas fa-share-alt"></i>
+              </a>
+              <a class="cta cta--green cta--full-block" href="#">
+                <i class="fas fa-cloud-download-alt"></i>
+              </a>
+            </div>
+            <!-- -->
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
   </div>
+  <!-- -->
+
+  <section id="related_gallery" class="mt-24">
+    <div class="container p-1 sm:p-6">
+      <div class="row">
+        <h5 class="fw-bold pb-3 text-2xl border-b-2 border-gray-300">Related Gallery</h5>
+        <ul class="gallery grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 mt-4">
+          {% for related in related_gallery %}
+          <li class="gallery__card shadow">
+            <div class="gallery__content pos-relative">
+              <div class="gallery__image image">
+                {% with related.photo_set.first as cover %}
+                {% if cover %}
+                <img class="img-fluid" src="{{cover.image.url}}" alt="{{gallery}} {{cover}} photo">
+                {% else %}
+                <img class="img-fluid" src="{{gallery.default_cover}}" alt="{{gallery}} {{cover}} photo">
+                {% endif %}
+                {% endwith %}
+              </div>
+              <!-- Gallery Overlay -->
+              <div class="image-overlay overlay overlay--bgdark overlay--hovershow text-white">
+                <div id="index-grid-overlay" class="overlay__content grid grid-flow-rows h-100 p-2">
+                  <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
+                    <a class="text-ellipsis" href="{{related.get_absolute_url}}"><b>{{related}}</b></a>
+                    <h6 class="mt-1"><span class="badge rounded-full {{related.category.get_label_display}} p-1">{{related.category.get_name_display}}</span></h6>
+                  </div>
+                  <div class="flex-center text-xs sm:text-base mx-1 overflow-hidden">
+                    <a class="text-shadow p-3" href="{{related.get_absolute_url}}"><b>view gallery</b></a>
+                  </div>
+                  <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
+                    <p class="">{{related.photo_set.count}}
+                      <i class="fas fa-images"></i>
+                    </p>
+                    <p class="font-italic text-ellipsis"><i class="fa fa-user-circle user__icon mr-1"></i>{{related.user.username}} </p>
+                  </div>
+                </div>
+              </div>
+              <!-- Gallery Overlay -->
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
 </section>
+
+
 {% endblock body %}

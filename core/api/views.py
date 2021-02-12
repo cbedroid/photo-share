@@ -1,131 +1,73 @@
 import re
+from django.db.models import Q
 from django.contrib.auth.models import User
-from .serializers import AlbumSerializer, GallerySerializer, UserSerializer
+from rest_framework.viewsets import GenericViewSet
 from core.models import Gallery, Photo
-from rest_framework.generics import (
-    mixins,
-    ListAPIView,
-    CreateAPIView,
-    RetrieveUpdateDestroyAPIView as RUD,
-)
+from .serializers import *
+from . import permissions
+from .mixins import CRUDMixins
 
 
-class UserCreateListView(mixins.CreateModelMixin, ListAPIView):
-    # List View to GET and POST an User
-    # api/image/ --> GET (list)
-    # api/Gallery/create --> POST
-    lookup_field = "pk"
-    serializer_class = UserSerializer
-    permission_classes = []
-
-    def get_queryset(self, *args, **kwargs):
-        qs = User.objects.all()
-        query = self.request.GET.get("q")
-        if query is not None:
-            query = re.sub(r"\s{1,}", " ", query).strip()
-            return qs.filter(username__iexact=query)
-        return qs
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request": self.request}
-
-
-class UserRetrieveUpdateDestroyView(RUD):
-    # Base View to GET,PUT,PATCH, and Destroy an User
-    # api/Gallery/<pk>
-    queryset = User.objects.all()
-    lookup_field = "pk"
-    serializer_class = UserSerializer
-    permission_classes = []
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request": self.request}
-
-
-class GalleryCreateListView(mixins.CreateModelMixin, ListAPIView):
-    # List View to GET and POST an Image
-    # api/image/ --> GET (list)
-    # api/Gallery/create --> POST
-    lookup_field = "pk"
-    serializer_class = GallerySerializer
-    permission_classes = []
-
-    def get_queryset(self, *args, **kwargs):
-        qs = Photo.objects.all()
-        query = self.request.GET.get("q")
-        if query is not None:
-            return qs.filter(title__iexact=query)
-        return qs
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request": self.request}
-
-
-class GalleryRetrieveUpdateDestroyView(RUD):
-    # Base View to GET,PUT,PATCH, and Destroy Image
-    # api/Gallery/<pk>
-    queryset = Photo.objects.all()
-    lookup_field = "pk"
-    serializer_class = GallerySerializer
-    permission_classes = []
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request": self.request}
-
-
-class AlbumCreateListView(mixins.CreateModelMixin, ListAPIView):
-    # List View to GET and POST an Gallery
-    # api/Gallery/ --> GET (list)
-    # api/Gallery/create --> POST
-    lookup_field = "pk"
-    serializer_class = AlbumSerializer
-    permission_classes = []
-
-    def get_queryset(self, *args, **kwargs):
-        qs = Gallery.objects.all()
-        query = self.request.GET.get("q")
-        if query is not None:
-            return qs.filter(name__iexact=query)
-        return qs
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request": self.request}
-
-
-class AlbumRetrieveUpdateDestroyView(RUD):
-    # Base View to GET,PUT,PATCH, and Destroy an Gallery
-    # api/Gallery/<pk>
+class GalleryViewSet(CRUDMixins, GenericViewSet): 
     queryset = Gallery.objects.all()
-    lookup_field = "pk"
-    serializer_class = AlbumSerializer
-    permission_classes = []
+    serializer_class = GallerySerializer
+    permission_classes = [permissions.IsAuthAllowCRUDOrReadOnly]
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            # Query Gallery album based on its public status.
+            # If the gallery belongs to the logged in, disregard "public" state
+            # include his/her private galleries as well.
+            qs = Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
+        else:
+            qs = Gallery.objects.filter(public=True)
+        return qs
+
+    def get_serializer_context(self, **kwargs):
+        context = super().get_serializer_context(**kwargs)
+        context["user"] = self.request.user
+        context["request"] = self.request
+        return context
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
 
     def perform_update(self, serializer):
-        serializer.save()
+        return serializer.save(user=self.request.user)
 
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request": self.request}
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class PhotoViewSet(CRUDMixins, GenericViewSet):  
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSerializer
+    permission_classes = [permissions.IsAuthAllowCRUDOrReadOnly]
+
+    def perform_destroy(self, instance):
+        instance.delete()
+        # Delete related gallery if it is now empty
+        photo_count = instance.gallery.photo_set.count()
+        if photo_count == 0:
+            instance.gallery.delete()
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class UserViewSet(CRUDMixins, GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthAllowCRUDOrReadOnly]

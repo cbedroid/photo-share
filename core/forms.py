@@ -3,7 +3,7 @@ from django import forms
 from django.utils.html import mark_safe
 from django.core.exceptions import ValidationError
 from django.forms.models import inlineformset_factory
-from .models import Gallery, Photo
+from .models import Gallery, Photo, Category
 
 
 class GalleryForm(forms.ModelForm):
@@ -16,13 +16,27 @@ class GalleryForm(forms.ModelForm):
 
     class Meta:
         model = Gallery
-        fields = ["name", "public"]
+        fields = ["name", "category", "public"]
 
     name = forms.CharField(
         required=True,
         label="Gallery name",
         widget=forms.TextInput(attrs={"placeholder": "Enter a gallery title"}),
     )
+    category = forms.ModelChoiceField(
+        label="category",
+        empty_label="(Select Category)",
+        widget=forms.Select,
+        queryset=Category.objects.all(),
+        required=True,
+    )
+
+    # def clean_category(self):
+    #     category = self.cleaned_data.get("category")
+    #     obj = Category.objects.filter(name=category)
+    #     if obj.exists():
+    #         return obj.first()
+    #     raise ValidationError("Sorry, That category does not exist!")
 
     def clean_name(self):
         name = self.cleaned_data.get("name", "")
@@ -51,11 +65,11 @@ class GalleryForm(forms.ModelForm):
 
 class PhotoForm(forms.ModelForm):
     CUSTOM_IMAGE_LABEL = """
-        <label class="image-label">
-            <div class="img__upload-wrapper">
-                <img class="img-fluid" src="https://icon-library.net/images/upload-photo-icon/upload-photo-icon-21.jpg"/>
+        <label class="photoset__image_label">
+            <div class="image--wrapper">
+                <img class="image form-image " src="https://icon-library.net/images/upload-photo-icon/upload-photo-icon-21.jpg"/>
             </div>
-            <div> <p class="image-label__custom">upload</p></div>
+            <div><p class="image__label text-ellipsis mt-1">upload</p></div>
         </label>"""
 
     class Meta:
@@ -66,7 +80,7 @@ class PhotoForm(forms.ModelForm):
         required=True,
         label=False,
         widget=forms.TextInput(
-            attrs={"placeholder": "Image title", "class": "text-center"}
+            attrs={"placeholder": "Image title", "class": "photo-form text-center"}
         ),
     )
     image = forms.ImageField(
@@ -102,5 +116,5 @@ GalleryFormSet = inlineformset_factory(
     Photo,
     form=PhotoForm,
     fields=["title", "image"],
-    extra=3,
+    extra=2,
 )
