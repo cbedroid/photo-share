@@ -1,3 +1,4 @@
+from . import permissions
 from rest_framework import pagination
 from rest_framework import mixins, status
 from rest_framework.response import Response
@@ -18,12 +19,18 @@ class CRUDPagination(pagination.PageNumberPagination):
 
 class CRUDMixins(ListMM, CreateMM, UpdateMM, RetrieveMM, DestroyMM):
     parser_classes = (FormParser, JSONParser, MultiPartParser)
+    permission_classes = [permissions.IsAuthOrStaff]
     pagination_class = CRUDPagination
     UPDATE_METHODS = [
         "post",
         "put",
         "patch",
     ]
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     def querysearch(self):
         # perform query search on list view GET method

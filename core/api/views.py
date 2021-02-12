@@ -4,14 +4,12 @@ from django.contrib.auth.models import User
 from rest_framework.viewsets import GenericViewSet
 from core.models import Gallery, Photo
 from .serializers import *
-from . import permissions
 from .mixins import CRUDMixins
 
 
 class GalleryViewSet(CRUDMixins, GenericViewSet): 
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
-    permission_classes = [permissions.IsAuthAllowCRUDOrReadOnly]
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -48,7 +46,6 @@ class GalleryViewSet(CRUDMixins, GenericViewSet):
 class PhotoViewSet(CRUDMixins, GenericViewSet):  
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
-    permission_classes = [permissions.IsAuthAllowCRUDOrReadOnly]
 
     def perform_destroy(self, instance):
         instance.delete()
@@ -70,4 +67,3 @@ class PhotoViewSet(CRUDMixins, GenericViewSet):
 class UserViewSet(CRUDMixins, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthAllowCRUDOrReadOnly]

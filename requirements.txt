@@ -1,10 +1,16 @@
 asgiref==3.3.1
+beautifulsoup4==4.9.3
 Django==3.1.4
 django-cleanup==5.1.0
 django-crispy-forms==1.10.0
 django-filter==2.4.0
+django-social-share==2.1.1
 djangorestframework==3.12.2
 mock==4.0.3
+model-bakery==1.2.1
 Pillow==8.0.1
 pytz==2020.4
+six==1.15.0
+soupsieve==2.1
 sqlparse==0.4.1
+tornado==6.1

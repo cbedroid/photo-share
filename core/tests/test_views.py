@@ -4,133 +4,30 @@ import shutil
 from django.conf import settings
 from django.urls import reverse
 from django.utils.text import slugify
-from django.test import TestCase, Client
+from django.test import Client,TestCase
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
-from django.core.files.uploadedfile import SimpleUploadedFile
 from core.models import *
+from core.test_utils.base_utils import BaseObjectUtils
+from django.test import override_settings
 
 # Setup a test media directory for all testing media files
-media_root = os.path.join(settings.BASE_DIR, "test_media/")
-settings.MEDIA_ROOT = media_root
+# media_root = os.path.join(settings.BASE_DIR, "test_media/")
+# settings.MEDIA_ROOT = media_root
 
+TEST_MEDIA_ROOT = os.path.join(settings.BASE_DIR, "test_media/")
 
-class TestView(TestCase):
-    category_choices = Category.CATEGORY_LIST
-
-    def create_user(
-        self,
-        username="test_user_1",
-        email="test_user_1@test.com",
-        password="test_password",
-    ):
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-        )
-        user.set_password(password)
-        user.save()
-        return user
-
-    def create_gallery(self, user, name="test_gallery_1"):
-        return Gallery.objects.create(
-            name=name, user=user, public=True, category=self.test_category
-        )
-
-    def fake_image(self, name):
-        with open("core/tests/test_image.jpg", "rb") as image_file:
-            return SimpleUploadedFile(
-                name=name + ".jpg", content=image_file.read(), content_type="image/jpeg"
-            )
-
-    def create_photo(self, gallery, title="test_image_1"):
-        return Photo.objects.create(
-            title=title, image=self.fake_image(title), gallery=gallery
-        )
-
-    def create_category(self):
-        # Create all categories for testing
-        for index in range(len(self.category_choices)):
-            Category.objects.create(
-                name=index,
-                label="s",
-            )
+@override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
+class TestView(TestCase,BaseObjectUtils):
 
     def setUp(self):
-        self.client = Client()
-        self.create_category()
-        self.test_category = Category.objects.first()
-
-        # Test Users
-        self.user_1 = {
-            "username": "test_user_1",
-            "password": "test_password",
-            "email": "test_user1@test.com",
-        }
-        self.user_2 = {
-            "username": "test_user_2",
-            "password": "test_password",
-            "email": "test_user_2@test.com",
-        }
-        self.test_user_1 = self.create_user(**self.user_1)
-        self.test_user_2 = self.create_user(**self.user_2)
-
-        # Test Galleries
-        self.test_gallery_1 = self.create_gallery(
-            self.test_user_1, name="test_gallery_1"
-        )
-        self.test_gallery_2 = self.create_gallery(
-            self.test_user_2, name="test_gallery_2"
-        )
-
-        # Test Photos
-        self.test_photo_1 = self.create_photo(self.test_gallery_1, title="test_image_1")
-        self.test_photo_2 = self.create_photo(self.test_gallery_2, title="test_image_2")
-
-        self.default_formset = {
-            "name": "new_gallery",
-            "category": ["1"],
-            "public": "on",
-            "photo-TOTAL_FORMS": "2",
-            "photo-INITIAL_FORMS": "0",
-            "photo-MIN_NUM_FORMS": "0",
-            "photo-MAX_NUM_FORMS": "1000",
-            "photo-0-title": "",
-            "photo-0-image": "",
-            "photo-1-title": "",
-            "photo-1-image": "",
-        }
-
-        self.login_url = reverse("account_login")
-        self.logout_url = reverse("account_logout")
-        self.home_url = reverse("core:index")  # index
-        self.create_url = reverse("core:gallery-create")
-        self.detail_url = reverse(
-            "core:gallery-detail",
-            kwargs={
-                "slug": slugify("test_gallery_1"),
-                "owner": slugify(self.test_gallery_1.user.username),
-            },
-        )
-        self.update_url = reverse(
-            "core:gallery-update",
-            kwargs={
-                "slug": slugify("test_gallery_1"),
-                "owner": slugify(self.test_gallery_1.user.username),
-            },
-        )
-        self.delete_url = reverse(
-            "core:gallery-delete",
-            kwargs={
-                "slug": slugify("test_gallery_1"),
-                "owner": slugify(self.test_gallery_1.user.username),
-            },
-        )
+       self.client = Client()
+       super().create_test_objects() # BaseObjectUtils
 
     def tearDown(self):
         print("Tearing down test_views")
-        if os.path.isdir(media_root):
-            shutil.rmtree(media_root, ignore_errors=True)
+        if os.path.isdir(TEST_MEDIA_ROOT):
+            shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
 
     def test_user_login(self):
         client = Client()

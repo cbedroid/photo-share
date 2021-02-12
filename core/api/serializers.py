@@ -41,7 +41,7 @@ class PhotoSerializer(serializers.ModelSerializer):
         model = Photo
         fields = "__all__"
         read_only_fields = (
-            "slug", "created",
+            "slug", "created",'pk',
             "updated", "gallery",
         )
 
@@ -107,12 +107,25 @@ class GallerySerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         date_format = "%m-%d-%Y"
-        photo_set = list(
-            dict(id=photo.id, title=photo.title) for photo in instance.photo_set.all()
-        )
+        try:
+            """ 
+                On perform_create and perform_update we dont't want the 
+                represention to return any related model data. we just need the
+                default representation data to populate the detail view
+                
+                # On Create and Update
+                - POST/PUT/PATCH ---> gallery-detail view
+                - GET            ---> gallery-list view (This is where the related data is needed)
+            """
+            photo_set = instance["photo"]
+            return  representation
+        except:
+            photo_set = list(
+                dict(id=photo.id, title=photo.title) for photo in instance.photo_set.all()
+            )
+            representation["uri"] = self.get_uri(instance)
+            representation["category"] = instance.category.get_name_display()
 
-        representation["uri"] = self.get_uri(instance)
-        representation["category"] = instance.category.get_name_display()
         representation["photos"] = photo_set
         representation["id"] = instance.pk
         representation["updated"] = instance.updated.strftime(date_format)
@@ -143,9 +156,9 @@ class GallerySerializer(serializers.ModelSerializer):
             )
         return value
 
-    def create(self, data):
-        photo = data.pop("photo", None)
-        gallery = Gallery.objects.create(**data)
+    def create(self, validated_data):
+        photo = validated_data.pop("photo", None)
+        gallery = Gallery.objects.create(**validated_data)
         if photo:
             photo = dict(photo)
             title = photo["title"]

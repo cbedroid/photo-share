@@ -5,8 +5,9 @@ from django.urls import reverse
 from rest_framework.reverse import reverse as api_reverse
 from django.conf import settings
 from django.utils.text import slugify
-from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import User
+
 
 
 class GalleryManager(models.Manager):
@@ -176,3 +177,7 @@ class Photo(models.Model):
         app_name = settings.ROOT_URLCONF.split(".")[0].title()
         photo = re.sub(" ", "_", str(self))
         return f"{app_name}_{photo}_by_{user}.jpg"
+
+
+
+
