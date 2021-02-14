@@ -14,8 +14,9 @@ from rest_framework.mixins import (
 )
 
 
-class CRUDPagination(pagination.PageNumberPagination):       
+class CRUDPagination(pagination.PageNumberPagination):
     page_size = 25
+
 
 class CRUDMixins(ListMM, CreateMM, UpdateMM, RetrieveMM, DestroyMM):
     parser_classes = (FormParser, JSONParser, MultiPartParser)
@@ -72,11 +73,11 @@ class CRUDMixins(ListMM, CreateMM, UpdateMM, RetrieveMM, DestroyMM):
         # First we filter the queryset and check for any lookups
         # Example: api/gallery/q=lookup_this_gallery
         # Default behavior (no lookups) will return the unfiltered queryset
-        qs = self.get_queryset()
+        qs = self.get_queryset().order_by("id")
 
         pqs = self.paginate_queryset(qs)
 
-        if pqs is not None: # If pagination page is available
+        if pqs is not None:  # If pagination page is available
             serializer = self.get_serializer(pqs, many=True)
             return self.get_paginated_response(serializer.data)
 

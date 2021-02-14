@@ -1,13 +1,12 @@
 from rest_framework import permissions, filters
 from core.models import Gallery, Photo, Category
-from django.contrib.auth.models import User,Group,Permission
+from django.contrib.auth.models import User, Group, Permission
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
     Custom permission to only allow owners of an object to edit it.
     """
-
 
     def has_object_permissions(self, request, view, obj):
         # Read permissions are allowed to any request,
@@ -23,13 +22,12 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return obj.gallery.user == request.user
         elif isinstance(obj, user):
             return obj == request.user
-        
 
 
 class IsAuthOrStaff(permissions.BasePermission):
-    CUD_METHODS = [ "POST", "PUT", "PATCH", "DELETE" ]
+    CUD_METHODS = ["POST", "PUT", "PATCH", "DELETE"]
 
-    def is_moderator(self,request):
+    def is_moderator(self, request):
         if request.user.is_authenticated:
             return request.user.groups.filter(name="moderator").exists()
 
@@ -42,9 +40,7 @@ class IsAuthOrStaff(permissions.BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-
         is_moderator = self.is_moderator(request)
-        print("IS_Moderator",is_moderator)
 
         if request.method in permissions.SAFE_METHODS:
             return True

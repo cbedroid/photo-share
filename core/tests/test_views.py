@@ -4,9 +4,10 @@ import shutil
 from django.conf import settings
 from django.urls import reverse
 from django.utils.text import slugify
-from django.test import Client,TestCase
+from django.test import Client, TestCase
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
+from django.shortcuts import get_object_or_404
 from core.models import *
 from core.test_utils.base_utils import BaseObjectUtils
 from django.test import override_settings
@@ -17,31 +18,29 @@ from django.test import override_settings
 
 TEST_MEDIA_ROOT = os.path.join(settings.BASE_DIR, "test_media/")
 
+
 @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-class TestView(TestCase,BaseObjectUtils):
+class TestView(TestCase, BaseObjectUtils):
+    fixtures = ["test_users.json", "test_category.json", "test_galleries.json"]
 
     def setUp(self):
-       self.client = Client()
-       super().create_test_objects() # BaseObjectUtils
+        self.client = Client()
+        super().create_test_objects()  # BaseObjectUtils
 
     def tearDown(self):
-        print("Tearing down test_views")
+        print("Ran View Test --> ", self._testMethodName)
         if os.path.isdir(TEST_MEDIA_ROOT):
             shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
 
     def test_user_login(self):
         client = Client()
-        logged_in_user = client.login(
-            username=self.user_1["username"], password=self.user_1["password"]
-        )
+        logged_in_user = client.login(**self.user_1_account)
         self.assertTrue(logged_in_user)
 
     def test_user_logout(self):
         # Test logout redirect to home
         client = Client()
-        logged_in_user = client.login(
-            username=self.user_1["username"], password=self.user_1["password"]
-        )
+        logged_in_user = client.login(**self.user_1_account)
         response = client.get(self.logout_url)
         self.assertEquals(response.status_code, 302)
         self.assertRedirects(response, self.home_url)
@@ -74,7 +73,8 @@ class TestView(TestCase,BaseObjectUtils):
         # Test gallery update view only allow updates by its creator
         # Test gallery update by creator
         client = Client()
-        client.login(username=self.user_1["username"], password=self.user_1["password"])
+
+        client.login(**self.user_1_account)
         response = client.get(self.update_url)
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "core/gallery_form.html")
@@ -94,7 +94,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_gallery_can_update_name_without_imagefile(self):
         client = Client()
-        client.login(**self.user_1)
+        client.login(**self.user_1_account)
 
         # test gallery name update successfully (No image )
         response = client.post(self.update_url, self.default_formset, follow=True)
@@ -107,7 +107,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_gallery_updateview_creates_new_image_successfully(self):
         client = Client()
-        client.login(**self.user_1)
+        client.login(**self.user_1_account)
 
         # create fake gallery
         test_gallery = Gallery.objects.create(
@@ -136,7 +136,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_gallery_createview_post_fails_without_a_gallery_name(self):
         client = Client()
-        client.login(**self.user_1)
+        client.login(**self.user_1_account)
 
         # test creating a gallery without a name fails
         formset = self.default_formset.copy()
@@ -148,7 +148,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_gallery_createview_post_fails_without_an_photo_title(self):
         client = Client()
-        client.login(**self.user_1)
+        client.login(**self.user_1_account)
 
         # test create gallery fails when image file doesn't exist
         gallery_name = "test_create_gallery_1"
@@ -166,7 +166,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_gallery_createview_post_fails_without_an_photo_file(self):
         client = Client()
-        client.login(**self.user_1)
+        client.login(**self.user_1_account)
 
         # test create gallery fails when image file doesn't exist
         gallery_name = "test_create_gallery_2"
@@ -182,7 +182,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_gallery_createview_post_is_successfully(self):
         client = Client()
-        client.login(**self.user_1)
+        client.login(**self.user_1_account)
 
         # test create gallery fails when image file doesn't exist
         gallery_name = "test_create_gallery_3"
@@ -238,7 +238,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_gallery_deleteview_allows_owner_to_view_page(self):
         client = Client()
-        client.login(username=self.user_1["username"], password="test_password")
+        client.login(**self.user_1_account)
         # GET Method
         # Test owner can view DeleteView
         # Test html contains delete message
@@ -253,7 +253,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_gallery_deleteview_successfully_delete_gallery(self):
         client = Client()
-        client.login(username=self.user_1["username"], password="test_password")
+        client.login(**self.user_1_account)
         # POST Method
         # Test deleting a gallery is successful
         # view should redirect to login page
@@ -286,9 +286,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_photo_deletion_throw_404_when_photo_does_not_exist(self):
         client = Client()
-        owner = client.login(
-            username=self.user_1["username"], password=self.user_1["password"]
-        )
+        owner = client.login(**self.user_1_account)
 
         # POST Method
         # Test deleting a Photo fails because photo does exists
@@ -301,9 +299,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_photo_deletion_fails_when_user_is_not_the_owner(self):
         client = Client()
-        wrong_user = client.login(
-            username=self.user_2["username"], password=self.user_1["password"]
-        )
+        wrong_user = client.login(**self.user_2_account)
 
         # POST Method
         # Test deleting a Photo fails
@@ -321,9 +317,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_photo_deletion_is_successfully(self):
         client = Client()
-        wrong_user = client.login(
-            username=self.user_1["username"], password=self.user_1["password"]
-        )
+        user = client.login(**self.user_1_account)
 
         # POST Method
         # Test deleting a Photo is successful
@@ -343,9 +337,7 @@ class TestView(TestCase,BaseObjectUtils):
 
     def test_photo_deletion_also_delete_gallery_when_no_photo_exist(self):
         client = Client()
-        owner = client.login(
-            username=self.user_1["username"], password=self.user_1["password"]
-        )
+        owner = client.login(**self.user_1_account)
 
         # POST Method
         # Test deleting a Photo successfully delete empty gallery

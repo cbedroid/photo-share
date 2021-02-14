@@ -7,12 +7,12 @@ from .serializers import *
 from .mixins import CRUDMixins
 
 
-class GalleryViewSet(CRUDMixins, GenericViewSet): 
+class GalleryViewSet(CRUDMixins, GenericViewSet):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
 
     def get_queryset(self):
-        if self.request.user.is_authenticated:
+        if self.request and self.request.user.is_authenticated:
             # Query Gallery album based on its public status.
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
@@ -43,9 +43,21 @@ class GalleryViewSet(CRUDMixins, GenericViewSet):
         return self.destroy(request, *args, **kwargs)
 
 
-class PhotoViewSet(CRUDMixins, GenericViewSet):  
+class PhotoViewSet(CRUDMixins, GenericViewSet):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
+
+    def get_queryset(self):
+        if hasattr(self, "request") and self.request.user.is_authenticated:
+            # Query Gallery album based on its public status.
+            # If the gallery belongs to the logged in, disregard "public" state
+            # include his/her private galleries as well.
+            qs = Photo.objects.filter(
+                Q(gallery__public=True) | Q(gallery__user=self.request.user)
+            )
+        else:
+            qs = Photo.objects.filter(gallery__public=True)
+        return qs
 
     def perform_destroy(self, instance):
         instance.delete()

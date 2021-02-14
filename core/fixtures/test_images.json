@@ -1,0 +1,38 @@
+[
+  {
+    "model": "core.photo",
+    "pk": 83,
+    "fields": {
+      "title": "test_image_1",
+      "image": "gallery/test_image_1.jpg",
+      "slug": "test_image_1",
+      "gallery": 98,
+      "created": "2021-02-14T07:34:32.784Z",
+      "updated": "2021-02-14T07:34:32.784Z"
+    }
+  },
+  {
+    "model": "core.photo",
+    "pk": 84,
+    "fields": {
+      "title": "test_image_2",
+      "image": "gallery/test_image_2.jpg",
+      "slug": "test_image_2",
+      "gallery": 99,
+      "created": "2021-02-14T07:34:33.023Z",
+      "updated": "2021-02-14T07:34:33.023Z"
+    }
+  },
+  {
+    "model": "core.photo",
+    "pk": 85,
+    "fields": {
+      "title": "test_blank_image",
+      "image": "gallery/test_blank_image.jpg",
+      "slug": "test_blank_image",
+      "gallery": 100,
+      "created": "2021-02-14T07:34:33.115Z",
+      "updated": "2021-02-14T07:43:08.090Z"
+    }
+  }
+]

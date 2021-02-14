@@ -9,7 +9,6 @@ from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import User
 
 
-
 class GalleryManager(models.Manager):
     def query_search(self, query=None, qs=None):
         qs = qs or self.get_queryset()
@@ -177,7 +176,3 @@ class Photo(models.Model):
         app_name = settings.ROOT_URLCONF.split(".")[0].title()
         photo = re.sub(" ", "_", str(self))
         return f"{app_name}_{photo}_by_{user}.jpg"
-
-
-
-
