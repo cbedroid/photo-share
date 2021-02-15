@@ -12,7 +12,7 @@ $(document).ready(function () {
   });
 
   /* --------------------------------
-    Magnific Popup 
+      Magnific Popup 
   ------------------------------------*/
   $("#gallery-photo-collections .photo__card").each(function () {
     console.log("Gallery Photo", this);
