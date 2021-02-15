@@ -18,7 +18,7 @@
       </div>
       <div class="header__content header__content--right">
         <div class="header__action text-xl text-gray-400">
-          <a href="#" class="border-2 border-gray-100 p-2 px-4 hover:text-red-600">
+          <a href="#" class="border-2 border-gray-200 p-2 px-4 hover:text-red-600">
             <i class="fa fa-heart"></i>
           </a>
           <a href="#" class="border-2 border-gray-200 p-2 px-4 hover:text-blue-300">
@@ -51,9 +51,9 @@
   <div id="photo-collection" class="px-1 sm:px-2">
     <div class="container p-1 sm:p-6">
       <div class="row wrapper">
-        <ul class="photo grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+        <ul id="gallery-photo-collections" class="photo grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
           {% for photo in photo_set %}
-          <li class="photo__card py-1 shadow-lg hover:shadow-2xl ">
+          <li class="photo__card py-1 shadow-lg hover:shadow-2xl">
             <h4 class="photo__title py-1 text-center text-ellipsis text-sm sm:text-base font-semibold font-serif">{{photo.title}}</h4>
             <!-- Photo Image-->
             <div class="photo__image">
@@ -76,19 +76,24 @@
             <!-- -->
             <!--Photo share-->
             <div class="share__hidden hidden row align-content-center">
-              <div class="social-share bg-white shadow-lg py-2">
-                <div class="social-share__img-wrapper flex-center w-100">
-                  <img src="{{photo.image.url}}" class="social-share__img">
-                </div>
-                <div class="grid grid-cols-6 gap-4 my-1 p-2">
-                  <div class="share-card col-span-6 sm:col-start-2 sm:col-span-4">
-                    <div class="share-card__content p-2 sm:p-4">
-                      <h4 class="text-lg sm:text-2xl font-semibold">Share {{photo}} to your social media account</h4>
-                      <p class="fw-med italic">created by {{photo.gallery.user}}</p>
-                      <div class="share-card__link flex flex-row space-x-4 justify-center w-100 mt-2">
-                        {% post_to_twitter 'Post your amazing photo using Photo-Share' photo.image.url '<i class="fa fa-twitter share__icon"></i>' 'cta cta--blue cta--full-block' %}
-                        {% post_to_facebook photo.image.url '<i class="fa fa-facebook share__icon"></i>' 'cta cta--blue mx-2 cta--full-block' %}
-                        {% post_to_gplus photo.image.url '<i class="fab fa-google-plus-square share__icon"></i>' 'cta cta--red cta--full-block' %}
+              <div class="social-share py-2">
+                <div class="social-share__content bg-white shadow-lg">
+                  <div class="share-grid grid grid-cols-12 gap-4 my-1 sm:p-1">
+                    <div class="social-share__img-wrapper col-start-1 col-span-12 flex-center">
+                      <img src="{{photo.image.url}}" class="social-share__img">
+                    </div>
+                    <div class="share-card col-start-1 col-span-12">
+                      <div class="share-card__content py-2">
+                        <h4 class="text-3xl font-semibold">{{photo}}</h4>
+                        <p class="text-muted font-italic">created by: <i class="fa fa-user-circle mx-1"></i>{{photo.gallery.user}}</p>
+                      </div>
+                      <div class="link col-start-6 col-span-6 my-4 border-2 border-grey-200 py-4">
+                        <p class="text-center">Share it on your social media.</p>
+                        <div class="share-card__link flex flex-row space-x-4 justify-center w-100 mt-2">
+                          {% post_to_twitter 'Post your amazing photo using Photo-Share' photo.image.url '<i class="fa fa-twitter share__icon bg-blue-600"><p>Twitter</p></i>'%}
+                          {% post_to_facebook photo.image.url '<i class="fa fa-facebook share__icon bg-blue-600"><p>Facebook</p></i>' %}
+                          {% post_to_gplus photo.image.url '<i class="fab fa-google-plus-square share__icon bg-red-600"><p>Google &#43;</p></i>'%}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -109,7 +114,7 @@
               </a>
               {% endif %}
 
-              <a class="cta cta--blue cta--full-block test_popup" href="#">
+              <a class="cta cta--blue cta--full-block share_popup" href="#">
                 <i class="fas fa-share-alt"></i>
               </a>
               <a class="cta cta--green cta--full-block" href="#">
@@ -125,7 +130,7 @@
   </div>
   <!-- -->
 
-  <section id="related_gallery" class="mt-24">
+  <section id="related_gallery" class="mt-14">
     <div class="container p-1 sm:p-6">
       <div class="row">
         <h5 class="fw-bold pb-3 text-2xl border-b-2 border-gray-300">Related Gallery</h5>
