@@ -20,7 +20,7 @@ TEST_MEDIA_ROOT = os.path.join(settings.BASE_DIR, "test_media/")
 
 
 @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-class TestView(TestCase, BaseObjectUtils):
+class TestWebAppGalleryView(TestCase, BaseObjectUtils):
     fixtures = ["test_users.json", "test_category.json", "test_galleries.json"]
 
     def setUp(self):
@@ -28,7 +28,7 @@ class TestView(TestCase, BaseObjectUtils):
         super().create_test_objects()  # BaseObjectUtils
 
     def tearDown(self):
-        print("Ran View Test --> ", self._testMethodName)
+        print("Ran Gallery View Test --> ", self._testMethodName)
         if os.path.isdir(TEST_MEDIA_ROOT):
             shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
 
@@ -270,6 +270,23 @@ class TestView(TestCase, BaseObjectUtils):
 
         # Test view was redirect to home page
         self.assertRedirects(response, self.home_url)
+
+
+
+
+# PHOTO TEST
+@override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
+class TestWebAppPhotoView(TestCase, BaseObjectUtils):
+    fixtures = ["test_users.json", "test_category.json", "test_galleries.json"]
+
+    def setUp(self):
+        self.client = Client()
+        super().create_test_objects()  # BaseObjectUtils
+
+    def tearDown(self):
+        print("Ran Photo View Test --> ", self._testMethodName)
+        if os.path.isdir(TEST_MEDIA_ROOT):
+            shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
 
     def test_photo_deletion_fails_when_user_not_authenticated(self):
         client = Client()

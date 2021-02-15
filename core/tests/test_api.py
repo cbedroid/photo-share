@@ -66,6 +66,7 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
        self.assertEqual(response.status_code,200)
 
 
+       # Test total numbers of Gallery available
        client.force_login(self.test_user_2)
        url = api_reverse('api:gallery-list')
        response = client.get(url,format="json")
@@ -177,11 +178,10 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
         response = client.get(url,format="json")
         self.assertEqual(response.status_code,200)
 
+        # Test gallery was deleted successfully 
         response = client.delete(url,format="json")
         self.assertEqual(response.status_code,204) # 204/MODIFIED
 
-        # response = client.get(url,format="json")
-        # self.assertEqual(response.status_code,404)
 
     def test_staff_and_moderator_have_permissions_to_perform_CRUD_on_all_gallery(self):
         # Test if staff and moderator have full permission to
@@ -191,9 +191,8 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
         staff_members = [self.test_staff,self.test_moderator]
         for member in staff_members:
             # Create initial data
-            gallery = baker.make('core.Gallery',user=member)
+            gallery = baker.make('core.Gallery',user=self.test_user_1)
             photo = baker.make('core.Photo',gallery=gallery)
-
 
             client = self.client
             client.force_authenticate(member)
@@ -204,7 +203,7 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
                 "public": True,
                 }
 
-            # Test patch method is successful
+            # Test patch method is successful performed by a staff member or moderator
             response = client.patch(url,data=data,format="json")
             self.assertEqual(response.status_code,200)
 
@@ -218,7 +217,7 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
             response = client.delete(url,format="json")
             self.assertEqual(response.status_code,204)
 
-    def test_gallery_create_fails_if_user_not_logged_in(self):
+    def test_gallery_create_method_fails_if_user_not_logged_in(self):
         photo = self.test_photo_1
         with open(photo.image.path,'rb') as image_data:
             data = {
@@ -235,7 +234,7 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
             response = client.post(url,data=data,format="multipart",follow=True)
             self.assertEqual(response.status_code,403)
 
-    def test_gallery_create_fails_when_gallery_name_is_NOT_UNIQUE(self):
+    def test_gallery_create_method_fails_when_gallery_name_is_NOT_UNIQUE(self):
         gallery = baker.make('core.Gallery',user=self.test_moderator)
         photo = baker.make('core.Photo',gallery=gallery,image=self.test_photo_1.image)
 
@@ -253,11 +252,12 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
             url = api_reverse('api:gallery-list')
             response = client.post(url,data=data,format="multipart",follow=True)
             self.assertEqual(response.status_code,403)
-            # Test response error
+
+            # Test response error is correct
             self.assertEqual(response.data['detail'].code,'not_authenticated')
 
 
-    def test_gallery_create_fails_if_photo_is_not_added(self):
+    def test_gallery_create_method_fails_if_photo_is_not_added(self):
         data = {
             "name": "testing_gallery_1",
             "category": "1",
@@ -270,7 +270,7 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
         response = client.post(url,data=data,format="multipart",follow=True)
         self.assertEqual(response.status_code,400)
 
-    def test_gallery_create_fails_if_category_does_not_exist(self):
+    def test_gallery_create_method_fails_if_category_does_not_exist(self):
         photo = self.test_photo_1
         with open(photo.image.path,'rb') as image_data:
             data = {
@@ -287,12 +287,12 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
             response = client.post(url,data=data,format="multipart",follow=True)
             self.assertEqual(response.status_code,400)
 
-    def test_gallery_update_and_delete_fails_403_when_modified_by_non_authorized_owner(self):
+    def test_gallery_update_and_delete_method_fails_403_when_modified_by_non_authorized_owner(self):
         # Create initial data
         gallery = baker.make('core.Gallery',user=self.test_moderator)
         photo = baker.make('core.Photo',gallery=gallery)
 
-        # test unauthorized user can not update gallery
+        # Test unauthorized user can not update gallery
         not_the_owner = self.create_user("hacker","Ilovehacking")
         client = self.client
         client.force_authenticate(not_the_owner)
@@ -421,23 +421,29 @@ class TestPhotoViewSets(APITestCase, BaseObjectUtils):
         gallery_exist = Gallery.objects.filter(pk=gallery.pk).exists()
         self.assertFalse(gallery_exist)
 
-    # def test_photo_create_method_fails_when_photo_is_not_valid(self):
-    #     gallery = baker.make('core.Gallery',user=self.test_user_1)
-    #     with open(self.test_photo_2.image.path,'rb') as image_data:
-    #         data = {
-    #             "gallery":gallery.pk,
-    #             "title": "new_photo",
-    #             "image": image_data
-    #             }
-    #         client = APIClient()
-    #         client.force_authenticate(self.test_user_1)
-    #         url = api_reverse('api:photo-list')
-    #         response = client.post(url,data=data,format="multipart",follow=True)
-    #         self.assertEqual(response.status_code,201)
+    def test_photo_create_method_fails_when_photo_is_not_valid(self):
+        gallery = baker.make('core.Gallery',user=self.test_user_1)
+        with open(self.test_photo_blank.image.path,'rb') as image_data:
+            data = {
+                "gallery":gallery.pk,
+                "title": "new_photo",
+                "image": image_data
+                }
+            client = APIClient()
+            client.force_authenticate(self.test_user_1)
+            url = api_reverse('api:photo-list')
+            response = client.post(url,data=data,format="multipart",follow=True)
 
-    def test_photo_patch_partial_update_method_fails_when_user_is_not_the_authorized_owner_of_gallery(
-        self,
-    ):
+            # Test photo creation fails
+            self.assertEqual(response.status_code,400) #400/Bad Request
+
+            # Test photo response error code 
+            self.pickle_save(response,'wb')
+            resp_code = (response.data['image'][0]).code
+            self.assertEqual(resp_code,"empty")
+
+
+    def test_photo_patch_partial_update_method_fails_when_user_is_not_the_authorized_owner_of_gallery(self):
         gallery = baker.make("core.Gallery", user=self.test_user_1)
         photo = baker.make("core.Photo", gallery=gallery, image=self.test_photo_1.image)
 
@@ -448,9 +454,8 @@ class TestPhotoViewSets(APITestCase, BaseObjectUtils):
         response = client.patch(url, data=data, format="json")
         self.assertEqual(response.status_code, 403)
 
-    def test_photo_delete_method_fails_when_user_is_not_the_authorized_owner_of_gallery(
-        self,
-    ):
+
+    def test_photo_delete_method_fails_when_user_is_not_the_authorized_owner_of_gallery(self):
         gallery = baker.make("core.Gallery", user=self.test_user_1)
         photo = baker.make("core.Photo", gallery=gallery, image=self.test_photo_1.image)
 
@@ -463,7 +468,7 @@ class TestPhotoViewSets(APITestCase, BaseObjectUtils):
     def test_photo_create_fails_when_gallery_does_not_exist(self):
         with open(self.test_photo_1.image.path, "rb") as image_data:
             data = {
-                "gallery": "Rando Gallery",  # Fails because a gallery id not provided
+                "gallery": "Rand-O-Gallery",  # Fails because a gallery id not provided
                 "title": "new_photo",
                 "image": image_data,
             }
@@ -473,9 +478,7 @@ class TestPhotoViewSets(APITestCase, BaseObjectUtils):
             response = client.post(url, data=data, format="multipart")
             self.assertEqual(response.status_code, 400)
 
-    def test_photo_title_uniqueness_when_one_gallery_has_multiple_photos_with_the_same_title(
-        self,
-    ):
+    def test_photo_title_uniqueness_when_one_gallery_has_multiple_photos_with_the_same_title(self):
         gallery = baker.make("core.Gallery", user=self.test_user_1)
         photo = baker.make("core.Photo", gallery=gallery, image=self.test_photo_1.image)
 
