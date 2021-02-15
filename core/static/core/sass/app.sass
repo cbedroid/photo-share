@@ -52,13 +52,15 @@ h1,h2,h3,h4,h5,h6,p
 .fw-light
   font-weight: 300
 
-
 .text__sm 
   font-size: 14px
 
 .text__lg 
   font-size: 26px
   font-weight: 500
+
+.text-muted
+  color: #6c757d
 
 .text__secondary 
   color: $text-secondary
@@ -264,10 +266,31 @@ form
   
 
 .social-share
+  display: grid
+  place-items: center
+  &__content
+    padding: 25px 35px
   &__img
-    width: 750px
-  .share-card .share__icon
-    font-size: 3rem
+    width: 590px
+    height: 400px
+
+  .share-grid
+    .share-card .share__icon
+      display: grid
+      place-items: center
+      border-radius: 4px
+      min-width: 110px
+      font-size: 3rem
+      padding: 4px 6px
+      color: #fff
+
+      transition: .3s ease-in-out
+      &:hover
+        color: inherit
+      p
+        text-align: center
+        font-size: 1.5rem
+    
 
 .badge
   box-shadow: 3px 2px 8px rgba(0,0,0,.3)
@@ -558,4 +581,30 @@ form
 
   #aside_checkbox:checked ~ #main #gallery-sidebar
     width: 60%
+
+  .social-share
+    display: grid
+    place-items: center
+    width: 100%
+    &__content
+      padding: 25px 35px
+    &__img
+      width: 450px
+      height: 250px
+
+    .share-card .share__icon
+        display: grid
+        place-items: center
+        border-radius: 4px
+        min-width: 90px
+        font-size: 2.5rem
+        padding: 4px 6px
+        color: #fff
+        transition: .3s ease-in-out
+        &:hover
+          color: inherit
+        p
+          text-align: center
+          font-size: 1.2rem
+
 

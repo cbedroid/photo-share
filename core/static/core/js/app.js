@@ -12,17 +12,22 @@ $(document).ready(function () {
   });
 
   /* --------------------------------
-    Magnific Popup 
+      Magnific Popup 
   ------------------------------------*/
-  $(".test_popup").magnificPopup({
-    items: [
-      {
-        src: ".social-share",
-        type: "inline",
-      },
-    ],
-    closeOnContentClick: true,
-    closeBtnInside: false,
+  $("#gallery-photo-collections .photo__card").each(function () {
+    console.log("Gallery Photo", this);
+    $(this)
+      .find(".share_popup")
+      .magnificPopup({
+        items: [
+          {
+            src: $(this).find(".social-share").first(),
+            type: "inline",
+          },
+        ],
+        closeOnContentClick: true,
+        closeBtnInside: false,
+      });
   });
 
   /* --------------------------------
