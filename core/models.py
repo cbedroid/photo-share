@@ -5,8 +5,8 @@ from django.urls import reverse
 from rest_framework.reverse import reverse as api_reverse
 from django.conf import settings
 from django.utils.text import slugify
-from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import User
+from django.core.validators import MinLengthValidator
 
 
 class GalleryManager(models.Manager):
