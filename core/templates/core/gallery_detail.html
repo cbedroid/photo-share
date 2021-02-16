@@ -140,13 +140,7 @@
           <li class="gallery__card shadow">
             <div class="gallery__content pos-relative">
               <div class="gallery__image image">
-                {% with related.photo_set.first as cover %}
-                {% if cover %}
-                <img class="img-fluid" src="{{cover.image.url}}" alt="{{gallery}} {{cover}} photo">
-                {% else %}
-                <img class="img-fluid" src="{{gallery.default_cover}}" alt="{{gallery}} {{cover}} photo">
-                {% endif %}
-                {% endwith %}
+                <img class="img-fluid" src="{{gallery.cover_photo.image.url}}" alt="{{gallery}} {{gallery.cover_photo}} photo">
               </div>
               <!-- Gallery Overlay -->
               <div class="image-overlay overlay overlay--bgdark overlay--hovershow text-white">

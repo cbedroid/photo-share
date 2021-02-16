@@ -31,13 +31,6 @@ class GalleryForm(forms.ModelForm):
         required=True,
     )
 
-    # def clean_category(self):
-    #     category = self.cleaned_data.get("category")
-    #     obj = Category.objects.filter(name=category)
-    #     if obj.exists():
-    #         return obj.first()
-    #     raise ValidationError("Sorry, That category does not exist!")
-
     def clean_name(self):
         name = self.cleaned_data.get("name", "")
         name = re.sub(r"\s{1,}", " ", name).strip()

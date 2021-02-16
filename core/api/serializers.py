@@ -140,7 +140,7 @@ class GallerySerializer(serializers.ModelSerializer):
         return instance
 
 class PhotoSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = Photo
         fields = "__all__"

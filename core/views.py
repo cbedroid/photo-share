@@ -55,9 +55,7 @@ class HomeListView(ListView):
             c=Count("gallery")
         ).order_by("-c")[:10]
 
-
-        page = self.request.GET.get("page")
-        #     qs = paginator.page(1)
+        return context
 
 
 
@@ -257,7 +255,8 @@ class PhotoDetailView(DetailView):
         self.object = self.get_object()
         self.object.views += 1   
         self.object.save()
-        return super().get(request,*args,**kwargs)
+        context = self.get_context_data()
+        return self.render_to_response(context)
 
 
 class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):

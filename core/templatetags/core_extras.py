@@ -44,4 +44,4 @@ def random_cover(gallery):
             return random.choices(photo_set)[0]
     except:
         pass
-    return "/".join((settings.MEDIA_URL, "default_image.png"))
+    return "/".join((settings.MEDIA_URL, "/defaults/default_image.jpg"))

@@ -124,7 +124,6 @@ class Category(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=50,blank=True,null=True)
-    
     def __str__(self):
         return self.name or "Tags"
 
@@ -151,8 +150,12 @@ class Gallery(models.Model):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
-    def default_cover(self):
-        return settings.MEDIA_URL + "gallery/default_image.png"
+
+    def cover_photo(self):
+        cover =  self.photo_set.filter(is_cover=True)
+        if cover.exists():
+            return cover.first()
+        return self.photo_set.first()
 
     def get_absolute_url(self):
         return reverse(
@@ -174,8 +177,9 @@ class Photo(models.Model):
     image = models.ImageField(upload_to="gallery")
     slug = models.SlugField(blank=False, editable=False, db_index=True)
     gallery = models.ForeignKey(Gallery, db_index=True, on_delete=models.CASCADE)
-    tags  = models.ManyToManyField(Tag)
+    tags  = models.ManyToManyField(Tag,blank=True)
     views = models.PositiveIntegerField(default=0)
+    is_cover = models.BooleanField(default=False)
     downloads = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
@@ -188,8 +192,19 @@ class Photo(models.Model):
         # SlugField should also be deleted,It's only vaild for API lookups
         url = f"{self.title}"
         self.slug = slugify(url)
+        self.set_gallery_cover()
         super().save(*args, **kwargs)
 
+    def set_gallery_cover(self):
+        # Reset related all photo cover from gallery
+        # and set the current photo as the cover
+        if self.is_cover:
+            photo_set = self.gallery.photo_set.all()
+            for photo in photo_set:
+                photo.is_cover = False
+                # if saved here, there may be a recursive error
+            self.is_cover = True # set the current phoo as the cover
+        
     def get_absolute_url(self):
         return reverse(
             "core:photo-detail",
