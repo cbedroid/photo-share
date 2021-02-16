@@ -17,12 +17,12 @@
         </p>
       </div>
       <div class="header__content header__content--right">
-        <div class="header__action text-xl text-gray-400">
-          <a href="#" class="border-2 border-gray-200 p-2 px-4 hover:text-red-600">
+        <div class="header__action text-2xl text-gray-400">
+          <a href="#" class="border-2 border-gray-200 p-2 px-4 hover:text-red-600 mr-1">
             <i class="fa fa-heart"></i>
           </a>
           <a href="#" class="border-2 border-gray-200 p-2 px-4 hover:text-blue-300">
-            <i class="fa fa-share-square"></i>
+            <i class="text-3xl fa fa-share-square"></i>
           </a>
         </div>
       </div>
@@ -57,7 +57,7 @@
             <h4 class="photo__title py-1 text-center text-ellipsis text-sm sm:text-base font-semibold font-serif">{{photo.title}}</h4>
             <!-- Photo Image-->
             <div class="photo__image">
-              <a href="{{photo.image.url}}">
+              <a href="{{photo.get_absolute_url}}">
                 <img class="img-fluid" src="{{photo.image.url}}" alt="{{photo.gallery}} {{photo}} photo">
               </a>
             </div>

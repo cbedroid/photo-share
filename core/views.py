@@ -27,9 +27,8 @@ def get_current_user(request):
 class HomeListView(ListView):
     model = Gallery
     template_name = "core/index.html"
-    queryset = Gallery.objects.all()
     context_object_name = "galleries"
-    paginate_by = 25
+    paginate_by = 12
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -42,6 +41,7 @@ class HomeListView(ListView):
 
         # Preform lookup searches in all Gallery's related field
         search = self.request.GET.get("q")
+
         if search:
             qs = Gallery.objects.query_search(search, qs)
         return qs
@@ -54,7 +54,11 @@ class HomeListView(ListView):
         context["top_category"] = Category.objects.annotate(
             c=Count("gallery")
         ).order_by("-c")[:10]
-        return context
+
+
+        page = self.request.GET.get("page")
+        #     qs = paginator.page(1)
+
 
 
 class GalleryDetailView(DetailView):
@@ -232,6 +236,29 @@ class GalleryDeleteView(CRUDView, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy("core:index")
     template_name = "core/gallery_confirm_delete.html"
 
+# PHOTO 
+class PhotoDetailView(DetailView):
+    model = Photo
+    template_name = "core/photo_detail.html"
+    context_object_name = "photo"
+    slug_url_kwarg = "slug"
+
+    # Throws 404 if photo gallery is private
+    def get_queryset(self):
+        return Photo.objects.filter(
+            Q(gallery__public=True) | Q(gallery__user=get_current_user(self.request))
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get(self, request,*args,**kwargs):
+        self.object = self.get_object()
+        self.object.views += 1   
+        self.object.save()
+        return super().get(request,*args,**kwargs)
+
 
 class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Photo
@@ -270,9 +297,3 @@ class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == photo.gallery.user
 
 
-def testing(request):
-    context = {
-        "gallery": Gallery.objects.all(),
-        "photo": Photo.objects.all(),
-    }
-    return render(request, "core/testing.html", context)

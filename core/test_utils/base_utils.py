@@ -19,7 +19,6 @@ class BaseObjectUtils(object):
 
     MODERATOR_GROUP = Group.objects.get(name="moderator")
     category_choices = Category.CATEGORY_LIST
-    test_category = Category.objects.first()
     default_formset = {
         "name": "new_gallery",
         "category": ["1"],
@@ -67,6 +66,9 @@ class BaseObjectUtils(object):
             return pickle.load(obj)
 
     def create_test_objects(self, *args, **kwargs):
+        self.fixtures = ["test_users.json", "test_category.json", "test_galleries.json"]
+
+        self.test_category = Category.objects.get(pk=1)
         # # Test Users
         self.test_user_1 = get_object_or_404(User, pk=56)
         self.test_user_2 = get_object_or_404(User, pk=57)

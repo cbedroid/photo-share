@@ -1,7 +1,6 @@
 import os
 import shutil
 import json
-
 from model_bakery import baker
 from rest_framework.reverse import reverse as api_reverse
 from django.test import override_settings
@@ -191,9 +190,8 @@ class TestGalleryViewSets(APITestCase,BaseObjectUtils):
         staff_members = [self.test_staff,self.test_moderator]
         for member in staff_members:
             # Create initial data
-            gallery = baker.make('core.Gallery',user=self.test_user_1)
+            gallery = baker.make('core.Gallery',user=self.test_user_1,category=self.test_category)
             photo = baker.make('core.Photo',gallery=gallery)
-
             client = self.client
             client.force_authenticate(member)
             url = api_reverse('api:gallery-detail', kwargs= {"pk":gallery.pk})

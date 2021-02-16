@@ -55,7 +55,7 @@ class GallerySerializer(serializers.ModelSerializer):
              "public", "created", "updated",
              "user", "image","title", "photo_set",
         )
-        read_only_fields = ["user"]
+        read_only_fields = ("user",)
 
     def get_uri(self, obj):
         """ Get object reversed slug url"""
@@ -82,7 +82,10 @@ class GallerySerializer(serializers.ModelSerializer):
         )
 
         representation["uri"] = self.get_uri(instance)
-        representation["category"] = instance.category.get_name_display()
+        try:
+            representation["category"] = instance.category.get_name_display()
+        except:
+            pass 
         representation["photos"] = photo_set
         representation["id"] = instance.pk
         representation["updated"] = instance.updated.strftime(date_format)
@@ -142,8 +145,8 @@ class PhotoSerializer(serializers.ModelSerializer):
         model = Photo
         fields = "__all__"
         read_only_fields = (
-            "slug", "created",
-            'pk', "updated"
+            "slug", "created", "updated",
+            "tags", "views", "downloads"
             )
 
     def to_representation(self, instance):

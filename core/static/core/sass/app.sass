@@ -19,6 +19,11 @@ body
   margin: 0
   overflow-x: hidden
 
+
+.bgc
+  /* Create all bootstrap background color */
+  +bootstrap-background-color()
+
 .scrollbar
   &--hz::-webkit-scrollbar 
     height: 2px
@@ -32,6 +37,30 @@ body
   &--vt:hover::-webkit-scrollbar
     width: 2px
     background: grey
+
+
+.page-item
+
+  background: #fff
+  min-width: 35px
+  min-height: 35px 
+  width: auto
+  height: auto
+  text-align: center
+  border: 1px solid #c3c3c3
+  .page-link
+    display: grid 
+    place-items: center
+    width: 100%
+    height: 100%
+    padding: 2px 4px 
+    transition: .3s ease-in-out
+    &.active  
+      background: $color-cyan
+    &:hover
+      background: $color-blue
+      color: #fff
+
 
 
 /* Typography */
@@ -256,6 +285,11 @@ form
   &--h400
     max-height: 400px
 
+.img-full
+  width: 690px
+  height: 400px
+
+
 .img__upload-wrapper
   img
     display: block
@@ -271,10 +305,10 @@ form
   &__content
     padding: 25px 35px
   &__img
-    width: 590px
-    height: 400px
-
+      @extend .img-full
+        
   .share-grid
+    place-content: center
     .share-card .share__icon
       display: grid
       place-items: center
@@ -283,7 +317,6 @@ form
       font-size: 3rem
       padding: 4px 6px
       color: #fff
-
       transition: .3s ease-in-out
       &:hover
         color: inherit
@@ -296,6 +329,7 @@ form
   box-shadow: 3px 2px 8px rgba(0,0,0,.3)
   box-sizing: border-box
   cursor: pointer
+  text-align: center
   &:hover
     text-shadow: 0px 0px 8px rgba(0,0,0,.3)
     box-shadow: 3px 2px 10px rgba(0,0,0,.5)

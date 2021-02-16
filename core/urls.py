@@ -21,12 +21,16 @@ urlpatterns = [
     re_path(
         r"^gallery/new/$", views.GalleryCreateView.as_view(), name="gallery-create"
     ),
-    # re_path(r"^photo/delete/(?P<pk>\d+)/$",views.deletePhoto,name="photo-delete"),
+
+     re_path(
+        r"^photo/detail/(?P<owner>.*)/(?P<gallery>.*)/(?P<slug>.*)/$",
+        views.PhotoDetailView.as_view(),
+        name="photo-detail",
+    ),
     re_path(
         r"^photo/delete/(?P<pk>\d+)/$",
         views.PhotoDeleteView.as_view(),
         name="photo-delete",
     ),
     path("", views.HomeListView.as_view(), name="index"),
-    path("testing/", views.testing, name="testing"),
 ]

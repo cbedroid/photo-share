@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Gallery, Photo, Category
+from .models import Gallery, Photo, Category,Tag,Rate
 
 
 class DateCreatedAdmin(admin.ModelAdmin):
@@ -10,9 +10,11 @@ class DateCreatedAdmin(admin.ModelAdmin):
 
 
 class GalleryAdmin(DateCreatedAdmin):
-    list_display = ["name", "user", "public"]
+    list_display = ["name", "user", "public","category"]
 
 
 admin.site.register(Category)
+admin.site.register(Tag)
+admin.site.register(Rate)
 admin.site.register(Gallery, GalleryAdmin)
 admin.site.register(Photo, DateCreatedAdmin)

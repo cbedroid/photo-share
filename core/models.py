@@ -7,6 +7,7 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import User
+from PIL import Image
 
 
 class GalleryManager(models.Manager):
@@ -78,15 +79,21 @@ class Category(models.Model):
         (50, "wildlife"),
     )
     CATEGORY_LABEL = (
-        ("p", "primary text-light bg-blue-600 text-white"),
-        ("s", "secondary text-light bg-gray-500 opacity-75 text-white"),
-        ("g", "success text-dark  bg-green-600 text-white"),
-        ("w", "warning text-dark bg-yellow-400 text-black"),
-        ("d", "danger text-light bg-red-600 text-white"),
-        ("i", "info text-light bg-blue-500 text-white"),
+        ("bl",  "bgc-blue text-white text-light"),
+        ("bk",  "bgc-black text-white text-light"),
+        ("gy",  "bgc-grey text-white text-light"),
+        ("gn",  "bgc-green text-white text-dark"),
+        ("yl",  "bgc-yellow text-dark text-dark"),
+        ("rd",  "bgc-red text-white text-light"),
+        ("lbl", "bgc-cyan text-white text-light"),
+        ("or",  "bgc-orange text-white text-light"),
+        ("br",  "bgc-brown text-white text-light"),
+        ("lbr", "bgc-lt-brown text-white text-light"),
+        ("pk",  "bgc-pink  text-white text-light"),
+        ("pr",  "bgc-purple  text-white text-light"),
     )
     name = models.IntegerField(choices=CATEGORY_LIST, default=0, db_index=True)
-    label = models.CharField(max_length=1, choices=CATEGORY_LABEL, default=1)
+    label = models.CharField(max_length=3, choices=CATEGORY_LABEL, default="gy")
     slug = models.SlugField(blank=False, editable=False, db_index=True)
 
     class Meta:
@@ -114,6 +121,15 @@ class Category(models.Model):
         return self.get_name_display()
 
 
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50,blank=True,null=True)
+    
+    def __str__(self):
+        return self.name or "Tags"
+
+
+
 class Gallery(models.Model):
     objects = GalleryManager()
 
@@ -121,7 +137,7 @@ class Gallery(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     public = models.BooleanField(default=True)
     slug = models.SlugField(blank=False, editable=False, db_index=True)
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, db_index=True)
+    category = models.ForeignKey(Category,null=True,on_delete=models.SET_NULL, db_index=True)
     created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
@@ -158,6 +174,9 @@ class Photo(models.Model):
     image = models.ImageField(upload_to="gallery")
     slug = models.SlugField(blank=False, editable=False, db_index=True)
     gallery = models.ForeignKey(Gallery, db_index=True, on_delete=models.CASCADE)
+    tags  = models.ManyToManyField(Tag)
+    views = models.PositiveIntegerField(default=0)
+    downloads = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
@@ -171,8 +190,47 @@ class Photo(models.Model):
         self.slug = slugify(url)
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse(
+            "core:photo-detail",
+            kwargs={
+                "slug": self.slug, 
+                "owner": slugify(self.gallery.user.username),
+                "gallery":(slugify(self.gallery.name))
+            }
+        )
+
+
     def get_download_title(self):
         user = self.gallery.user
         app_name = settings.ROOT_URLCONF.split(".")[0].title()
         photo = re.sub(" ", "_", str(self))
         return f"{app_name}_{photo}_by_{user}.jpg"
+
+
+    def mime_type(self):
+        image = Image.open(self.image.path)
+        return image.get_format_mimetype() or "unknown"
+
+    def dimension(self):
+        return f"{self.image.height} X {self.image.width}"
+
+    def total_likes(self):
+        return self.rate_set.like.filter(like=True).count()
+
+    def total_stars(self):
+        return self.rate_set.like.filter(star=True).count()
+
+
+class Rate(models.Model):
+    like = models.BooleanField(default=False)
+    star = models.BooleanField(default=False)
+    photo  = models.ForeignKey(Photo,blank=True ,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,blank=True,on_delete=models.CASCADE)
+
+    def __str__(self):
+        photo = ""
+        if self.photo:
+            photo = self.photo.title
+        return f"{self.user} {photo} - Like: {int(self.like)} Star: {int(self.star)}"
+

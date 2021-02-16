@@ -35,7 +35,7 @@
       <p><b>Trending Category</b></p>
       <ul class="category scrollbar--hz flex flex-row justify-between py-1.5" style="overflow-x:auto;">
         {% for category in top_category %}
-        <li class="badge ring-1 {{category.get_label_display}} rounded-full p-1 mx-1">
+        <li class="badge badge--pill ring-1 {{category.get_label_display}} rounded-full p-1 mx-1">
           <a class="whitespace-nowrap text-sm sm:text-lg mx-1" href="{{ category.get_absolute_url }}">{{category}}</a>
         </li>
         {% endfor %}
@@ -43,9 +43,42 @@
     </div>
     <!-- End Top Category -->
 
+
+
     <!-- Gallery List-->
     <div id="gallery-collection" class="px-1 sm:px-2">
       <div class="row">
+        <!--Pagination-->
+        <ul class="pagination flex flex-row p-4">
+          {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{page_obj.previous_page_number}}">Back</a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Back</a>
+          </li>
+          {% endif %}
+          {% for pr in paginator.page_range %}
+          {% if page_obj.number == pr %}
+          <li class="page-item"><a class="page-link active">{{ pr }}</a></li>
+          {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ pr }}">{{ pr }}</a>
+          </li>
+          {% endif %}
+          {% endfor %}
+          {% if page_obj.has_next %}
+          <li class="page-item">
+            <a href="?page={{page_obj.next_page_number}}" class="page-link">Next</a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link">Next</a>
+          </li>
+          {% endif %}
+        </ul>
+        <!---->
         <ul class="gallery grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
           {% for gallery in galleries %}
           <li class="gallery__card shadow">
@@ -64,7 +97,7 @@
                 <div id="index-grid-overlay" class="overlay__content grid grid-flow-rows h-100 p-2">
                   <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
                     <a class="text-ellipsis" href="{{gallery.get_absolute_url}}"><b>{{gallery}}</b></a>
-                    <h6 class="mt-1"><span class="badge rounded-full {{gallery.category.get_label_display}} p-1">{{gallery.category.get_name_display}}</span></h6>
+                    <h6 class="mt-1"><span class="badge badge--pill rounded-full {{gallery.category.get_label_display}} p-1">{{gallery.category.get_name_display}}</span></h6>
                   </div>
                   <div class="flex-center text-xs sm:text-base mx-1 overflow-hidden">
                     <a class="text-shadow p-3" href="{{gallery.get_absolute_url}}"><b>view gallery</b></a>
@@ -85,7 +118,7 @@
             <h2 class="font-bold text-2xl">No gallery found {% if by_search %}for <span class="mt-2 text-gray-400">"{{ by_search }}"</span>{% endif %}</h2>
             <h4 class="font-semibold my-3">Be the first to create this gallery</h4>
             <div class="action mt-4">
-              <a class="cta cta--outline-yellow badge" href="{% url 'core:gallery-create' %}">create gallery</a>
+              <a class="cta cta--outline-yellow badge badge--pill" href="{% url 'core:gallery-create' %}">create gallery</a>
             </div>
             {% endfor %}
           </div>
