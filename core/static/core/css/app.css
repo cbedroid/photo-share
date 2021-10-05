@@ -302,23 +302,24 @@ form input[type="text"], form input[type="email"], form input[type="password"] {
   place-items: center; }
   .social-share__content {
     padding: 25px 35px; }
-  .social-share .share-grid {
-    place-content: center; }
-    .social-share .share-grid .share-card .share__icon {
-      display: grid;
-      place-items: center;
-      border-radius: 4px;
-      min-width: 110px;
-      font-size: 3rem;
-      padding: 4px 6px;
-      color: #fff;
-      transition: 0.3s ease-in-out; }
-      .social-share .share-grid .share-card .share__icon:hover {
-        color: inherit; }
-      .social-share .share-grid .share-card .share__icon p {
-        text-align: center;
-        font-size: 1.5rem; }
 
+  .social-share__img {
+    width: 590px;
+    height: 400px; }
+  .social-share .share-grid .share-card .share__icon {
+    display: grid;
+    place-items: center;
+    border-radius: 4px;
+    min-width: 110px;
+    font-size: 3rem;
+    padding: 4px 6px;
+    color: #fff;
+    transition: 0.3s ease-in-out; }
+    .social-share .share-grid .share-card .share__icon:hover {
+      color: inherit; }
+    .social-share .share-grid .share-card .share__icon p {
+      text-align: center;
+      font-size: 1.5rem; }
 .badge {
   box-shadow: 3px 2px 8px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
