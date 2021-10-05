@@ -1,0 +1,14 @@
+[
+  {
+    "model": "core.photo",
+    "pk": 1,
+    "fields": {
+      "title": "default_image",
+      "image": "gallery/defaults/default_image.jpg",
+      "slug": "test_image_1",
+      "gallery": 98,
+      "created": "2021-02-14T07:64:32.784Z",
+      "updated": "2021-02-14T07:64:32.784Z"
+    }
+  }
+]
