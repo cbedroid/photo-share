@@ -80,6 +80,25 @@ DATABASES = {
     }
 }
 
+
+# REDIS
+REDIS_TTL_TIMEOUT = None
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SOCKET_CONNECT_TIMEOUT": 5,  # seconds
+            "SOCKET_TIMEOUT": 5,  # seconds
+            # https://redis.io/topics/security
+            # For future production server, this will need to be configured manually.
+            # Highly recommended to protect sensitive data  - minimum: 60+ chars.
+            "PASSWORD": os.getenv("REDIS_PASSWORD"),
+        },
+    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
