@@ -1,0 +1,60 @@
+# Docker compose for Local Development
+version: "3.3"
+
+services:
+  django:
+    build:
+      context: ./django
+      dockerfile: Dockerfile.dev
+    container_name: dev-django
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - REDIS_URL=redis://redis:6379/
+    ports:
+      - 8001:8000
+    env_file:
+      - ./.env.dev
+    volumes:
+      - ./django/:/srv/app
+      - static:/srv/app/static
+      - media:/srv/app/media
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:9.6.22-buster
+    container_name: dev-db
+    ports:
+      - 5432:5432
+    env_file: ./.env.dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: dev-redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_cache:/data
+
+  nginx:
+    build:
+      context: ./nginx/dev
+      dockerfile: Dockerfile
+    container_name: dev-nginx
+    ports:
+      - 8080:80
+    volumes:
+      - static:/srv/app/static
+      - media:/srv/app/media
+    depends_on:
+      - django
+      - db
+
+volumes:
+  postgres_data:
+  redis_cache:
+  media:
+  static:

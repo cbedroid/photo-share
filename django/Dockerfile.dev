@@ -1,0 +1,54 @@
+# Note: This is DEV (test) Dockerfile for local testing
+# Pull official base image
+FROM python:3.9.3-slim-buster
+
+# create linux user
+RUN addgroup --system app && adduser --system --group app
+
+# Create Directory
+ENV APP_HOME=/srv/webapp
+
+RUN mkdir -p $APP_HOME
+RUN mkdir -p $APP_HOME/static
+RUN mkdir -p $APP_HOME/media
+
+# set work directory
+WORKDIR $APP_HOME
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Install dependencies
+RUN pip install --upgrade pip
+
+# copy requirements.txt to app directory
+COPY ./requirements.txt .
+
+# Install linux dependencies
+RUN apt-get update && apt-get install --no-install-recommends -y \
+  apt-utils \
+  netcat \
+  postgresql-client \
+  libpq-dev \
+  gcc \
+  redis-server \
+  libjpeg-dev \
+  && pip install -r requirements.txt --no-cache-dir\
+  && apt-get autoremove -y gcc
+
+
+# copy entrypoint.sh to app directory
+COPY ./entrypoint.sh .
+
+# copy project to app directory
+COPY . .
+
+# chown all the files to the app user
+RUN chown -R app:app .
+
+# Change to linux user account
+USER app
+
+# run entrypoint.sh
+ENTRYPOINT ["sh","/srv/app/entrypoint.sh"]
