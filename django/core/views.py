@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count, Q
 from django.urls import reverse, reverse_lazy
-from django.utils.text import slugify
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -254,12 +253,8 @@ class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self, *args, **kwargs):
         gallery = self.object.gallery
         if gallery.photo_set.count() > 1:
-            return reverse(
-                "core:gallery-detail",
-                kwargs={"slug": gallery.slug, "owner": slugify(gallery.user.username)},
-            )
-        else:
-            return reverse("core:index")
+            return gallery.get_absolute_url()
+        return reverse("core:index")
 
     def post(self, *args, **kwargs):
         response = super().post(*args, **kwargs)
