@@ -21,6 +21,7 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(" ")
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
     "django.contrib.admin",
@@ -156,3 +157,46 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+
+JAZZMIN_SETTINGS = {
+    # title of the window
+    "site_title": "Photo-Share Admin",
+    # Title on the brand, and the login screen (19 chars max)
+    "site_header": "PHOTO-SHARE",
+    # square logo to use for your site, must be present in static files, used for favicon and brand on top left
+    "site_logo": "static/assets/PhotoShare-logo.png",
+    # Welcome text on the login screen
+    "welcome_sign": "Welcome to Photo-Share",
+    # Copyright on the footer
+    "copyright": "NoworNever LLC",
+    # The model admin to search from the search bar, search bar omitted if excluded
+    "search_model": "users.User",
+    # Order the auth app before the books app, other apps will be alphabetically placed after these
+    "order_with_respect_to": [
+        "users",
+        "account",
+        "core",
+        "auth",
+    ],
+    # Custom icons for side menu apps/models
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "account.emailaddress": "fas fa-envelope",
+        "account_profile.account": "fa fa-user-cog",
+        "core.category": "fa fa-th-list",
+        "core.gallery": "fa fa-images",
+        "core.photo": "fa fa-image",
+        "core.rate": "fa fa-thumbs-up",
+        "core.tag": "fa fa-tags",
+    },
+    # Icons that are used when one is not manually specified
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    # Relative paths to custom CSS/JS scripts (must be present in static files)
+    "custom_css": None,
+    "custom_js": None,
+    # Whether to show the UI customizer on the sidebar
+    "show_ui_builder": False,
+}
