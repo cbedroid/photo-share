@@ -160,6 +160,18 @@ class Gallery(models.Model):
             kwargs={"slug": self.slug, "owner": slugify(self.user.username)},
         )
 
+    def get_update_url(self):
+        return reverse(
+            "core:gallery-update",
+            kwargs={"slug": self.slug, "owner": slugify(self.user.username)},
+        )
+
+    def get_delete_url(self):
+        return reverse(
+            "core:gallery-delete",
+            kwargs={"slug": self.slug, "owner": slugify(self.user.username)},
+        )
+
     def get_api_url(self, request=None):
         return api_reverse("api:gallery-detail", kwargs={"pk": self.slug}, request=request)
 
@@ -209,6 +221,9 @@ class Photo(models.Model):
                 "gallery": (slugify(self.gallery.name)),
             },
         )
+
+    def get_delete_url(self):
+        return reverse("core:photo-delete", kwargs={"pk": self.pk})
 
     def get_download_title(self):
         user = self.gallery.user
