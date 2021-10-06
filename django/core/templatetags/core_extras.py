@@ -21,7 +21,7 @@ def get_user_gallery(context):
     request = context["request"]
     if request.user.is_authenticated:
         user = request.user
-        context["user_gallery"] = Gallery.objects.filter(user=user)
+        context["user_gallery"] = Gallery.objects.filter(user=user)[:10]
         # Interesting enough here,we are not returning any data
         # as Django documentation states. Because we are manipulating
         # the context data here. There is no need to pass additional
@@ -29,7 +29,7 @@ def get_user_gallery(context):
 
     """
      TODO: Figure out why not returning any data here results in rendering
-            a "None" value when instantiating this filter tag in the template.
+            a "None" value when instalizing this filter tag in the template.
             I believe the problem is cause by using the wrong filter tag here??
             I worked around this issue by returning an empty string, but this
             may not be best practice to do so.
