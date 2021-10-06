@@ -2,66 +2,88 @@
 <div id="site-navigation">
   <nav id="main-nav" class="p-1 sm:py-4 sm:px-8">
     <div class="inner-nav flex flex-col sm:flex-row sm:items-center sm:justify-between">
-      <div class="nav__brand flex justify-between sm:flex-none border-bottom">
-        <a class="nav__brand-title" href="{% url 'core:index' %}"><span class="text__lg text__accent">PhotoShare</span></a>
-        <button class="bg-white-500 sm:hidden mr-4 p-1 border" data-toggler="true" data-dropdown-target="nav-list">
-          <svg class="stroke-1 text-black h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-        <ul class="nav__list collapse text__sm sm:flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 trans-300" data-expanded="false" data-target="nav-list">
-          <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Stories</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Capabilites</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Company</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
-        </ul>
+      <div class="nav__brand flex justify-between items-center sm:flex-none border-bottom">
+        <img id="site-logo" src="{% static 'assets/PhotoShare-logo.png' %}" alt="Photo Share logo">
+        <a class="nav__brand-title" href="{% url 'core:index' %}">
+          <span class="text-2xl font-extrabold text__accent">PhotoShare</span>
+        </a>
 
-        <ul class="nav__list collapse nav__account mt-2 sm:mt-0 sm:flex flex-col sm:flex-row sm:space-x-2 trans-300" data-expanded="false" data-target="nav-list">
-          {% if request.user.is_authenticated %}
-          <li><p class="nav-link">{{request.user.username}}</p></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
-          {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
-          {% endif %}
-        </ul>
-      </nav>
-    </div>
-
-    <!-- Mini Nav-->
-    <div id="mini-nav" class="bg-white flex flex-row align-middle py-2">
-      <label for="aside_checkbox" class="px-4 grid place-items-center">
-        <i id="aside_menu_btn" class="fa fa-bars" style="font-size:22px"></i>
-      </label>
-
-      <div class="flex-wrapper flex-1">
-        <div class="flex flex-col sm:flex-row space-y-2 sm:justify-between px-2 pr-6">
-          <!-- Navigation Search-->
-          <form action="/">
-            <div class="search-tray search-tray--icon search-tray--collapse">
-              <input type="text" class="search_bar" list="category-list" placeholder="Search for a gallery" name="q" aria-label="search bar">
-              <button type="submit">
-                <i class="search-icon fa fa-search"></i>
-              </button>
+        <!-- Mini Nav Secondary Menu-->
+        <div class="flex-wrapper flex-none  invisible mobile-show md:hidden trans-400" data-scroll-show="true">
+          <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+          <div x-data="{ dropdownOpen: false }" class="relative">
+            <button @click="dropdownOpen = !dropdownOpen" class="relative z-10 block rounded-md bg-white p-2 focus:outline-none">
+              <span class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                menu
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            </button>
+            <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10"></div>
+            <div x-show="dropdownOpen" class="absolute right-2 pb-3 w-80 text-white bg-gray-700 divide-y-4 divide-gray-300 rounded-md shadow-xl z-20" style="z-index: 2000;">
+              <div class="nav-menu">
+                <h4 class="menu-title text-shadow font-extrabold bg-white text-black px-2">Menu</h4>
+                <ul class="block space-y-3 my-2 px-2">
+                  <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#">Stories</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#">Capabilites</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#">Company</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                </ul>
+              </div>
+              <div class="nav-menu nav--sub-menu pb-3">
+                <h4 class="menu-title text-shadow font-extrabold bg-white text-black px-2" >Account</h4>
+                <ul id="mini-menu" class="mini-nav_secondary-menu nav__list space-y-3  mb-2 p-2 trans-300">
+                  <li><p class="nav-link font-semibold text-lg text__accent sm:px-6">{{request.user.username}}</p></li>
+                  <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
+                  {% if request.user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+                  {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+                  {% endif %}
+                </ul>
+              </div>
             </div>
-          </form>
-          <!-- -->
-          <!-- Mini Nav Secondary Menu-->
-          <div class="flex-wrapper flex-none invisible mobile-show trans-400" data-scroll-show="true">
-            <ul id="mini-menu" class="mini-nav_secondary-menu nav__list flex-between space-x-6 trans-300">
-              <li><p class="nav-link font-semibold text-lg text__accent sm:px-6">{{request.user.username}}</p></li>
-              <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
-              {% if request.user.is_authenticated %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
-              {% else %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
-              {% endif %}
-            </ul>
           </div>
         </div>
         <!-- -->
       </div>
-      <!-- End Navigation Category-->
+      <ul class="nav__list collapse text__sm sm:flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 trans-300" data-expanded="false" data-target="nav-list">
+        <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Stories</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Capabilites</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Company</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+      </ul>
+
+      <ul class="nav__list collapse nav__account mt-2 sm:mt-0 sm:flex flex-col sm:flex-row sm:space-x-2 trans-300" data-expanded="false" data-target="nav-list">
+        {% if request.user.is_authenticated %}
+          <li><p class="nav-link">{{request.user.username}}</p></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+        {% endif %}
+      </ul>
     </div>
-    <!-- End Mini Nav-->
+  </nav>
+  <!-- Mini Nav-->
+  <div id="mini-nav">
+    <div class="flex justify-between sm:justify-start items-center w-full p-2">
+      <label for="aside_checkbox" class="px-4 ">
+        <i id="aside_menu_btn" class="fa fa-bars" style="font-size:22px"></i>
+      </label>
+      <!-- Navigation Search-->
+      <form action="/">
+        <div class="search-tray search-tray--icon search-tray--collapse">
+          <input type="text" class="search_bar" list="category-list" placeholder="Search for a gallery &#128269" name="q" aria-label="search bar">
+          <button type="submit">
+            <i class="search-icon fa fa-search"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+    <!-- -->
+  </div>
+  <!-- End Mini Nav-->
+</div>

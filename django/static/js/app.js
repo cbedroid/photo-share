@@ -35,8 +35,11 @@ $(document).ready(function () {
   ------------------------------------*/
   const togglers = $('[data-toggler="true"]');
   togglers.bind(CLICK, function () {
-    const target = $(this).data("dropdown-target");
-    $(`[data-target=${target}`).toggleClass("collapse collaspe--all-device");
+    const dropdown_elem = $(this).data("dropdown-target");
+    const target = $(`[data-target=${dropdown_elem}`)[0];
+    $(target).toggleClass("collapse collapse--all-device");
+    const is_expanded = $(target).attr("data-expanded") == "true";
+    $(target).attr("data-expanded", !is_expanded);
   });
 
   /* --------------------------------

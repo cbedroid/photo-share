@@ -8,8 +8,8 @@ any other user's data
 -- See core_extra.py for more information
 {% endcomment %}
 {% get_user_gallery %}
-
 <section id="gallery-sidebar">
+
   <div class="wrapper">
     <div id="aside-header" class="header">
       <!--Aside Header-->
@@ -45,9 +45,11 @@ any other user's data
             </div>
             <!-- preview right-->
             <div class="preview__right inline-block space-x-2">
-              <small class="photo_total badge bg-red-600 text-white rounded-full inline-block w-5 h-5 align-middle">
+              <div class="photo-badge">
+              <small class="badge bg-red-600 text-white rounded-full inline-block w-5 h-5 align-middle">
                 <span class="photo-count">{{gallery.photo_set.count}}</span>
               </small>
+              </div>
               <i class="preview__toggler fa fa-caret-down align-middle"></i>
             </div>
           </div>
@@ -56,12 +58,14 @@ any other user's data
           <!--Submenu Photo -->
           <div class="photo-menu photo-menu--collapse mt-1">
             <ul class="photo-list flex flex-col collapse space-y-2 pl-8" data-expanded="false" data-target="photolist-{{forloop.counter}}">
-              <a href="{{gallery.get_absolute_url}}" class="cta cta--blue badge badge--shw float-left text-xs my-1">view gallery</a>
+              <div class="floater-wrapper w-full">
+                <a href="{{gallery.get_absolute_url}}" class="cta cta--blue badge badge--shw float-right max-w-sm text-xs my-1">view gallery</a>
+              </div>
               <div class="clear-both"></div>
               {% for photo in gallery.photo_set.all %}
               <li class="photo-list__item font-thin hover-dark text-sm flex flex-between hover-dark p-1">
                 <p class="text-ellipsis">{{photo}}</p>
-                <a class="" href="{{photo.image.url}}">
+                <a class="img-link" href="{{photo.image.url}}">
                   <img class="block max-w-8 max-h-8 h-auto w-auto" src="{{photo.image.url}}" alt="{{gallery}} {{photo}} image">
                 </a>
               </li>
