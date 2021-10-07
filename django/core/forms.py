@@ -61,7 +61,7 @@ class PhotoForm(forms.ModelForm):
     CUSTOM_IMAGE_LABEL = """
         <label class="photoset__image_label">
             <div class="image--wrapper">
-                <img class="image form-image " src="https://icon-library.net/images/upload-photo-icon/upload-photo-icon-21.jpg"/>
+                <img class="image form-image " src="static/assets/add_image.png"/>
             </div>
             <div><p class="image__label text-ellipsis mt-1">upload</p></div>
         </label>"""

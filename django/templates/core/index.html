@@ -2,122 +2,125 @@
 {% load static core_extras %}
 
 {% block body %}
-<section id="index-main" class="w-100">
-  <div class="wrapper clear-top">
-    <!-- Hero -->
-    <div id="intro-hero" class="hero pos-relative" style="background-image:url('{% get_media_prefix %}public/intro_banner_splash.png')">
-      <div class="hero__content overlay overlay--bgdrk">
-        <div class="content text-white align-content-center h-100">
-          <h2 class="content__title text-responsive leading-none fw-bold text-shadow-dark w-100">
-            <p>PhotoShare </p>
-            <p>G <i class="icon-logo fas fa-images"></i> llery </p>
-          </h2>
-          <div class="content__text grey-text text-lighten-4 mt-2">
-            <div class="text-wrapper text-shadow-dark fw-bold text-gray-300">
-              <p class="text-shadow">Let the world see your amazing photos!</p>
-              <p class="hidden sm:block mt-1">Create your gallery today! </p>
-            </div>
-            <div class="content__cta mt-4">
-              <a href="{% url 'core:gallery-create' %}" class="cta cta--outline-yellow py-2 px-4!">Get started today</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Hero -->
-  </div>
-  <hr>
+	<section id="index-main" class="w-100">
+		<div class="wrapper clear-top">
+			<!-- Hero -->
+      <div id="intro-hero" class="hero pos-relative" style="background-image:url({% static 'assets/intro_banner_splash.png' %})">
+				<div class="hero__content overlay overlay--bgdrk">
+					<div class="content text-white align-content-center h-100">
+						<h2 class="content__title text-responsive leading-none fw-bold text-shadow-dark w-100">
+							<p>PhotoShare </p>
+							<p>G <i class="icon-logo fas fa-images"></i> llery </p>
+						</h2>
+						<div class="content__text grey-text text-lighten-4 mt-2">
+							<div class="text-wrapper text-shadow-dark fw-bold text-gray-300">
+								<p class="text-shadow">Let the world see your amazing photos!</p>
+								<p class="hidden sm:block mt-1">Create your gallery today! </p>
+							</div>
+							<div class="content__cta mt-4">
+								<a href="{% url 'core:gallery-create' %}" class="cta cta--outline-yellow py-2 px-4!">Get started today</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Hero -->
+		</div>
+		<hr>
+		<section id="splash_main_content" class="mb-2">
+			<div class="xl:container mx-auto">
+				<!-- Trending Categories-->
+				<div class="trend-category my-2">
+					<h4><b>Trending Category</b></h4>
+					<ul class="category category--slider">
+						{% for category in top_category %}
+							<li class="badge category__badge {{category.get_label_display}} rounded-full p-1">
+								<a class="whitespace-nowrap text-sm sm:text-lg mx-1" href="{{ category.get_absolute_url }}#gallery-collection">{{category}}</a>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+				<!-- End Top Category -->
+				<!-- Gallery Content-->
+				<div class="gallery-content px-1 sm:px-2">
+					<div class="row">
+						<!--Pagination-->
+						<ul class="pagination flex flex-row p-4">
+							{% if page_obj.has_previous %}
+								<li class="page-item page-prev">
+									<a class="page-link" href="?page={{page_obj.previous_page_number}}">Back</a>
+								</li>
+							{% else %}
+								<li class="page-item page-prev disabled">
+									<a class="page-link" href="javascript:void();" disabled>Back</a>
+								</li>
+							{% endif %}
 
-  <section id="main_gallery" class="mb-2">
-    <!-- Top Categories-->
-    <div class="top-category my-2 p-2">
-      <p><b>Trending Category</b></p>
-      <ul class="category scrollbar--hz flex flex-row justify-between py-1.5" style="overflow-x:auto;">
-        {% for category in top_category %}
-        <li class="badge badge--pill ring-1 {{category.get_label_display}} rounded-full p-1 mx-1">
-          <a class="whitespace-nowrap text-sm sm:text-lg mx-1" href="{{ category.get_absolute_url }}">{{category}}</a>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-    <!-- End Top Category -->
+							{% for pr in paginator.page_range %}
+								{% if page_obj.number == pr %}
+									<li class="page-item"><a class="page-link page-number active">{{ pr }}</a></li>
+								{% else %}
+									<li class="page-item"><a class="page-link page-number" href="?page={{ pr }}">{{ pr }}</a></li>
+								{% endif %}
+							{% endfor %}
+							{% if page_obj.has_next %}
+								<li class="page-item page-next ">
+									<a href="?page={{page_obj.next_page_number}}" class="page-link">Next</a>
+								</li>
+							{% else %}
+								<li class="page-item page-next disabled">
+									<a class="page-link" disabled>Next</a>
+								</li>
+							{% endif %}
+						</ul>
+						<!---->
 
-
-
-    <!-- Gallery List-->
-    <div id="gallery-collection" class="px-1 sm:px-2">
-      <div class="row">
-        <!--Pagination-->
-        <ul class="pagination flex flex-row p-4">
-          {% if page_obj.has_previous %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{page_obj.previous_page_number}}">Back</a>
-          </li>
-          {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" href="#">Back</a>
-          </li>
-          {% endif %}
-          {% for pr in paginator.page_range %}
-          {% if page_obj.number == pr %}
-          <li class="page-item"><a class="page-link active">{{ pr }}</a></li>
-          {% else %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ pr }}">{{ pr }}</a>
-          </li>
-          {% endif %}
-          {% endfor %}
-          {% if page_obj.has_next %}
-          <li class="page-item">
-            <a href="?page={{page_obj.next_page_number}}" class="page-link">Next</a>
-          </li>
-          {% else %}
-          <li class="page-item disabled">
-            <a class="page-link">Next</a>
-          </li>
-          {% endif %}
-        </ul>
-        <!---->
-        <ul class="gallery grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
-          {% for gallery in galleries %}
-          <li class="gallery__card shadow">
-            <div class="gallery__content pos-relative">
-              <div class="gallery__image image">
-                <img class="img-fluid" src="{{gallery.cover_photo.image.url}}" alt="{{gallery}} {{gallery.cover_photo}} photo">
-              </div>
-              <!-- Gallery Overlay -->
-              <div class="image-overlay overlay overlay--bgdark overlay--hovershow text-white">
-                <div id="index-grid-overlay" class="overlay__content grid grid-flow-rows h-100 p-2">
-                  <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
-                    <a class="text-ellipsis" href="{{gallery.get_absolute_url}}"><b>{{gallery}}</b></a>
-                    <h6 class="mt-1"><span class="badge badge--pill rounded-full {{gallery.category.get_label_display}} p-1">{{gallery.category.get_name_display}}</span></h6>
-                  </div>
-                  <div class="flex-center text-xs sm:text-base mx-1 overflow-hidden">
-                    <a class="text-shadow p-3" href="{{gallery.get_absolute_url}}"><b>view gallery</b></a>
-                  </div>
-                  <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
-                    <p class="">{{gallery.photo_set.count}}
-                      <i class="fas fa-images"></i>
-                    </p>
-                    <p class="font-italic text-ellipsis"><i class="fa fa-user-circle user__icon mr-1"></i>{{gallery.user.username}} </p>
-                  </div>
-                </div>
-              </div>
-              <!-- Gallery Overlay -->
-            </div>
-          </li>
-          {% empty %}
-          <div class="no-results min-h row col-12 bg-white absolute left-0 bottom-90 z-auto mt-3 px-4">
-            <h2 class="font-bold text-2xl">No gallery found {% if by_search %}for <span class="mt-2 text-gray-400">"{{ by_search }}"</span>{% endif %}</h2>
-            <h4 class="font-semibold my-3">Be the first to create this gallery</h4>
-            <div class="action mt-4">
-              <a class="cta cta--outline-yellow badge badge--pill" href="{% url 'core:gallery-create' %}">create gallery</a>
-            </div>
-            {% endfor %}
-          </div>
-        </ul>
-      </div>
-    </div>
-  </section>
-</section>
+						<!-- Gallery Card Collection -->
+						<div id="gallery-collection" class="gallery-card-deck">
+							<ul class="gallery-list grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+								{% for gallery in galleries %}
+									<li class="gallery__card shadow">
+										<div class="inner--content pos-relative">
+											<div class="gallery__image image">
+												<img class="img-fluid" src="{{gallery.cover_photo.image.url}}" alt="{{gallery}} {{gallery.cover_photo}} photo">
+											</div>
+											<!--card image overlay -->
+											<div class="image-overlay overlay overlay--bgdark overlay--hovershow text-white">
+												<div id="index-grid-overlay" class="overlay__content grid grid-flow-rows h-100 p-2">
+													<div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
+														<a class="text-ellipsis" href="{{gallery.get_absolute_url}}"><b>{{gallery}}</b></a>
+														<h6 class="mt-1"><span class="badge badge--pill rounded-full {{gallery.category.get_label_display}} p-1">{{gallery.category.get_name_display}}</span></h6>
+													</div>
+													<div class="flex-center text-xs sm:text-base mx-1 overflow-hidden">
+														<a class="text-shadow p-3" href="{{gallery.get_absolute_url}}"><b>view gallery</b></a>
+													</div>
+													<div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
+														<p>{{gallery.photo_set.count}}
+														<i class="fas fa-images"></i>
+														</p>
+														<p class="font-italic text-ellipsis"><i class="fa fa-user-circle user__icon mr-1"></i>{{gallery.user.username}} </p>
+													</div>
+												</div>
+											</div>
+											<!-- -->
+										</div>
+									</li>
+								{% endfor %}
+							</ul>
+							{% if not galleries %}
+								<div class="content-empty">
+									<h1 class="font-bold text-3xl">No gallery found {% if by_search %}for <span class="mt-2 text-gray-400">"{{ by_search }}"</span>{% endif %}</h1>
+									<h4 class="font-semibold my-3">Be the first to create this gallery</h4>
+									<div class="action mt-4">
+										<a class="cta cta--lg-full cta--outline-yellow  badge--pill block w-56 px-5" href="{% url 'core:gallery-create' %}">Create Gallery</a>
+									</div>
+								</div>
+							{% endif %}
+						</div>
+						<!-- End Gallery Collection -->
+					</div>
+				</div>
+			</div>
+		</section>
+	</section>
 {% endblock body %}

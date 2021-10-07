@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count, Q
 from django.urls import reverse, reverse_lazy
-from django.utils.text import slugify
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -52,6 +51,65 @@ class HomeListView(ListView):
         return context
 
 
+class CRUDMixin(LoginRequiredMixin):
+    model = Gallery
+    form_class = GalleryForm
+    formset_class = GalleryFormSet
+    template_name = "core/gallery_form.html"
+    object = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.method == "GET":
+            context["form"] = self.form_class(instance=self.object)
+            context["formset"] = self.formset_class(
+                prefix="photo",
+                queryset=Gallery.objects.none(),
+            )
+        else:
+            context["form"] = self.form_class(instance=self.object)
+            context["formset"] = self.formset_class(
+                self.request.POST,
+                self.request.FILES,
+                instance=self.object,
+                prefix="photo",
+            )
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+        kwargs["gallery_update_obj"] = self.object
+        return kwargs
+
+    def form_valid(self, form):
+        # Add user and save the Gallery object
+        context = self.get_context_data()
+        formset = context.get("formset")
+        form.instance.user = self.request.user
+        # get gallery form, do not save until formset are valid
+        self.object = form.save(commit=False)
+
+        # Validate all formset are valid
+        if not form.is_valid() or not formset.is_valid():
+            context["form"] = form
+            return super().form_invalid(form)
+
+        # iterate through formset and save photo
+        self.object = form.save()
+        if formset.has_changed():
+            for subform in formset:
+                subform.full_clean()
+                if not subform.is_valid():
+                    return super().form_invalid(form)
+                title = subform.cleaned_data.get("title")
+                image = subform.cleaned_data.get("image")
+                if image and title:
+                    subform.instance.gallery = self.object
+                    subform.save()
+        return super().form_valid(form)
+
+
 class GalleryDetailView(DetailView):
     model = Gallery
     template_name = "core/gallery_detail.html"
@@ -71,156 +129,60 @@ class GalleryDetailView(DetailView):
 
         if related_gallery.exists():
             # Filter galleries by creator or its public status
-
             # Include all public or galleries belonging to the current user
-            related_gallery = related_gallery.filter(Q(public=True) | Q(user=get_current_user(self.request)))
-
-            # Exclude the current gallery from the queryset
-            related_gallery = related_gallery.exclude(name=self.object.name)
-
-            # Limiting the total number of related_gallery to display in template
-            related_gallery_total = related_gallery.count()
-            if related_gallery_total >= 20:
-                related_gallery = related_gallery[:20]
+            related_gallery = related_gallery.filter(
+                Q(public=True) | Q(user=get_current_user(self.request)),
+            ).exclude(name=self.object.name)
 
         context["photo_set"] = self.object.photo_set.all()
-        context["related_gallery"] = related_gallery
+        context["related_gallery"] = related_gallery[:20]
         return context
 
 
-class CRUDView(LoginRequiredMixin):
+class GalleryCreateView(CRUDMixin, CreateView):
     model = Gallery
-    form_class = GalleryForm
-    template_name = "core/gallery_form.html"
-    object = None
 
-    def get_context_data(self, *args, **kwargs):
-        # NOTE: Removed code conjuction and added it to the  proper view
-        context = super().get_context_data(**kwargs)
-        context["request"] = self.request
-        return context
+    def get_success_url(self, *args, **kwargs):
+        return self.object.get_absolute_url()
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["request"] = self.request
-        kwargs["gallery_update_obj"] = self.object
-        return kwargs
 
-    def form_valid(self, form, formset):
-        # Add user and save the Gallery object
-        form.instance.user = self.request.user
-        self.object = form.save()
-
-        # Validate all formset
-        for subform in formset:
-            if subform.is_valid():
-                title = subform.cleaned_data.get("title")
-                image = subform.cleaned_data.get("image")
-                if image and title:
-                    subform.instance.gallery = self.object
-                    subform.save()
-
-        return super().form_valid(form)
-
-    def form_invalid(self, form, formset):
-        context = self.get_context_data()
-        context["form"] = form
-        context["formset"] = formset
-        return self.render_to_response(context)
+class GalleryUpdateView(CRUDMixin, UserPassesTestMixin, UpdateView):
+    model = Gallery
 
     def test_func(self):
         """Test whether the Gallery belongs to the current user"""
-        gallery = self.get_object()
-        return self.request.user == gallery.user
+        return self.request.user == self.get_object().user
 
-
-class GalleryCreateView(CRUDView, CreateView):
-    model = Gallery
-    object = None
-    form_class = GalleryForm
-    formset_class = GalleryFormSet
-    template_name = "core/gallery_form.html"
-
-    def get(self, request, *args, **kwargs):
+    def form_valid(self, form):
         context = self.get_context_data()
-        form = self.get_form()
-        context["form"] = form
-        context["formset"] = GalleryFormSet(
-            prefix="photo",
-            queryset=Gallery.objects.none(),
-        )
-        return self.render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data()
-        form = self.get_form()
-        formset = GalleryFormSet(
-            request.POST,
-            request.FILES,
-            instance=self.object,
-            prefix="photo",
-        )
-        context["form"] = form
-        context["formset"] = formset
-
-        if form.is_valid() and formset.is_valid():
-            # Only allow users to create gallery if formset is valid
-            # This way there wil be no empty galleries.
-            return self.form_valid(form, formset)
-        return self.render_to_response(context)
-
-
-class GalleryUpdateView(CRUDView, UserPassesTestMixin, UpdateView):
-    form_class = GalleryForm
-    formset_class = GalleryFormSet
-
-    def test_func(self):
-        """Test whether the Gallery belongs to the current user"""
-        gallery = self.get_object()
-        return self.request.user == gallery.user
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        context = self.get_context_data()
-        form = self.get_form()
-        context["form"] = form
-        context["formset"] = GalleryFormSet(
-            prefix="photo",
-            queryset=Gallery.objects.none(),
-        )
-        return self.render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        context = self.get_context_data()
-        form = self.get_form()
-        formset = GalleryFormSet(
-            request.POST,
-            request.FILES,
-            instance=self.object,
-            prefix="photo",
-        )
-        context["form"] = form
-        context["formset"] = formset
-
+        formset = context.get("formset")
         if form.is_valid():
+            self.object = form.save()
+            # since we are using gallery name as slug and
+            # slug as lookup field for this view,
+            # we have to catch gallery name changes here
+            self.succes_url = self.object.get_update_url()
+
             # check whether images were added during update
             if formset.has_changed():
                 formset.full_clean()
                 # if images were added but failed, then fail all forms!
                 if not formset.is_valid():
-                    return self.form_invalid(form, formset)
-                return self.form_valid(form, formset)
-            elif form.has_changed():
-                # If only the current gallery object name was changed
-                # then valid it and return the validated response
-                return self.form_valid(form, formset)
-        return self.render_to_response(context)
+                    context["formset"] = formset
+                    return super().form_invalid(form)
+        return super().form_valid(form)
 
 
-class GalleryDeleteView(CRUDView, UserPassesTestMixin, DeleteView):
-    success_url = reverse_lazy("core:index")
+class GalleryDeleteView(CRUDMixin, UserPassesTestMixin, DeleteView):
+    model = Gallery
     template_name = "core/gallery_confirm_delete.html"
+
+    def test_func(self):
+        """Test whether the Gallery belongs to the current user"""
+        return self.request.user == self.get_object().user
+
+    def get_success_url(self):
+        return reverse_lazy("core:index")
 
 
 # PHOTO
@@ -251,15 +213,16 @@ class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     template_name = "core/photo_confirm_delete.html"
     pk_kwargs = "pk"
 
+    def test_func(self):
+        """Test whether the Photo belongs to the current user"""
+        photo = self.get_object()
+        return self.request.user == photo.gallery.user
+
     def get_success_url(self, *args, **kwargs):
         gallery = self.object.gallery
         if gallery.photo_set.count() > 1:
-            return reverse(
-                "core:gallery-detail",
-                kwargs={"slug": gallery.slug, "owner": slugify(gallery.user.username)},
-            )
-        else:
-            return reverse("core:index")
+            return gallery.get_absolute_url()
+        return reverse("core:index")
 
     def post(self, *args, **kwargs):
         response = super().post(*args, **kwargs)
@@ -276,8 +239,3 @@ class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
                 ),
             )
         return response
-
-    def test_func(self):
-        """Test whether the Photo belongs to the current user"""
-        photo = self.get_object()
-        return self.request.user == photo.gallery.user

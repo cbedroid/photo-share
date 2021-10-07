@@ -16,10 +16,8 @@ class GalleryViewSet(CRUDMixins, GenericViewSet):
             # Query Gallery album based on its public status.
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
-            qs = Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
-        else:
-            qs = Gallery.objects.filter(public=True)
-        return qs
+            return Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
+        return Gallery.objects.filter(public=True)
 
     def get_serializer_context(self, **kwargs):
         context = super().get_serializer_context(**kwargs)
@@ -52,10 +50,8 @@ class PhotoViewSet(CRUDMixins, GenericViewSet):
             # Query Gallery album based on its public status.
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
-            qs = Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=self.request.user))
-        else:
-            qs = Photo.objects.filter(gallery__public=True)
-        return qs
+            return Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=self.request.user))
+        return Photo.objects.filter(gallery__public=True)
 
     def perform_destroy(self, instance):
         instance.delete()

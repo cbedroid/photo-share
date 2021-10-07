@@ -1,7 +1,8 @@
-Django==3.1.2
 django-cleanup==5.1.0
 django-crispy-forms==1.10.0
+django-debug-toolbar==3.2.1
 django-filter==2.4.0
+django-jazzmin==2.4.8
 django-redis==5.0.0
 django-social-share==2.1.1
 djangorestframework==3.12.2

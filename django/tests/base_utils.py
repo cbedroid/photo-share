@@ -1,7 +1,8 @@
 import os
-import pickle
+import shutil
 
 from core.models import *
+from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import get_object_or_404
@@ -11,11 +12,28 @@ from rest_framework.reverse import reverse as api_reverse
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 FIXTURE_PATH = os.path.abspath(os.path.join(PATH, "..", "fixtures/"))
-PICKLE_FILE = os.path.abspath(os.path.join(PATH, "..", "fixtures/test_pickle_file.txt"))
 TEST_MEDIA_ROOT = os.path.join(settings.BASE_DIR, "test_media/")
+TEST_IMAGE_DIR = os.path.join(settings.BASE_DIR, "tests/mediaFixture/gallery/")
+
+
+def override_setting_config():
+    # Change django settings for testing
+    global settings
+
+    setattr(
+        settings,
+        "DEBUG_TOOLBAR_CONFIG",
+        {
+            "INTERCEPT_REDIRECTS": False,
+            "SHOW_TOOLBAR_CALLBACK": lambda enableToolBar: False,
+        },
+    )
 
 
 class BaseObjectUtils(object):
+
+    fixtures = ["test_users.json", "test_category.json", "test_galleries.json", "test_photos"]
+    override_setting_config()
 
     MODERATOR_GROUP = Group.objects.get(name="moderator")
     category_choices = Category.CATEGORY_LIST
@@ -55,55 +73,45 @@ class BaseObjectUtils(object):
         "password": "test_staff_password123",
     }
 
-    def pickle_save(self, obj, file_mode="ab"):
-        """Save test object for further inspection and analysis"""
-        with open(PICKLE_FILE, file_mode) as pf:
-            pickle.dump(obj, pf)
-
-    def pickle_load(self, obj, file_mode="rb"):
-        """load test object for further inspection and analysis"""
-        with open(PICKLE_FILE, file_mode) as pf:
-            return pickle.load(pf.read())
+    def create_media_root(self):
+        if not TEST_MEDIA_ROOT:
+            shutil.copytree(TEST_IMAGE_DIR, TEST_MEDIA_ROOT)
 
     def create_test_objects(self, *args, **kwargs):
-        self.fixtures = ["test_users.json", "test_category.json", "test_galleries.json"]
+        self.fixtures = ["test_users", "test_category", "test_galleries", "test_photos"]
+
+        self.create_media_root()
 
         self.test_category = Category.objects.get(pk=1)
         # # Test Users
-        self.test_user_1 = get_object_or_404(User, pk=56)
-        self.test_user_2 = get_object_or_404(User, pk=57)
-
-        self.test_moderator = get_object_or_404(User, pk=58)
-
-        self.test_staff = get_object_or_404(User, pk=59)
+        self.test_user_1 = get_object_or_404(User, pk=1)
+        self.test_user_2 = get_object_or_404(User, pk=2)
+        self.test_moderator = get_object_or_404(User, pk=3)
+        self.test_staff = get_object_or_404(User, pk=4)
 
         # # Test Galleries
-        self.test_gallery_1 = get_object_or_404(Gallery, pk=98)
-        self.test_gallery_2 = get_object_or_404(Gallery, pk=99)
-        self.test_gallery_3 = get_object_or_404(Gallery, pk=100)
+        self.test_gallery_1 = get_object_or_404(Gallery, pk=1)
+        self.test_gallery_2 = get_object_or_404(Gallery, pk=2)
+        self.test_gallery_3 = get_object_or_404(Gallery, pk=3)
 
         # # Test Photos
         self.test_photo_1 = self.create_photo(self.test_gallery_1, title="test_image_1")
         self.test_photo_2 = self.create_photo(
             self.test_gallery_2,
             title="test_image_2",
-            path="core/fixtures/test_image_2.jpg",
+            path=TEST_IMAGE_DIR + "test_image_2.jpg",
         )
         self.test_photo_blank = self.create_photo(
             self.test_gallery_3,
             title="test_blank_image",
-            path="core/fixtures/test_blank_image.jpg",
+            path=TEST_IMAGE_DIR + "test_blank_image.jpg",
         )
-
-        # self.test_photo_1 = get_object_or_404(Photo,pk=83)
-        # self.test_photo_2 = get_object_or_404(Photo,pk=84)
-        # self.test_photo_blank = get_object_or_404(Photo,pk=85)
 
         self.login_url = reverse("account_login")
         self.logout_url = reverse("account_logout")
         self.home_url = reverse("core:index")  # index
-        self.create_url = reverse("core:gallery-create")
-        self.detail_url = reverse(
+        self.gallery_create_url = reverse("core:gallery-create")
+        self.test_gallery_detail_url = reverse(
             "core:gallery-detail",
             kwargs={
                 "slug": slugify("test_gallery_1"),
@@ -136,7 +144,7 @@ class BaseObjectUtils(object):
         email="test_user_1@test.com",
         password="test_password",
     ):
-        user = User.objects.create_user(
+        user, _ = User.objects.get_or_create(
             username=username,
             email=email,
         )
@@ -145,14 +153,20 @@ class BaseObjectUtils(object):
         return user
 
     def create_gallery(self, user, name="test_gallery_1"):
-        return Gallery.objects.create(name=name, user=user, public=True, category=self.test_category)
+        gallery, _ = Gallery.objects.get_or_create(name=name, user=user, public=True, category=self.test_category)
+        return gallery
 
-    def fake_image(self, name, path="core/fixtures/test_image_1.jpg"):
+    def fake_image(self, name, path=TEST_IMAGE_DIR + "test_image_1.jpg"):
         with open(path, "rb") as image_file:
             return SimpleUploadedFile(name=name + ".jpg", content=image_file.read(), content_type="image/jpeg")
 
     def create_photo(self, gallery, title="test_image_1", **kwargs):
-        return Photo.objects.create(title=title, image=self.fake_image(title, **kwargs), gallery=gallery)
+        photo, _ = Photo.objects.get_or_create(
+            title=title,
+            image=self.fake_image(title, **kwargs),
+            gallery=gallery,
+        )
+        return photo
 
     def create_category(self):
         # Create all categories for testing

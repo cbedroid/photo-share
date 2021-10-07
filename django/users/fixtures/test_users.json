@@ -5,37 +5,15 @@
     "fields": {
       "name": "moderator",
       "permissions": [
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28,
-        33,
-        34,
-        35,
-        36,
-        5,
-        6,
-        7,
-        8,
-        1,
-        2,
-        3,
-        4,
-        29,
-        30,
-        31,
-        32
+        21, 22, 23, 24, 25, 26, 27, 28, 33, 34, 35, 36, 5, 6, 7, 8, 1, 2, 3, 4,
+        29, 30, 31, 32
       ]
     }
   },
 
   {
     "model": "auth.user",
-    "pk": 56,
+    "pk": 1,
     "fields": {
       "password": "pbkdf2_sha256$216000$dKMUT6qiIh5Z$kNHZEe74LiwSYXqIklhAp3mhpN+q6JtVjHfa8yKt1QM=",
       "last_login": null,
@@ -53,7 +31,7 @@
   },
   {
     "model": "auth.user",
-    "pk": 57,
+    "pk": 2,
     "fields": {
       "password": "pbkdf2_sha256$216000$kd46jDjCQo8e$8GqQ6OrDt8FQmAELARS1x0JlTpeQ9nxFvK+5xVr0x0U=",
       "last_login": null,
@@ -71,7 +49,7 @@
   },
   {
     "model": "auth.user",
-    "pk": 58,
+    "pk": 3,
     "fields": {
       "password": "pbkdf2_sha256$216000$CifVBaK2D9d0$UxO+V0EIBNkQZT7CURgXKpOKnScx3sy5aBHZgCfmEeg=",
       "last_login": null,
@@ -89,7 +67,7 @@
   },
   {
     "model": "auth.user",
-    "pk": 59,
+    "pk": 4,
     "fields": {
       "password": "pbkdf2_sha256$216000$IxDaKgQDSQs7$3j3EhFmMo7L/7+jeHmxVe5gMKuBgIu4lhnIyTGU7nGc=",
       "last_login": null,

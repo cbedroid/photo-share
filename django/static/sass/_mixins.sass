@@ -1,7 +1,6 @@
 @import "variables"
-
-
 $color-palette: ( 'yellow': $color-yellow, 'blue': $color-blue, 'red': $color-red, 'green': $color-green,'gray':$color-grey, 'grey':$color-grey, 'indigo': $color-indigo, 'purple': $color-purple, 'pink': $color-pink, 'orange': $color-orange, 'teal': $color-teal, 'cyan': $color-cyan ,'lt-brown': $color-lt-brown, 'brown': $color-brown, 'black': $color-black )
+$display_list: ('flex','grid') !default
 
 //@debug string.slice(
 @function get_color($color)
@@ -34,3 +33,15 @@ $color-palette: ( 'yellow': $color-yellow, 'blue': $color-blue, 'red': $color-re
   @each $prefix in map-keys($bs-colors)
     &-#{$prefix}
       background: get_color(#{$prefix})
+
+
+=cross-browser($name,$style)
+  @if $style in $display_list
+    #{$name}: -ms-#{$style}
+    #{$name}: -webkit-#{$style}
+  @else
+    -ms-#{$name}: #{$style}
+    -webkit-#{$name}: #{$style}
+  -moz-#{$name}: #{$style}
+  -o-#{$name}: #{$style}
+  #{$name}: #{$style}

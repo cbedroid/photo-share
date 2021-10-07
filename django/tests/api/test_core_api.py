@@ -4,13 +4,13 @@ import shutil
 from core.api.serializers import *
 from core.api.views import *
 from core.models import *
-from core.test_utils.base_utils import BaseObjectUtils
 from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404
 from django.test import override_settings
 from model_bakery import baker
 from rest_framework.reverse import reverse as api_reverse
 from rest_framework.test import APIClient, APITestCase
+from tests.base_utils import BaseObjectUtils
 
 TEST_MEDIA_ROOT = os.path.join(settings.BASE_DIR, "test_media/")
 
@@ -23,23 +23,23 @@ class TestGalleryViewSets(APITestCase, BaseObjectUtils):
     def setUp(self):
         # Base SetUp
         self.client = APIClient()
-        super().create_test_objects()  # BaseObjectUtils
+        self.create_test_objects()  # BaseObjectUtils
 
     def tearDown(self):
-        print("Ran Gallery API Test --> ", self._testMethodName)
         if os.path.isdir(TEST_MEDIA_ROOT):
             shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
 
-    def test_gallery_list_GET_method_is_successful(self):
-        gallery = baker.make("core.Gallery")
+        category = Category.objects.first()
+        gallery = baker.make("core.gallery", category=category, user=self.test_user_1)
 
         url = api_reverse("api:gallery-detail", kwargs={"pk": gallery.pk})
         client = APIClient()
         response = client.get(url, format="json")
         self.assertEqual(response.status_code, 200)
 
-    def test_gallery_list_GET_DO_NOT_return_private_gallery(self):
-        gallery = baker.make("core.Gallery", public=False, user=self.test_user_1)
+    def test_gallery_listView_does_not_return_private_gallery(self):
+        category = Category.objects.first()
+        gallery = baker.make("core.Gallery", public=False, category=category, user=self.test_user_1)
         url = api_reverse("api:gallery-detail", kwargs={"pk": gallery.pk})
 
         # Test non owner can not access private gallery
@@ -305,7 +305,6 @@ class TestPhotoViewSets(APITestCase, BaseObjectUtils):
         super().create_test_objects()  # BaseObjectUtils
 
     def tearDown(self):
-        print("Ran Photo API Test --> ", self._testMethodName)
         if os.path.isdir(TEST_MEDIA_ROOT):
             shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
 
@@ -407,7 +406,6 @@ class TestPhotoViewSets(APITestCase, BaseObjectUtils):
             self.assertEqual(response.status_code, 400)  # 400/Bad Request
 
             # Test photo response error code
-            self.pickle_save(response, "wb")
             resp_code = (response.data["image"][0]).code
             self.assertEqual(resp_code, "empty")
 
