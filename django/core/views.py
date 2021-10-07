@@ -14,11 +14,6 @@ from .forms import GalleryForm, GalleryFormSet
 from .models import Category, Gallery, Photo
 
 
-def get_current_user(request):
-    if request.user.is_authenticated:
-        return request.user
-
-
 class HomeListView(ListView):
     model = Gallery
     template_name = "core/index.html"
@@ -121,7 +116,7 @@ class GalleryDetailView(DetailView):
         # Filtering gallery base on ownership and its public status.
         # This will return a gallery if it is access by "non_owner" AND it is "public"
         #  or if it's access by owner, then disregard the gallery's "public" status.
-        return Gallery.objects.filter(Q(public=True) | Q(user=get_current_user(self.request)))
+        return Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -131,7 +126,7 @@ class GalleryDetailView(DetailView):
             # Filter galleries by creator or its public status
             # Include all public or galleries belonging to the current user
             related_gallery = related_gallery.filter(
-                Q(public=True) | Q(user=get_current_user(self.request)),
+                Q(public=True) | Q(user=self.request.user),
             ).exclude(name=self.object.name)
 
         context["photo_set"] = self.object.photo_set.all()
@@ -194,7 +189,7 @@ class PhotoDetailView(DetailView):
 
     # Throws 404 if photo gallery is private
     def get_queryset(self):
-        return Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=get_current_user(self.request)))
+        return Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=self.request.user))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
