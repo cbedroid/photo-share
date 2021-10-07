@@ -406,7 +406,7 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
   cursor: pointer;
   text-align: center;
   font-weight: 700;
-  min-width: 125px;
+  min-width: 4rem;
   text-align: center; }
 .badge:hover {
   text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
