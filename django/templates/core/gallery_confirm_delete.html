@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block body %}
+
+<section id="gallery-deletion" class="clear-top bg-gray-50 h-screen">
+  <div class="content-section p-2 px-4">
+    <form method="POST">
+      {% csrf_token %}
+      <fieldset class="form-group p-2">
+        <legend class="content__title content-title mb-4">
+          <i class="fa fa-photo sm:text-3xl"></i>
+          Delete Gallery
+        </legend>
+        <hr>
+        <div class="confirmation-text text-2xl font-semibold font-serif text-gray-500 text-opacity-75 mt-4">
+          <h2>Are you sure you want to delete this gallery? </h2>
+          <h4>
+            <span>&ldquo;</span>
+            <span class="text-red-500 text-shadow">{{object}}</span>
+            <span>&rdquo;</span>
+          </h4>
+        </div>
+          <div class="action-btn-group mt-4">
+            <button class="cta cta--outline-red" type="submit">Yes, Delete</button>
+            <a class="cta cta--outline-grey" href="{{object.get_absolute_url}}">Cancel</a>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
+{% endblock body %}
