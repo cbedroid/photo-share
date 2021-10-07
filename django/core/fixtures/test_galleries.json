@@ -1,10 +1,10 @@
 [
   {
     "model": "core.gallery",
-    "pk": 98,
+    "pk": 1,
     "fields": {
       "name": "test_gallery_1",
-      "user": 56,
+      "user": 1,
       "public": true,
       "slug": "test_gallery_1",
       "category": 1,
@@ -14,10 +14,10 @@
   },
   {
     "model": "core.gallery",
-    "pk": 99,
+    "pk": 2,
     "fields": {
       "name": "test_gallery_2",
-      "user": 57,
+      "user": 2,
       "public": true,
       "slug": "test_gallery_2",
       "category": 1,
@@ -28,10 +28,10 @@
 
   {
     "model": "core.gallery",
-    "pk": 100,
+    "pk": 3,
     "fields": {
       "name": "test_gallery_3",
-      "user": 57,
+      "user": 3,
       "public": true,
       "slug": "test_gallery_3",
       "category": 1,
