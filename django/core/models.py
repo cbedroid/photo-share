@@ -10,16 +10,7 @@ from django.utils.text import slugify
 from PIL import Image
 from rest_framework.reverse import reverse as api_reverse
 
-
-class GalleryManager(models.Manager):
-    def query_search(self, query=None, qs=None):
-        qs = qs or self.get_queryset()
-        if query is not None:
-            gallery_lookups = (
-                Q(name__icontains=query) | Q(user__username__icontains=query) | Q(category__slug__icontains=query)
-            )
-            qs = qs.filter(gallery_lookups).distinct()
-        return qs
+from .managers import GalleryManager
 
 
 class Category(models.Model):
@@ -154,25 +145,16 @@ class Gallery(models.Model):
         return self.photos.first()
 
     def get_absolute_url(self):
-        return reverse(
-            "core:gallery-detail",
-            kwargs={"slug": self.slug},
-        )
+        return reverse("core:gallery-detail", kwargs={"pk": self.pk})
 
     def get_update_url(self):
-        return reverse(
-            "core:gallery-update",
-            kwargs={"slug": self.slug},
-        )
+        return reverse("core:gallery-update", kwargs={"pk": self.pk})
 
     def get_delete_url(self):
-        return reverse(
-            "core:gallery-delete",
-            kwargs={"slug": self.slug},
-        )
+        return reverse("core:gallery-delete", kwargs={"pk": self.pk})
 
     def get_api_url(self, request=None):
-        return api_reverse("api:gallery-detail", kwargs={"pk": self.slug}, request=request)
+        return api_reverse("api:gallery-detail", kwargs={"pk": self.pk}, request=request)
 
     def __str__(self):
         return self.name
@@ -200,7 +182,7 @@ class Photo(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("core:photo-detail", kwargs={"slug": self.slug})
+        return reverse("core:photo-detail", kwargs={"pk": self.pk})
 
     def get_delete_url(self):
         return reverse("core:photo-delete", kwargs={"pk": self.pk})

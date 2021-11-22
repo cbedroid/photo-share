@@ -106,7 +106,6 @@ class CRUDMixin(LoginRequiredMixin):
 class GalleryDetailView(DetailView, MultipleObjectMixin):
     model = Gallery
     template_name = "core/gallery_detail.html"
-    slug_url_kwarg = "slug"
     object_list = None
     paginate_by = 25
 
@@ -213,7 +212,6 @@ class PhotoDetailView(DetailView):
 class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Photo
     template_name = "core/photo_confirm_delete.html"
-    pk_kwargs = "pk"
 
     def test_func(self):
         """Test whether the Photo belongs to the current user"""
