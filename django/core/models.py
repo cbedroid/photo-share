@@ -144,32 +144,31 @@ class Gallery(models.Model):
         verbose_name_plural = "Galleries"
 
     def save(self, commit=True, *args, **kwargs):
-        # Dynamically create slugs from Gallery's name
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
     def cover_photo(self):
-        cover = self.photo_set.filter(is_cover=True)
+        cover = self.photos.filter(is_cover=True)
         if cover.exists():
             return cover.first()
-        return self.photo_set.first()
+        return self.photos.first()
 
     def get_absolute_url(self):
         return reverse(
             "core:gallery-detail",
-            kwargs={"slug": self.slug, "owner": slugify(self.user.username)},
+            kwargs={"slug": self.slug},
         )
 
     def get_update_url(self):
         return reverse(
             "core:gallery-update",
-            kwargs={"slug": self.slug, "owner": slugify(self.user.username)},
+            kwargs={"slug": self.slug},
         )
 
     def get_delete_url(self):
         return reverse(
             "core:gallery-delete",
-            kwargs={"slug": self.slug, "owner": slugify(self.user.username)},
+            kwargs={"slug": self.slug},
         )
 
     def get_api_url(self, request=None):
@@ -183,7 +182,7 @@ class Photo(models.Model):
     title = models.CharField(max_length=75, validators=[MinLengthValidator(3)])
     image = models.ImageField(upload_to="gallery")
     slug = models.SlugField(blank=False, editable=False, db_index=True)
-    gallery = models.ForeignKey(Gallery, db_index=True, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(Gallery, related_name="photos", db_index=True, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, blank=True)
     views = models.PositiveIntegerField(default=0)
     is_cover = models.BooleanField(default=False)
@@ -196,31 +195,12 @@ class Photo(models.Model):
 
     def save(self, *args, **kwargs):
         # This whole method can be deleted.
-        # SlugField should also be deleted,It's only vaild for API lookups
-        url = f"{self.title}"
-        self.slug = slugify(url)
-        self.set_gallery_cover()
+        # SlugField should also be deleted,It's only valid for API lookups
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
-    def set_gallery_cover(self):
-        # Reset related all photo cover from gallery
-        # and set the current photo as the cover
-        if self.is_cover:
-            photo_set = self.gallery.photo_set.all()
-            for photo in photo_set:
-                photo.is_cover = False
-                # if saved here, there may be a recursive error
-            self.is_cover = True  # set the current phoo as the cover
-
     def get_absolute_url(self):
-        return reverse(
-            "core:photo-detail",
-            kwargs={
-                "slug": self.slug,
-                "owner": slugify(self.gallery.user.username),
-                "gallery": (slugify(self.gallery.name)),
-            },
-        )
+        return reverse("core:photo-detail", kwargs={"slug": self.slug})
 
     def get_delete_url(self):
         return reverse("core:photo-delete", kwargs={"pk": self.pk})

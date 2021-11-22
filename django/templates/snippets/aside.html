@@ -47,7 +47,7 @@ any other user's data
             <div class="preview__right inline-block space-x-2">
               <div class="photo-badge">
               <small class="badge bg-red-600 text-white rounded-full inline-block w-5 h-5 align-middle">
-                <span class="photo-count">{{gallery.photo_set.count}}</span>
+                <span class="photo-count">{{gallery.photos.count}}</span>
               </small>
               </div>
               <i class="preview__toggler fa fa-caret-down align-middle"></i>
@@ -62,7 +62,7 @@ any other user's data
                 <a href="{{gallery.get_absolute_url}}" class="cta cta--blue badge badge--shw float-right max-w-sm text-xs my-1">view gallery</a>
               </div>
               <div class="clear-both"></div>
-              {% for photo in gallery.photo_set.all %}
+              {% for photo in gallery.photos.all %}
               <li class="photo-list__item font-thin hover-dark text-sm flex flex-between hover-dark p-1">
                 <p class="text-ellipsis">{{photo}}</p>
                 <a class="img-link" href="{{photo.image.url}}">

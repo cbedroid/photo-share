@@ -143,9 +143,9 @@ class TestGalleryViewSets(APITestCase, BaseObjectUtils):
             self.assertEqual(response.data["public"], data["public"])
 
             # test numbers of photo in a Gallery
-            self.assertEqual(updated_gallery.photo_set.count(), 1)
+            self.assertEqual(updated_gallery.photos.count(), 1)
             [baker.make("core.Photo", gallery=gallery) for x in range(20)]
-            self.assertEqual(updated_gallery.photo_set.count(), 21)
+            self.assertEqual(updated_gallery.photos.count(), 21)
 
     def test_gallery_destroy_method_is_successful(self):
         gallery = baker.make("core.Gallery", user=self.test_moderator, category=self.test_category)

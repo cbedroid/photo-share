@@ -9,6 +9,7 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from django.views.generic.list import MultipleObjectMixin
 
 from .forms import GalleryForm, GalleryFormSet
 from .models import Category, Gallery, Photo
@@ -25,24 +26,21 @@ class HomeListView(ListView):
             # Query Gallery album based on its public status.
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
-            # This will also fix any pagination error when logic occured in template.
+            # This will also fix any pagination error when logic occurred in template.
             qs = Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
         qs = Gallery.objects.filter(public=True)
 
         # Preform lookup searches in all Gallery's related field
         search = self.request.GET.get("q")
-
         if search:
             qs = Gallery.objects.query_search(search, qs)
         return qs
 
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         # top 10 category used
         context["by_search"] = self.request.GET.get("q", False)
-        context["top_category"] = Category.objects.annotate(c=Count("gallery")).order_by("-c")[:10]
-
+        context["top_category"] = Category.objects.alias(c=Count("gallery")).order_by("-c")[:10]
         return context
 
 
@@ -105,31 +103,39 @@ class CRUDMixin(LoginRequiredMixin):
         return super().form_valid(form)
 
 
-class GalleryDetailView(DetailView):
+class GalleryDetailView(DetailView, MultipleObjectMixin):
     model = Gallery
     template_name = "core/gallery_detail.html"
-    context_object_name = "gallery"
     slug_url_kwarg = "slug"
+    object_list = None
+    paginate_by = 25
 
     # Throws 404 if gallery is private
     def get_queryset(self):
         # Filtering gallery base on ownership and its public status.
         # This will return a gallery if it is access by "non_owner" AND it is "public"
         #  or if it's access by owner, then disregard the gallery's "public" status.
-        return Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
+        user = self.request.user
+        if user.is_authenticated:
+            return Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
+        else:
+            return Gallery.objects.filter(public=True)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        object_list = self.object.photos.order_by("-pk")
+        context = super().get_context_data(object_list=object_list, **kwargs)
         related_gallery = self.object.category.gallery_set
-
+        user = self.request.user
         if related_gallery.exists():
             # Filter galleries by creator or its public status
             # Include all public or galleries belonging to the current user
-            related_gallery = related_gallery.filter(
-                Q(public=True) | Q(user=self.request.user),
-            ).exclude(name=self.object.name)
+            if user.is_authenticated:
+                related_gallery = related_gallery.filter(
+                    Q(public=True) | Q(user=self.request.user),
+                ).exclude(pk=self.object.pk)
+            else:
+                related_gallery = related_gallery.filter(public=True).exclude(pk=self.object.pk)
 
-        context["photo_set"] = self.object.photo_set.all()
         context["related_gallery"] = related_gallery[:20]
         return context
 
@@ -156,7 +162,7 @@ class GalleryUpdateView(CRUDMixin, UserPassesTestMixin, UpdateView):
             # since we are using gallery name as slug and
             # slug as lookup field for this view,
             # we have to catch gallery name changes here
-            self.succes_url = self.object.get_update_url()
+            self.success_url = self.object.get_update_url()
 
             # check whether images were added during update
             if formset.has_changed():
@@ -167,17 +173,18 @@ class GalleryUpdateView(CRUDMixin, UserPassesTestMixin, UpdateView):
                     return super().form_invalid(form)
         return super().form_valid(form)
 
+    def get_success_url(self, *args, **kwargs):
+        return self.get_object().get_absolute_url()
+
 
 class GalleryDeleteView(CRUDMixin, UserPassesTestMixin, DeleteView):
     model = Gallery
     template_name = "core/gallery_confirm_delete.html"
+    success_url = reverse_lazy("core:index")
 
     def test_func(self):
         """Test whether the Gallery belongs to the current user"""
         return self.request.user == self.get_object().user
-
-    def get_success_url(self):
-        return reverse_lazy("core:index")
 
 
 # PHOTO
@@ -189,13 +196,13 @@ class PhotoDetailView(DetailView):
 
     # Throws 404 if photo gallery is private
     def get_queryset(self):
-        return Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=self.request.user))
+        user = self.request.user
+        if user.is_authenticated:
+            return Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=self.request.user))
+        else:
+            return Photo.objects.filter(gallery__public=True)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-    def get(self, request, *args, **kwargs):
+    def get(self, *args, **kwargs):
         self.object = self.get_object()
         self.object.views += 1
         self.object.save()
@@ -215,14 +222,14 @@ class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self, *args, **kwargs):
         gallery = self.object.gallery
-        if gallery.photo_set.count() > 1:
+        if gallery.photos.count() > 1:
             return gallery.get_absolute_url()
         return reverse("core:index")
 
     def post(self, *args, **kwargs):
         response = super().post(*args, **kwargs)
         gallery = self.object.gallery
-        if gallery.photo_set.count() == 0:
+        if gallery.photos.count() == 0:
             gallery.delete()
             messages.warning(
                 self.request,

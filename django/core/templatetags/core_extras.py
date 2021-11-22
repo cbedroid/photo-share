@@ -40,9 +40,9 @@ def get_user_gallery(context):
 @register.filter("random_cover")
 def random_cover(gallery):
     try:
-        photo_set = gallery.photo_set.all()
-        if photo_set is not None:
-            return random.choices(photo_set)[0]
+        photos = gallery.photos.all()
+        if photos is not None:
+            return random.choices(photos)[0]
     except:
         pass
     return "/".join((settings.MEDIA_URL, "/defaults/default_image.jpg"))

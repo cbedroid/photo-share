@@ -42,14 +42,14 @@ class GallerySerializer(serializers.ModelSerializer):
     public = serializers.BooleanField(default=True, initial=True)
 
     # For Read Only - string representation of gallery photos
-    photo_set = serializers.StringRelatedField(
+    photos = serializers.StringRelatedField(
         source="photo", many=False, read_only=True
     )
 
     class Meta:
         model = Gallery
         # fmt: off
-        fields = ("id", "name", "category", "public", "created", "updated", "user", "image", "title", "photo_set",)
+        fields = ("id", "name", "category", "public", "created", "updated", "user", "image", "title", "photos",)
         read_only_fields = ["user"]
 
     def get_uri(self, obj):
@@ -71,13 +71,13 @@ class GallerySerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         date_format = "%m-%d-%Y"
-        photo_set = list(
-            dict(id=photo.id, title=photo.title) for photo in instance.photo_set.all()
+        photos = list(
+            dict(id=photo.id, title=photo.title) for photo in instance.photos.all()
         )
 
         representation["uri"] = self.get_uri(instance)
         representation["category"] = instance.category.get_name_display()
-        representation["photos"] = photo_set
+        representation["photos"] = photos
         representation["id"] = instance.pk
         representation["updated"] = instance.updated.strftime(date_format)
         representation["created"] = instance.created.strftime(date_format)

@@ -1,188 +1,293 @@
 {% extends 'base.html' %}
-{% load static %}
-{% load core_extras %}
-{% load social_share %}
-
+{% load static core_extras social_share %}
+{% block modal %}
+{% include 'snippets/gallery_delete_modal.html' %}
+{% endblock modal %}
 
 {% block body %}
-  <section id="gallery-section" class="theme-ws clear top mx-2 py-2">
-    <!-- Gallery Header-->
-    <section id="main-gallery" class="bg-gray-200 border-b-2 border-gray-300 p-1 sm:p-2">
-      <div class="container">
-        <div class="header">
-          <div class="header-top">
-            <!-- header user__actions -->
-            <div class="header__action flex-between items-center">
-              <div class="share-cta flex md:text-2xl text-gray-400">
-                <a href="#" class="border-2 border-gray-200 py-2 px-4  m-auto hover:text-red-600 mr-1">
-                  <i class="fa fa-heart"></i>
-                </a>
-                <a href="#" class="border-2 border-gray-200 py-2 px-4 m-auto hover:text-blue-300">
-                  <i class="text-xl md:text-3xl fa fa-share-square"></i>
-                </a>
-              </div>
-              <div class="user__action flex content-end">
-                {% if request.user == gallery.user %}
-                  <div class="action__btn">
-                    <a  class="cta cta--outline-blue badge" href="{% url 'core:gallery-update' gallery.user.username|slugify gallery.slug %}" >update
-                      <span class="hidden sm:inline-block">gallery </span>
-                    </a>
-                    <span class="spacer mx-1"> </span>
-                    <a class="cta cta--outline-red badge" href="{% url 'core:gallery-delete' gallery.user.username|slugify gallery.slug %}">delete
-                      <span class="hidden sm:inline-block">gallery </span>
-                    </a>
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-            <!-- header user__actions -->
+{% url 'core:gallery-detail' slug=object.slug as current_url %}
+<section id="gallery-section" class="theme-ws clear top mx-2 py-2">
+  <!-- Gallery Header-->
+  <div class="container-lg mx-auto px-8 w-100">
+    <div class="header py-2">
+      <div class="header-top">
+        <!-- header user__actions -->
+        <div class="header__action flex-between items-center">
+          <div class="share-cta flex md:text-2xl text-gray-400">
+            <a href="#" class="border-2 border-gray-200 py-2 px-4  m-auto hover:text-red-600 mr-1">
+              <i class="fa fa-heart"></i>
+            </a>
+            <a href="#" class="border-2 border-gray-200 py-1.5 px-4 m-auto hover:text-blue-300">
+              <i class="text-xl md:text-3xl fa fa-share-square"></i>
+            </a>
           </div>
-          <div class="header__title">
-            <h3 class="pb-1 my-2 font-bold"><i class="fas fa-user-circle mr-1"></i>{{gallery.user}}</h3>
-            <div class="gallery-title flex items-center text-lg md:text-2xl">
-              <h4 class="pb-1 "><b>{{gallery}}</b></h4>
-              <span class="divider font-bold mx-2 my-auto"style="height:35px;" >&#8211;</span>
-              <h5><span class="badge rounded-full  px-1 md:py-1 md:px-3 hover:text-black {{gallery.category.get_label_display}}">{{gallery.category.get_name_display|title}}</span></h5>
+          <div class="user__action flex content-end">
+            {% if request.user == gallery.user %}
+            <div class="action__btn">
+              <a class="cta cta--outline-blue badge" href="{{object.get_update_url}}">update
+                <span class="hidden sm:inline-block">gallery </span>
+              </a>
+              <span class="spacer mx-1"> </span>
+              <a class="cta cta--outline-red badge" href="{{object.geet_delete_url}}">delete
+                <span class="hidden sm:inline-block">gallery </span>
+              </a>
             </div>
+            {% endif %}
           </div>
         </div>
-        <!-- -->
-        <hr>
-        <!-- Photo Collections -->
-        <div id="photo-collection" class="">
-          <div class="container p-1 sm:p-6">
-            <div class="row wrapper">
-              <ul id="gallery-photo-collections" class="photo grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
-                {% for photo in photo_set %}
-                  <li class="photo__card py-1 shadow-sm  rounded-lg hover:shadow-xl">
-                    <h4 class="photo__title py-1 text-center text-ellipsis text-sm sm:text-base font-semibold font-serif">{{photo.title}}</h4>
-                    <!-- Photo Image-->
-                    <div class="photo__image">
-                      <a href="{{photo.get_absolute_url}}">
-                        <img class="img-fluid" src="{{photo.image.url}}" alt="{{photo.gallery}} {{photo}} photo">
-                      </a>
-                    </div>
-                    <!-- -->
-                    <!-- Photo Details -->
-                    <div class="detail flex flex-col sm:flex-row -between sm:space-x-1 w-100 p-1">
-                      <small class="detail__date w-50 sm:flex-1 sm:text-left">
-                        <i class="fa fa-clock mr-1"></i>
-                        {{photo.created|date:"M d, Y"}}
-                      </small>
-                      <small class="detail__user text-ellipsis nowrap sm:text-right sm:flex-1" style="max-width:calc(100% / 2);">
-                        <i class="fa fa-user mr-1" ></i>
-                        <span class="text-truncated">{{gallery.user}}</span>
-                      </small>
-                    </div>
-                    <!-- -->
-                    <!--Photo share-->
-                    <div class="share__hidden hidden row align-content-center">
-                      <div class="social-share py-2">
-                        <div class="social-share__content bg-white shadow-sm">
-                          <div class="share-grid grid grid-cols-12 gap-4 my-1 sm:p-1">
-                            <div class="social-share__img-wrapper col-start-1 col-span-12 flex-center">
-                              <img src="{{photo.image.url}}" class="social-share__img">
-                            </div>
-                            <div class="share-card col-start-1 col-span-12">
-                              <div class="share-card__content py-2">
-                                <h4 class="text-3xl font-semibold">{{photo}}</h4>
-                                <p class="text-muted font-italic">created by: <i class="fa fa-user-circle mx-1"></i>{{photo.gallery.user}}</p>
-                              </div>
-                              <!-- Social media links-->
-                              <div class="link col-start-6 col-span-6 my-4 border-2 border-grey-200 py-4">
-                                <p class="text-center">Share it on your social media.</p>
-                                <div class="share-card__link flex flex-row space-x-4 justify-center w-100 mt-2">
-                                  {% post_to_twitter 'Post your amazing photo using Photo-Share' photo.image.url '<i class="fa fa-twitter share__icon bg-blue-600"><p>Twitter</p></i>'%}
-                                  {% post_to_facebook photo.image.url '<i class="fa fa-facebook share__icon bg-blue-600"><p>Facebook</p></i>' %}
-                                  {% post_to_gplus photo.image.url '<i class="fab fa-google-plus-square share__icon bg-red-600"><p>Google &#43;</p></i>'%}
-                                </div>
-                              </div>
-                            </div>
+        <!-- header user__actions -->
+      </div>
+      <div class="header__title">
+        <h3 class="pb-1 my-2 font-bold"><i class="fas fa-user-circle mr-1"></i>{{object.user}}</h3>
+        <div class="gallery-title flex items-center text-lg md:text-2xl">
+          <h4 class="pb-1 "><b>{{gallery}}</b></h4>
+          <span class="divider font-bold mx-2 my-auto" style="height:35px;">&#8211;</span>
+          <h5><span class="badge rounded-full  px-1 md:py-1 md:px-3 hover:text-black {{object.category.get_label_display}}">{{object.category.get_name_display|title}}</span></h5>
+        </div>
+      </div>
+    </div>
+    <!-- -->
+    <hr>
+    <!-- Photo Collections -->
+    <div id="photo-collection" class="">
+      <div class="container p-1 sm:p-6">
+        <div class="row wrapper">
+          <ul id="gallery-photo-collections" class="photo grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+            {% for photo in object_list %}
+            <li class="photo__card py-1 shadow-sm  rounded-lg hover:shadow-xl">
+              <h4 class="photo__title py-1 text-center text-ellipsis text-sm sm:text-base font-semibold font-serif">{{photo.title}}</h4>
+              <!-- Photo Image-->
+              <div class="photo__image">
+                <a href="{{photo.get_absolute_url}}">
+                  <img class="img-fluid" src="{{photo.image.url}}" alt="{{photo.gallery}} {{photo}} photo">
+                </a>
+              </div>
+              <!-- -->
+              <!-- Photo Details -->
+              <div class="detail flex flex-col sm:flex-row -between sm:space-x-1 w-100 p-1">
+                <small class="detail__date w-50 sm:flex-1 sm:text-left">
+                  <i class="fa fa-clock mr-1"></i>
+                  {{photo.created|date:"M d, Y"}}
+                </small>
+                <small class="detail__user text-ellipsis nowrap sm:text-right sm:flex-1" style="max-width:calc(100% / 2);">
+                  <i class="fa fa-user mr-1"></i>
+                  <span class="text-truncated">{{gallery.user}}</span>
+                </small>
+              </div>
+              <!-- -->
+              <!--Photo share-->
+              <div class="share__hidden hidden row align-content-center">
+                <div class="social-share py-2">
+                  <div class="social-share__content bg-white shadow-sm">
+                    <div class="share-grid grid grid-cols-12 gap-4 my-1 sm:p-1">
+                      <div class="social-share__img-wrapper col-start-1 col-span-12 flex-center">
+                        <img src="{{photo.image.url}}" class="social-share__img">
+                      </div>
+                      <div class="share-card col-start-1 col-span-12">
+                        <div class="share-card__content py-2">
+                          <h4 class="text-3xl font-semibold">{{photo}}</h4>
+                          <p class="text-muted font-italic">created by: <i class="fa fa-user-circle mx-1"></i>{{photo.gallery.user}}</p>
+                        </div>
+                        <!-- Social media links-->
+                        <div class="link col-start-6 col-span-6 my-4 border-2 border-grey-200 py-4">
+                          <p class="text-center">Share it on your social media.</p>
+                          <div class="share-card__link flex flex-row space-x-4 justify-center w-100 mt-2">
+                            {% post_to_twitter 'Post your amazing photo using Photo-Share' photo.image.url '<i class="fa fa-twitter share__icon bg-blue-600"><p>Twitter</p></i>'%}
+                            {% post_to_facebook photo.image.url '<i class="fa fa-facebook share__icon bg-blue-600"><p>Facebook</p></i>' %}
+                            {% post_to_gplus photo.image.url '<i class="fab fa-google-plus-square share__icon bg-red-600"><p>Google &#43;</p></i>'%}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <!-- -->
-                    <!--Photo share action-->
-                    <div class="clear-both"></div>
-                    <ul class="share-action flex-between space-x-1 relative bottom-0 left-0">
-                      {% if request.user.is_authenticated and request.user == gallery.user %}
-                        <li class="w-full">
-                          <a class="cta cta--red cta--full-block" href="{% url 'core:photo-delete' photo.pk %}">
-                            <i class="fas fa-trash"></i>
-                          </a>
-                        </li>
-                      {% else %}
-                        <li class="w-full">
-                          <a class="cta cta--red cta--full-block" href="javascript:void();">
-                            <i class="fas fa-heart"></i>
-                          </a>
-                        </li>
-                      {% endif %}
-                      <li class="w-full">
-                        <a class="cta cta--blue cta--full-block share_popup"  href="">
-                          <i class="fas fa-share-alt"></i>
-                        </a>
-                      </li>
-                      <li class="w-full">
-                        <a class="cta cta--green cta--full-block" href="javascript:void();">
-                          <i class="fas fa-cloud-download-alt"></i>
-                        </a>
-                      </li>
-                    </ul>
-                    <!-- -->
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- -->
-    <section id="related_gallery">
-      <div class="section-title fw-bold">
-        <h3 class="fw-bold pb-1 ">
-          <span> {{gallery.category.get_name_display|title}}</span>
-        Related Gallery
-        </h3>
-      </div>
-      <div class="container p-1 sm:p-6">
-        <div class="row wrapper">
-          <ul class="photo grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
-            {% for related in related_gallery %}
-              <li class="gallery__card shadow">
-                <div class="gallery__content pos-relative">
-                  <div class="gallery__image image">
-                    <img class="img-fluid" src="{{related.cover_photo.image.url}}" alt="{{related}} {{related.cover_photo}} photo">
                   </div>
-                  <!-- Gallery Overlay -->
-                  <div class="image-overlay overlay overlay--bgdark overlay--hovershow text-white">
-                    <div id="index-grid-overlay" class="overlay__content grid grid-flow-rows h-100 p-2">
-                      <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
-                        <a class="text-ellipsis" href="{{related.get_absolute_url}}"><b>{{related}}</b></a>
-                        <h6 class="mt-1"><span class="badge rounded-full {{related.category.get_label_display}} p-1">{{related.category.get_name_display}}</span></h6>
-                      </div>
-                      <div class="flex-center text-xs sm:text-base mx-1 overflow-hidden">
-                        <a class="text-shadow p-3" href="{{related.get_absolute_url}}"><b>view gallery</b></a>
-                      </div>
-                      <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
-                        <p class="">{{related.photo_set.count}}
-                        <i class="fas fa-images"></i>
-                        </p>
-                        <p class="font-italic text-ellipsis"><i class="fa fa-user-circle user__icon mr-1"></i>{{related.user.username}} </p>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Gallery Overlay -->
                 </div>
-              </li>
+              </div>
+              <!-- -->
+              <!--Photo share action-->
+              <div class="clear-both"></div>
+              <ul class="share-action flex-between space-x-1 relative bottom-0 left-0">
+                {% if request.user.is_authenticated and request.user == gallery.user %}
+                <li class="w-full">
+                  <a class="cta cta--red cta--full-block" href="{% url 'core:photo-delete' photo.pk %}">
+                    <i class="fas fa-trash"></i>
+                  </a>
+                </li>
+                {% else %}
+                <li class="w-full">
+                  <a class="cta cta--red cta--full-block" href="javascript:void();">
+                    <i class="fas fa-heart"></i>
+                  </a>
+                </li>
+                {% endif %}
+                <li class="w-full">
+                  <a class="cta cta--blue cta--full-block share_popup" href="">
+                    <i class="fas fa-share-alt"></i>
+                  </a>
+                </li>
+                <li class="w-full">
+                  <a class="cta cta--green cta--full-block" href="javascript:void();">
+                    <i class="fas fa-cloud-download-alt"></i>
+                  </a>
+                </li>
+              </ul>
+              <!-- -->
+            </li>
             {% endfor %}
           </ul>
         </div>
       </div>
-    </section>
-  </section>
+    </div>
+    <!-- Pagination -->
+    <!-- This example requires Tailwind CSS v2.0+ -->
+    <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+      <div class="flex-1 flex justify-between sm:hidden">
+
+        {% if  page_obj.has_previous %}
+        <a href="{{current_url}}?page={{page_obj.previous_page_number}}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+          Previous
+        </a>
+        {% else %}
+        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-gray-200 opacity-300">
+          Previous
+        </span>
+        {% endif %}
+
+        {% if  page_obj.has_next %}
+        <a href="{{current_url}}?page={{page_obj.next_page_number}}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+          Next
+        </a>
+        {% else %}
+        <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-gray-300 opacity-300">
+          Next
+        </span>
+        {% endif %}
+      </div>
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Showing
+            <span class="font-semibold">{{page_obj.start_index}}</span>
+            to
+            <span class="font-semibold">{{page_obj.end_index}}</span>
+            of
+            <span class="font-semibold">{{page_obj.paginator.count}}</span>
+            results
+          </p>
+        </div>
+        <div>
+          {% if is_paginated %}
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            {% if page_obj.has_previous %}
+            <a href="{{current_url}}?page=1" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <span class="sr-only">Previous</span>
+              <!-- Heroicon name: solid/chevron-left -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </a>
+            {% else %}
+            <span class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-300 opacity-50 text-sm font-medium text-gray-500">
+              <span class="sr-only">Previous</span>
+              <!-- Heroicon name: solid/chevron-left -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </span>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
+            <a href="{{current_url}}?page={{num}}" aria-current="page" class="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+              {{num}}
+            </a>
+            {% else %}
+            <a href="{{current_url}}?page={{num}}" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+              {{num}}
+            </a>
+            {% endif %}
+            {% endfor %}
+            <!-- page next-->
+            {% if  page_obj.has_next %}
+            <a href="{{current_url}}?page={{page_obj.paginator.num_pages}}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50{% if not page_obj.has_next %} disabled:opacity-50{% endif %}">
+              <span class="sr-only">Next</span>
+              <!-- Heroicon name: solid/chevron-right -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </a>
+            {% else %}
+            <span class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-300 opacity-50 text-sm font-medium text-gray-500 disabled">
+              <span class="sr-only">Next</span>
+              <!-- Heroicon name: solid/chevron-right -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </span>
+            {% endif %}
+          </nav>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- -->
+  </div>
+</section>
+
+<!-- -->
+<section id="related_gallery">
+  <div class="container-lg mx-auto px-8 w-100">
+    <div class="header">
+      <div class="content-title font-black">
+        <h3 class="fw-bold px-2 mb-1 w-max">
+          <span>Related Gallery</span>
+          <span>&nbsp;&#9472;&nbsp;</span>
+          <span class="text-gray-400"> {{gallery.category.get_name_display|title}}</span>
+        </h3>
+      </div>
+    </div>
+    <div class="row wrapper">
+        {% if related_gallery %}
+      <ul class="photo grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+        {% for related in related_gallery %}
+        <li class="gallery__card shadow">
+          <div class="gallery__content pos-relative">
+            <div class="gallery__image image">
+              <img class="img-fluid" src="{{related.cover_photo.image.url}}" alt="{{related}} {{related.cover_photo}} photo">
+            </div>
+            <!-- Gallery Overlay -->
+            <div class="image-overlay overlay overlay--bgdark overlay--hovershow text-white">
+              <div id="index-grid-overlay" class="overlay__content grid grid-flow-rows h-100 p-2">
+                <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
+                  <a class="text-ellipsis" href="{{related.get_absolute_url}}"><b>{{related}}</b></a>
+                  <h6 class="mt-1"><span class="badge rounded-full {{related.category.get_label_display}} p-1">{{related.category.get_name_display}}</span></h6>
+                </div>
+                <div class="flex-center text-xs sm:text-base mx-1 overflow-hidden">
+                  <a class="text-shadow p-3" href="{{related.get_absolute_url}}"><b>view gallery</b></a>
+                </div>
+                <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
+                  <p class="">{{related.photos.count}}
+                    <i class="fas fa-images"></i>
+                  </p>
+                  <p class="font-italic text-ellipsis"><i class="fa fa-user-circle user__icon mr-1"></i>{{related.user.username}} </p>
+                </div>
+              </div>
+            </div>
+            <!-- Gallery Overlay -->
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+        {% else %}
+         <div class="no-content h-full bg-white text-center w-1/2 p-3">
+        <h3 class="text-muted">
+        <i class="fa fa-photo block text-8xl"></i>
+        <span class="font-semibold">No assessments available.</span>
+      </h3>
+    </div>
+        {% endif %}
+    </div>
+  </div>
+</section>
 
 
 {% endblock body %}

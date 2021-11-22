@@ -56,7 +56,7 @@ class PhotoViewSet(CRUDMixins, GenericViewSet):
     def perform_destroy(self, instance):
         instance.delete()
         # Delete related gallery if it is now empty
-        photo_count = instance.gallery.photo_set.count()
+        photo_count = instance.gallery.photos.count()
         if photo_count == 0:
             instance.gallery.delete()
 

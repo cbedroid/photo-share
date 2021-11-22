@@ -18,7 +18,8 @@ body
   +cross-browser(text-rendering, optimizeLegibility)
   overflow-x: hidden
 
-
+.disabled
+  pointer-events: none
 .bgc
   /* Create all bootstrap background color */
   +bootstrap-background-color()
@@ -37,7 +38,6 @@ body
     width: 2px
     background: grey
 
-
 ::-webkit-scrollbar
   width: 8px
   height: 8px
@@ -49,22 +49,18 @@ body
     height: 3px
     border-radius: 10px
 
-
-
-
 /* Typography */
 @for $s from 1 through 6
   $i: 6 - $s
-  h#{$i}
-    font-size: #{$s / 2.5  + .5}rem
-
+  $header: h#{$i}
+  #{$header}
+    font-size: #{$s / 2.5 + .5}rem
 
 h1,h2,h3,h4,h5,h6,p
   margin: 0
 
 .text-responsive
   font-size: clamp(28px, 5vw, 52px) !important
-
 
 .fw-bold
   font-weight: 700
@@ -106,7 +102,6 @@ h1,h2,h3,h4,h5,h6,p
   &-lg
     +cross-browser(box-shadow, 0 0 32px rgba(0,0,0,.3) !important)
 
-
 .text-shadow-dark
   text-shadow: 2px 5px 5px rgba(0,0,0,.8)
 
@@ -118,7 +113,6 @@ h1,h2,h3,h4,h5,h6,p
 
 /* Typography */
 
-
 /* Base Css */
 section
   margin: 30px 0
@@ -127,7 +121,6 @@ ul
 
 li
   list-style: none
-
 
 a, a:hover
   text-decoration: none
@@ -170,7 +163,7 @@ a,i,button,.btn
   &.page-prev
     border-radius: 7px 0 0 7px
   &.page-next
-    border-radius: 0 7px 7px  0
+    border-radius: 0 7px 7px 0
 
   &.page-prev, &.page-next
     &.disabled
@@ -181,7 +174,6 @@ a,i,button,.btn
   &:hover:not(.disabled)
     background: $color-blue
     color: #fff
-
 
 .pos-relative
   position: relative
@@ -216,7 +208,6 @@ a,i,button,.btn
   align-items: center
   vertical-align: middle
 
-
 .flex-center
   display: flex
   justify-content: center
@@ -232,8 +223,6 @@ a,i,button,.btn
   flex-direction: row
   *
     padding: 2px 5px
-
-
 
 form
   input[type="text"], input[type="email"], input[type="password"],
@@ -278,7 +267,6 @@ form
       outline: none
       color: #7c7c7c
 
-
 .content-title
   font-size: 1.425rem
   font-family: "Lato", sans-serif
@@ -288,7 +276,6 @@ form
   padding: 6px
   border: 1px solid rgba(211,204,204,.3)
   border-radius: 2px
-
 
 .overlay
   display: block
@@ -330,15 +317,13 @@ form
   width: 690px
   height: 400px
 
-
 .img__upload-wrapper
   img
     display: block
     width: 300px
 
 .trans-300
-  transition: all 300ms  ease-in-out
-
+  transition: all 300ms ease-in-out
 
 .social-share
   display: grid
@@ -346,7 +331,7 @@ form
   &__content
     padding: 25px 35px
   &__img
-      @extend .img-full
+    @extend .img-full
 
   .share-grid
     place-content: center
@@ -365,7 +350,6 @@ form
         text-align: center
         font-size: 1.5rem
 
-
 .badge
   box-shadow: 3px 2px 8px rgba(0,0,0,.3)
   box-sizing: border-box
@@ -382,6 +366,7 @@ form
       box-shadow: 3px 2px 20px rgba(255,255,255,.2)
 
 .cta
+  background: #fff
   display: inline-block
   cursor: pointer
   padding: 8px
@@ -392,7 +377,7 @@ form
   +cross-browser(transition, all .3s ease-in-out)
   text-align: center
   vertical-align: center
-  box-shadow: 2px 2px 12px rgba(0,0,0,.3)
+  box-shadow: 2px 2px 12px rgba(0,0,0,.2)
   +bootstrap-normal-button()
   +bootstrap-outline-button()
   &--full-block
@@ -424,20 +409,16 @@ form
       padding: 4px 24px
 
   &--navigation
-    transition:  300ms ease-in-out
+    transition: 300ms ease-in-out
     &:hover
       @extend .text__accent
       box-shadow: 0px 0px 16px rgba(255,255,255,.2)
   &:hover
     box-shadow: 0px 0px 16px rgba(0,0,0,.4)
 
-
-
-
 .content-container
   display: block
   width: 100%
-
 
 .content-empty
   display: grid
@@ -450,7 +431,6 @@ form
 /* End Modules */
 
 /* Layout */
-
 
 #galleryset-form
   select[name="category"]
@@ -475,8 +455,6 @@ form
     display: block
     width: 100%
 
-
-
 #splash_main_content
   .trend-category
     padding: 12px 8px
@@ -497,12 +475,7 @@ form
       &:hover
         box-shadow: 4px 4px 8px rgba(0,0,0,.6)
 
-
-
-
 /* Main Styles */
-
-
 
 .photo-list
   &.collapse
@@ -523,7 +496,6 @@ form
       border-bottom: 2px solid $text-accent
     &:hover
       color: $text-accent
-
 
 #gallery-sidebar
   position: absolute
@@ -548,7 +520,6 @@ form
     overflow-y: auto
     z-index: 600
 
-
 #aside_checkbox:checked ~ #main-overlay::before
   content: ""
   position: fixed
@@ -561,7 +532,6 @@ form
   background: rgba(0,0,0,.5) !important
   z-index: 600
 
-
 #aside_checkbox:checked ~ #main #gallery-sidebar
   position: absolute
   top: -30px
@@ -572,7 +542,6 @@ form
   height: 100%
   box-sizing: border-box
   opacity: 1
-
 
   .search-tray
     color: #ccc
@@ -589,12 +558,12 @@ form
       color: #a3a3a3
       font-style: italic
       border: none !important
-      outline-width: .5px  !important
+      outline-width: .5px !important
       outline-color: transparent !important
       opacity: .2
       &:hover,&:active,&:focus
         border: none !important
-        outline : none !important
+        outline: none !important
         box-shadow: none !important
         opacity: 1
     &--icon
@@ -675,7 +644,6 @@ form
       color: #fff
       background: rgba(0,0,0,.3) !important
 
-
 #intro-hero
   display: block
   width: 100%
@@ -715,7 +683,6 @@ form
       background: #fff !important
       color: #000 !important
 
-
 .search_bar
   padding: 5px 7px
   border: 2px solid $text-secondary
@@ -723,13 +690,11 @@ form
 
 /* Main Style End */
 
-
 @media (min-width:750)
   .clear-flex
     clear: both
     display: block
     background: yellow !important
-
 
 @media (max-width: $sm-breakpoint)
   .mobile-show
@@ -768,16 +733,16 @@ form
       height: 250px
 
     .share-card .share__icon
-        display: grid
-        place-items: center
-        border-radius: 4px
-        min-width: 90px
-        font-size: 2.5rem
-        padding: 4px 6px
-        color: #fff
-        transition: .3s ease-in-out
-        &:hover
-          color: inherit
+      display: grid
+      place-items: center
+      border-radius: 4px
+      min-width: 90px
+      font-size: 2.5rem
+      padding: 4px 6px
+      color: #fff
+      transition: .3s ease-in-out
+      &:hover
+        color: inherit
         p
           text-align: center
           font-size: 1.2rem

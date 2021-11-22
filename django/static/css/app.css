@@ -25,6 +25,9 @@ body {
   text-rendering: optimizeLegibility;
   overflow-x: hidden; }
 
+.disabled {
+  pointer-events: none; }
+
 .bgc {
   /* Create all bootstrap background color */ }
 .bgc-yellow {
@@ -415,6 +418,7 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
   box-shadow: 3px 2px 20px rgba(255, 255, 255, 0.2); }
 
 .cta {
+  background: #fff;
   display: inline-block;
   cursor: pointer;
   padding: 8px;
@@ -429,7 +433,7 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
   transition: all 0.3s ease-in-out;
   text-align: center;
   vertical-align: center;
-  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.3); }
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2); }
 .cta--yellow {
   background: #ffc107; }
 .cta--yellow:hover {
@@ -949,6 +953,6 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
     transition: 0.3s ease-in-out; }
   .social-share .share-card .share__icon:hover {
     color: inherit; }
-  .social-share .share-card .share__icon p {
+  .social-share .share-card .share__icon:hover p {
     text-align: center;
     font-size: 1.2rem; } }
