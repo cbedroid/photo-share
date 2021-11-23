@@ -1,6 +1,6 @@
 [
   {
-    "model": "core.category",
+    "model": "gallery.category",
     "pk": 1,
     "fields": {
       "name": 0,

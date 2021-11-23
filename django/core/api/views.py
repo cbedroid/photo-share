@@ -1,6 +1,6 @@
-from core.models import Gallery, Photo
 from django.contrib.auth.models import User
 from django.db.models import Q
+from gallery.models import Gallery, Photo
 from rest_framework.viewsets import GenericViewSet
 
 from .mixins import CRUDMixins

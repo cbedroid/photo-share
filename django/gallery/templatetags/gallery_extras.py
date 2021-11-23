@@ -2,13 +2,13 @@ import os
 import random
 import re
 
-from core.models import Gallery
 from django import template
 from django.conf import settings
+from gallery.models import Gallery
 
 register = template.Library()
 
-ASIDE_URL = os.path.join(settings.BASE_DIR, "core/templates/core/snippets/aside.html")
+ASIDE_URL = os.path.join(settings.BASE_DIR, "gallery/templates/gallery/snippets/aside.html")
 
 
 @register.filter("replace")

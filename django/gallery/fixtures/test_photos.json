@@ -1,6 +1,6 @@
 [
   {
-    "model": "core.photo",
+    "model": "gallery.photo",
     "pk": 1,
     "fields": {
       "title": "test_image_1",
@@ -16,7 +16,7 @@
     }
   },
   {
-    "model": "core.photo",
+    "model": "gallery.photo",
     "pk": 2,
     "fields": {
       "title": "test_image_2",
@@ -32,7 +32,7 @@
     }
   },
   {
-    "model": "core.photo",
+    "model": "gallery.photo",
     "pk": 3,
     "fields": {
       "title": "test_image_3",
@@ -48,7 +48,7 @@
     }
   },
   {
-    "model": "core.photo",
+    "model": "gallery.photo",
     "pk": 4,
     "fields": {
       "title": "default_image",

@@ -1,7 +1,7 @@
 import re
 
-from core.models import Category, Gallery, Photo
 from django.contrib.auth.models import User
+from gallery.models import Category, Gallery, Photo
 from rest_framework import serializers
 
 

@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from PIL import Image
 
@@ -33,7 +33,6 @@ def resizeImage(sender, instance, **kwargs):
 @receiver(post_save, sender=Photo)
 def set_gallery_cover(sender, instance, created, **kwargs):
     """Set photo album cover to newly create photo image"""
-    print("Updated album Cover")
     if created:
         photos = instance.gallery.photos.all()
         for photo in photos:

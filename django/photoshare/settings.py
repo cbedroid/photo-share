@@ -24,8 +24,6 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(" ")
 
 INSTALLED_APPS = [
     "jazzmin",
-    "core.apps.CoreConfig",
-    "users.apps.UsersConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -36,6 +34,9 @@ INSTALLED_APPS = [
     "crispy_forms",
     "rest_framework",
     "debug_toolbar",
+    "users",
+    "core",
+    "gallery",
     "django_cleanup",
 ]
 
@@ -179,7 +180,7 @@ JAZZMIN_SETTINGS = {
     "order_with_respect_to": [
         "users",
         "account",
-        "core",
+        "gallery",
         "auth",
     ],
     # Custom icons for side menu apps/models
@@ -189,11 +190,11 @@ JAZZMIN_SETTINGS = {
         "auth.Group": "fas fa-users",
         "account.emailaddress": "fas fa-envelope",
         "account_profile.account": "fa fa-user-cog",
-        "core.category": "fa fa-th-list",
-        "core.gallery": "fa fa-images",
-        "core.photo": "fa fa-image",
-        "core.rate": "fa fa-thumbs-up",
-        "core.tag": "fa fa-tags",
+        "gallery.category": "fa fa-th-list",
+        "gallery.gallery": "fa fa-images",
+        "gallery.photo": "fa fa-image",
+        "gallery.rate": "fa fa-thumbs-up",
+        "gallery.tag": "fa fa-tags",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",

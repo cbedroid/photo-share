@@ -1,6 +1,6 @@
 [
   {
-    "model": "core.gallery",
+    "model": "gallery.gallery",
     "pk": 1,
     "fields": {
       "name": "test_gallery_1",
@@ -13,7 +13,7 @@
     }
   },
   {
-    "model": "core.gallery",
+    "model": "gallery.gallery",
     "pk": 2,
     "fields": {
       "name": "test_gallery_2",
@@ -27,7 +27,7 @@
   },
 
   {
-    "model": "core.gallery",
+    "model": "gallery.gallery",
     "pk": 3,
     "fields": {
       "name": "test_gallery_3",

@@ -1,7 +1,7 @@
 import re
 
-from core.models import Gallery, Photo
 from django.shortcuts import get_object_or_404
+from gallery.models import Gallery, Photo
 from rest_framework import pagination, status
 from rest_framework.mixins import CreateModelMixin as CreateMM
 from rest_framework.mixins import DestroyModelMixin as DestroyMM
