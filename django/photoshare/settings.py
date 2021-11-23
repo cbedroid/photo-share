@@ -6,22 +6,27 @@ from dotenv import load_dotenv
 from .debug_toolbar_config import *  # noqa: F401
 
 load_dotenv()
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
-
-# Normally, This would be hidden using an environment variable
-# For this application, I will leave this expose for code review purpose
 SECRET_KEY = os.getenv("SECRET_KEY")
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.getenv("DEBUG", default=0))
 
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(" ")
-
-
 # Application definition
 
+ALLAUTH_APPS = [
+    # The following apps are required:
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+]
 INSTALLED_APPS = [
     "jazzmin",
     "django.contrib.admin",
@@ -30,15 +35,22 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "django_social_share",
-    "crispy_forms",
-    "rest_framework",
     "debug_toolbar",
-    "users",
+    "rest_framework",
+    "profanity",
+    "widget_tweaks",
+    "crispy_forms",
     "core",
+    "users",
     "gallery",
     "django_cleanup",
-]
+] + ALLAUTH_APPS
+
+
+# SITE ID
+SITE_ID = 1
 
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -123,6 +135,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+AUTH_USER_MODEL = "users.User"
+LOGIN_REDIRECT_URL = "core:index"
+ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
+
+# To run behind HTTPS proxy
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -205,3 +225,10 @@ JAZZMIN_SETTINGS = {
     # Whether to show the UI customizer on the sidebar
     "show_ui_builder": False,
 }
+
+# ********************* #
+# *** Email Service *** #
+# ********************* #
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("SUPPORT_EMAIL_HOST", "DebuggingServer")
+EMAIL_PORT = os.getenv("SUPPORT_EMAIL_PORT", 587)
