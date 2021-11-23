@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.3.11",
+    "postcss-cli": "^9.0.2",
+    "tailwindcss": "^2.2.19"
+  },
+  "scripts": {
+    "build": "TAILWIND_MODE=watch postcss ./css/tailwind.css -o ../static/css/tailwind.css -w --verbose"
+  }
+}
