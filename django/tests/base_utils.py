@@ -2,12 +2,16 @@ import os
 import shutil
 
 from django.conf import settings
-from django.contrib.auth.models import Group, User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from gallery.models import *  # noqa
 from rest_framework.reverse import reverse as api_reverse
+
+User = get_user_model()
+
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 FIXTURE_PATH = os.path.abspath(os.path.join(PATH, "..", "fixtures/"))

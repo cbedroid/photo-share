@@ -1,10 +1,12 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from gallery.models import Gallery, Photo
 from rest_framework.viewsets import GenericViewSet
 
 from .mixins import CRUDMixins
 from .serializers import *
+
+user = get_user_model()
 
 
 class GalleryViewSet(CRUDMixins, GenericViewSet):

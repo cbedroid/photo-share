@@ -1,7 +1,7 @@
 import re
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models import Q
@@ -12,6 +12,8 @@ from PIL import Image
 from rest_framework.reverse import reverse as api_reverse
 
 from .managers import GalleryManager
+
+User = get_user_model()
 
 
 class Category(models.Model):
@@ -167,7 +169,9 @@ class Photo(models.Model):
     title = models.CharField(max_length=80, validators=[MinLengthValidator(3)])
     image = models.ImageField(upload_to="gallery")
     slug = models.SlugField(blank=False, editable=False, db_index=True)
-    gallery = models.ForeignKey(Gallery, related_name="photos", db_index=True, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(
+        Gallery, related_name="photos", null=True, blank=True, db_index=True, on_delete=models.CASCADE
+    )
     tags = models.ManyToManyField(Tag, blank=True)
     views = models.PositiveIntegerField(default=0)
     is_cover = models.BooleanField(default=False)

@@ -1,8 +1,10 @@
 import re
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from gallery.models import Category, Gallery, Photo
 from rest_framework import serializers
+
+User = get_user_model()
 
 
 def re_strip(value):

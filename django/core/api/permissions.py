@@ -1,6 +1,8 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from gallery.models import Gallery, Photo
 from rest_framework import permissions
+
+User = get_user_model()
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
