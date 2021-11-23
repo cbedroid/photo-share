@@ -1,13 +1,12 @@
 import os
 import shutil
 
-from core.models import *
 from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.utils.text import slugify
+from gallery.models import *  # noqa
 from rest_framework.reverse import reverse as api_reverse
 
 PATH = os.path.dirname(os.path.abspath(__file__))
@@ -109,29 +108,11 @@ class BaseObjectUtils(object):
 
         self.login_url = reverse("account_login")
         self.logout_url = reverse("account_logout")
-        self.home_url = reverse("core:index")  # index
-        self.gallery_create_url = reverse("core:gallery-create")
-        self.test_gallery_detail_url = reverse(
-            "core:gallery-detail",
-            kwargs={
-                "slug": slugify("test_gallery_1"),
-                "owner": slugify(self.test_gallery_1.user.username),
-            },
-        )
-        self.update_url = reverse(
-            "core:gallery-update",
-            kwargs={
-                "slug": slugify("test_gallery_1"),
-                "owner": slugify(self.test_gallery_1.user.username),
-            },
-        )
-        self.delete_url = reverse(
-            "core:gallery-delete",
-            kwargs={
-                "slug": slugify("test_gallery_1"),
-                "owner": slugify(self.test_gallery_1.user.username),
-            },
-        )
+        self.home_url = reverse("gallery:index")  # index
+        self.gallery_create_url = reverse("gallery:gallery-create")
+        self.test_gallery_detail_url = reverse("gallery:gallery-detail", kwargs={"pk": "1"})
+        self.update_url = reverse("gallery:gallery-update", kwargs={"pk": "1"})
+        self.delete_url = reverse("gallery:gallery-delete", kwargs={"pk": "1"})
 
         # API URLS
         self.gallery_api_list_url = api_reverse("api:gallery-list")

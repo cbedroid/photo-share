@@ -4,6 +4,7 @@ import shutil
 from core.api.serializers import *
 from core.api.views import *
 from core.models import *
+from django.conf import settings
 from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404
 from django.test import override_settings
@@ -28,14 +29,6 @@ class TestGalleryViewSets(APITestCase, BaseObjectUtils):
     def tearDown(self):
         if os.path.isdir(TEST_MEDIA_ROOT):
             shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
-
-        category = Category.objects.first()
-        gallery = baker.make("core.gallery", category=category, user=self.test_user_1)
-
-        url = api_reverse("api:gallery-detail", kwargs={"pk": gallery.pk})
-        client = APIClient()
-        response = client.get(url, format="json")
-        self.assertEqual(response.status_code, 200)
 
     def test_gallery_listView_does_not_return_private_gallery(self):
         category = Category.objects.first()

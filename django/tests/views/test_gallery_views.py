@@ -1,11 +1,11 @@
 import os
 import shutil
 
-from core.models import *
-from core.models import Gallery
 from django.conf import settings
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+from gallery.models import *
+from gallery.models import Gallery
 from model_bakery import baker
 from tests.base_utils import BaseObjectUtils
 
@@ -47,16 +47,16 @@ class TestWebAppGalleryView(TestCase, BaseObjectUtils):
         # Test HomeView
         response = self.client.get(self.home_url)
         self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, "core/index.html")
+        self.assertTemplateUsed(response, "gallery/index.html")
 
     def test_gallery_detailview_renders_properly(self):
         # Test DetailView
         response = self.client.get(self.test_gallery_detail_url)
         self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, "core/gallery_detail.html")
+        self.assertTemplateUsed(response, "gallery/gallery_detail.html")
 
     def test_gallery_updateview_fails_when_access_by_non_authenticated_user(self):
-        # Test response when user is NOT logged in and NOT rediected to login
+        # Test response when user is NOT logged in and NOT redirected to login
         # NOT AUTHENTICATED TEST
         client = Client()
         response = client.get(self.update_url)
@@ -76,7 +76,7 @@ class TestWebAppGalleryView(TestCase, BaseObjectUtils):
         # Test gallery update by creator
         response = self.client.get(self.update_url)
         self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, "core/gallery_form.html")
+        self.assertTemplateUsed(response, "gallery/gallery_form.html")
 
     def test_gallery_update_fails_when_user_is_not_the_owner(self):
         # Test updateview return 403 when a gallery is updated by non-creator
@@ -198,7 +198,7 @@ class TestWebAppGalleryView(TestCase, BaseObjectUtils):
         client.login(username=user.username, password="test_password")
 
         # Test deleting a gallery throw 403 permission denied
-        gallery = baker.make("core.gallery", user=self.test_user_1)
+        gallery = baker.make("gallery.gallery", user=self.test_user_1)
         url = gallery.get_delete_url()
         response = client.get(url)
         self.assertEquals(response.status_code, 403)
@@ -260,7 +260,7 @@ class TestWebAppPhotoView(TestCase, BaseObjectUtils):
         # view should redirect to login page
 
         photo = self.create_photo(self.test_gallery_1, title="test_photo_1")
-        photo_delete_url = reverse("core:photo-delete", kwargs={"pk": photo.id})
+        photo_delete_url = reverse("gallery:photo-delete", kwargs={"pk": photo.id})
         response = client.post(photo_delete_url, follow=True)
         expected_url = "/account/login/?next={}".format(photo_delete_url)
         self.assertEquals(response.status_code, 200)
@@ -272,7 +272,7 @@ class TestWebAppPhotoView(TestCase, BaseObjectUtils):
         # view should redirect 404
 
         fake_photo_id = 2002002002
-        photo_delete_url = reverse("core:photo-delete", kwargs={"pk": fake_photo_id})
+        photo_delete_url = reverse("gallery:photo-delete", kwargs={"pk": fake_photo_id})
         response = self.client.post(photo_delete_url, follow=True)
         self.assertEquals(response.status_code, 404)
 
@@ -286,7 +286,7 @@ class TestWebAppPhotoView(TestCase, BaseObjectUtils):
 
         # test_gallery_1 is owned by user_1 not user_2, so it should fail.
         photo = self.create_photo(self.test_gallery_1, title="test_photo_1")
-        photo_delete_url = reverse("core:photo-delete", kwargs={"pk": photo.id})
+        photo_delete_url = reverse("gallery:photo-delete", kwargs={"pk": photo.id})
         response = client.post(photo_delete_url, follow=True)
         self.assertEquals(response.status_code, 403)
 
@@ -299,8 +299,8 @@ class TestWebAppPhotoView(TestCase, BaseObjectUtils):
         # Test deleting a Photo is successful
         # view should to Photo's gallery detail page
 
-        gallery = baker.make("core.gallery", name="awesome_gallery", user=self.test_user_1)
-        photo = baker.make("core.photo", gallery=gallery, _create_files=True)
+        gallery = baker.make("gallery.gallery", name="awesome_gallery", user=self.test_user_1)
+        photo = baker.make("gallery.photo", gallery=gallery, _create_files=True)
         photo_delete_url = photo.get_delete_url()
 
         response = self.client.post(photo_delete_url, follow=True)
@@ -313,8 +313,8 @@ class TestWebAppPhotoView(TestCase, BaseObjectUtils):
     def test_photo_deletion_also_delete_gallery_when_no_photo_exist(self):
         # POST Method
         # Test deleting a Photo successfully delete empty gallery
-        gallery = baker.make("core.gallery", name="awesome_gallery", user=self.test_user_1)
-        photo = baker.make("core.photo", gallery=gallery, _create_files=True)
+        gallery = baker.make("gallery.gallery", name="awesome_gallery", user=self.test_user_1)
+        photo = baker.make("gallery.photo", gallery=gallery, _create_files=True)
         photo_delete_url = photo.get_delete_url()
 
         self.client.post(photo_delete_url, follow=True)
