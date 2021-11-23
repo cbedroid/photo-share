@@ -33,14 +33,16 @@
                 </ul>
               </div>
               <div class="nav-menu nav--sub-menu pb-3">
-                <h4 class="menu-title text-shadow font-extrabold bg-white text-black px-2" >Account</h4>
+                <h4 class="menu-title text-shadow font-extrabold bg-white text-black px-2">Account</h4>
                 <ul id="mini-menu" class="mini-nav_secondary-menu nav__list space-y-3  mb-2 p-2 trans-300">
-                  <li><p class="nav-link font-semibold text-lg text__accent sm:px-6">{{request.user.username}}</p></li>
+                  <li>
+                    <p class="nav-link font-semibold text-lg text__accent sm:px-6">{{request.user.username}}</p>
+                  </li>
                   <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
                   {% if request.user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
                   {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
                   {% endif %}
                 </ul>
               </div>
@@ -59,10 +61,12 @@
 
       <ul class="nav__list collapse nav__account mt-2 sm:mt-0 sm:flex flex-col sm:flex-row sm:space-x-2 trans-300" data-expanded="false" data-target="nav-list">
         {% if request.user.is_authenticated %}
-          <li><p class="nav-link">{{request.user.username}}</p></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+        <li>
+          <p class="nav-link">{{request.user.username}}</p>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
         {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
         {% endif %}
       </ul>
     </div>
@@ -75,9 +79,9 @@
       </label>
       <!-- Navigation Search-->
       <form action="/">
-        <div class="search-tray search-tray--icon search-tray--collapse">
-          <input type="text" class="search_bar" list="category-list" placeholder="Search for a gallery &#128269" name="q" aria-label="search bar">
-          <button type="submit">
+        <div class="mt-1 flex rounded-md shadow-sm">
+          <input class="search_bar focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" type="text" list="category-list" name="q" placeholder="search category or gallery" aria-label="search bar" style="padding: 6px;">
+          <button type="submit" class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
             <i class="search-icon fa fa-search"></i>
           </button>
         </div>

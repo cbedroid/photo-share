@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static  gallery_extras  social_share %}
+
+{% block body %}
+<div id="gallery-section" class="theme-ws clear top mx-2 pb-2">
+  <div class="container mx-auto p-3 sm:p-6">
+    <div class="row">
+      <div class="header">
+        <h1 class="py-1 text-center text-ellipsis  font-semibold font-serif">{{photo.title}}</h1>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 xxl:grid-cols-4  gap-y-2 sm:gap-6 my-1 sm:p-1">
+        <!-- Photo Card Details -->
+        <div class="content--left">
+          <!-- photo image-->
+          <div class="photo__card bg-white border border-gray-400 rounded-md shadow-lg hover:shadow-2xl  drop-shadow-md">
+            <div class="img-container" style="height: 550px">
+              <a href="{{photo.image.url}}">
+                <img class="block w-full h-full" src="{{photo.image.url}}" alt="{{photo.gallery}} {{photo}} photo" >
+              </a>
+            </div>
+            <!-- -->
+            <!-- Photo card spec -->
+            <div class="card-body flex flex-col sm:flex-row sm:space-x-1  p-3">
+              <small class="detail__date w-50 sm:flex-1 sm:text-left">
+                <i class="fa fa-clock mr-1"></i>
+                {{photo.created|date:"M d, Y"}}
+              </small>
+              <small class="detail__user text-ellipsis nowrap sm:text-right sm:flex-1" style="max-width:calc(100% / 2);">
+                <i class="fa fa-user mr-1"></i>
+                <span class="text-truncated">{{photo.gallery.user}}</span>
+              </small>
+            </div>
+            <!-- -->
+            <!--Photo actions-->
+            <div class="card-footer p-2">
+              <div class="share-action flex-between space-x-1 relative bottom-0 left-0">
+                {% if request.user.is_authenticated and request.user == photo.gallery.user %}
+                <a class="cta cta--red cta--full-block" href="{{object.get_delete_url}}">
+                  <i class="fas fa-trash"></i>
+                </a>
+                {% else %}
+                <a class="cta cta--red cta--full-block" href="#">
+                  <i class="fas fa-heart"></i>
+                </a>
+                {% endif %}
+                <a class="cta cta--blue cta--full-block share_popup" href="#">
+                  <i class="fas fa-share-alt"></i>
+                </a>
+                <a id="photo-download" class="cta cta--green cta--full-block" href="#">
+                  <i class="fas fa-cloud-download-alt"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- -->
+        </div>
+        <!-- -->
+
+        <!--Photo Specs-->
+        <div id="photo-specs" class="content--right">
+          <div class="bg-white shadow drop-shadow-md overflow-hidden sm:rounded-lg h-full">
+            <div class="px-4 py-5 sm:px-6">
+              <h3 class="text-lg leading-6 font-bold text-gray-900">
+                Image Specification
+              </h3>
+              <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                Photo details and specifications
+              </p>
+            </div>
+            <div class="border-t border-gray-200">
+              <dl>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">
+                    Image Type
+                  </dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{object.mime_type}}
+                  </dd>
+                </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">
+                    Dimension
+                  </dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{object.dimension}}
+                  </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">
+                    Date Published
+                  </dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{photo.created|date:"M d, Y"}}
+                  </dd>
+                </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">
+                    Last Update
+                  </dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{photo.updated|date:"M d, Y"}}
+                  </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">
+                    Views
+                  </dt>
+                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{object.views}}
+                  </dd>
+                </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt class="text-sm font-medium text-gray-500">
+                    Download
+                  </dt>
+                  <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">
+                    {% comment %} {{object.download}} {% endcomment %}
+                    Coming Soon!
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}

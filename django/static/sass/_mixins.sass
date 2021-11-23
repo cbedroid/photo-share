@@ -12,21 +12,20 @@ $display_list: ('flex','grid') !default
   // Create bootstrap outline button style
   @each $prefix in map-keys($bs-colors)
     &--outline-#{$prefix}
-      border: 2px solid  get_color(#{$prefix})
+      border: 2px solid get_color(#{$prefix})
       background: transparent
-      color:  get_color(#{$prefix})
+      color: get_color(#{$prefix})
       &:hover
         background: get_color(#{$prefix})
         color: #fff
-
 
 =bootstrap-normal-button()
   // Create bootstrap default button style
   @each $prefix in map-keys($bs-colors)
     &--#{$prefix}
-        background: get_color(#{$prefix})
-        &:hover
-          color: #ccc
+      background: get_color(#{$prefix})
+      &:hover
+        color: #ccc
 
 =bootstrap-background-color()
   // Create backgroup colors
@@ -34,14 +33,8 @@ $display_list: ('flex','grid') !default
     &-#{$prefix}
       background: get_color(#{$prefix})
 
-
+$display_list: ('flex','grid') !default
 =cross-browser($name,$style)
-  @if $style in $display_list
-    #{$name}: -ms-#{$style}
-    #{$name}: -webkit-#{$style}
-  @else
-    -ms-#{$name}: #{$style}
-    -webkit-#{$name}: #{$style}
-  -moz-#{$name}: #{$style}
-  -o-#{$name}: #{$style}
-  #{$name}: #{$style}
+  $special: null
+  @each $n in $display_list
+    $special: str-index(#{$style},$n)
