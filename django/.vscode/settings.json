@@ -1,0 +1,30 @@
+{
+    "python.envFile":   "${workspaceFolder}/.envs",
+    "python.pythonPath": "${workspaceFolder}/django/venv/bin/python3",
+    "python.venvPath": "${workspaceFolder}/django/venv/",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./django",
+        "-p",
+        "*test*.py"
+    ],
+    "python.testing.pytestPath": "${workspaceFolder}/django/venv/bin/pytest",
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "django"
+    ],
+    "cSpell.words": [
+        "Assesssment",
+        "csrftoken",
+        "filereader",
+        "lightgreen",
+        "lowercased",
+        "pytz",
+        "REFERER",
+        "tzname",
+        "undelete",
+        "untoggle"
+    ]
+}
