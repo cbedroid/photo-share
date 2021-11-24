@@ -1,15 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from gallery.models import Gallery, Photo
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import ModelViewSet
 
-from .mixins import CRUDMixins
 from .serializers import *
 
 user = get_user_model()
 
 
-class GalleryViewSet(CRUDMixins, GenericViewSet):
+class GalleryViewSet(ModelViewSet):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
 
@@ -33,17 +32,8 @@ class GalleryViewSet(CRUDMixins, GenericViewSet):
     def perform_update(self, serializer):
         return serializer.save(user=self.request.user)
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
 
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
-
-class PhotoViewSet(CRUDMixins, GenericViewSet):
+class PhotoViewSet(ModelViewSet):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
 
@@ -62,16 +52,7 @@ class PhotoViewSet(CRUDMixins, GenericViewSet):
         if photo_count == 0:
             instance.gallery.delete()
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
 
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
-
-class UserViewSet(CRUDMixins, GenericViewSet):
+class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
