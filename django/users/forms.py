@@ -47,7 +47,7 @@ class UserUpdateForm(forms.UserChangeForm):
 class UserSignUpForm(forms.UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserSignUpForm, self).__init__(*args, **kwargs)
-        self.fields["captcha"].label = ""
+        # self.fields["captcha"].label = ""
         self.fields["username"].help_text = _(
             "Required. {} characters or fewer. Letters, digits and @/./+/-/_ only.".format(
                 settings.ACCOUNT_USERNAME_MAX_LENGTH
@@ -58,8 +58,8 @@ class UserSignUpForm(forms.UserCreationForm):
     class Meta:
         model = User
         # TODO Add captcha field "captcha"
-        fields = ("username", "email", "phone_number")
-        field_order = ["username", "email", "phone_number", "password"]
+        fields = ("username", "email")
+        field_order = ["username", "email", "password"]
 
     def clean_username(self):
         username = self.cleaned_data["username"]
@@ -107,11 +107,11 @@ class UserSignUpForm(forms.UserCreationForm):
 
 
 class UserLoginForm(LoginForm):
+    pass
     # captcha = ReCaptchaField(widget=ReCaptchaV3)
-
     # def __init__(self, *args, **kwargs):
     #     super(UserLoginForm, self).__init__(*args, **kwargs)
     #     self.fields["captcha"].label = ""
 
-    def login(self, *args, **kwargs):
-        return super(UserLoginForm, self).login(*args, **kwargs)
+    # def login(self, *args, **kwargs):
+    #     return super(UserLoginForm, self).login(*args, **kwargs)
