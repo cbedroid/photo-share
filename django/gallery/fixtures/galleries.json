@@ -7,9 +7,9 @@
         "user": 1,
         "public": true,
         "slug": "holiday",
-        "category": 1,
+        "category": 438,
         "created": "2021-01-09T02:11:04.237Z",
-        "updated": "2021-02-16T20:40:17.656Z"
+        "updated": "2021-11-23T03:18:19.106Z"
     }
 },
 {
@@ -20,9 +20,9 @@
         "user": 1,
         "public": true,
         "slug": "band",
-        "category": 1,
+        "category": 444,
         "created": "2021-01-13T12:13:09.247Z",
-        "updated": "2021-02-16T20:40:17.573Z"
+        "updated": "2021-11-23T03:18:09.141Z"
     }
 },
 {
@@ -33,9 +33,9 @@
         "user": 1,
         "public": true,
         "slug": "projects",
-        "category": 1,
+        "category": 421,
         "created": "2021-01-14T16:05:35.988Z",
-        "updated": "2021-02-16T20:40:17.564Z"
+        "updated": "2021-11-23T03:18:28.324Z"
     }
 },
 {
@@ -46,22 +46,9 @@
         "user": 1,
         "public": true,
         "slug": "lakers",
-        "category": 1,
+        "category": 455,
         "created": "2021-01-18T10:14:37.391Z",
-        "updated": "2021-02-16T20:40:17.481Z"
-    }
-},
-{
-    "model": "gallery.gallery",
-    "pk": 73,
-    "fields": {
-        "name": "Rockin On 🎸🤘",
-        "user": 1,
-        "public": true,
-        "slug": "rockin-on",
-        "category": 1,
-        "created": "2021-01-18T23:53:24.055Z",
-        "updated": "2021-02-16T20:40:17.471Z"
+        "updated": "2021-11-23T04:29:12.597Z"
     }
 },
 {
@@ -72,9 +59,22 @@
         "user": 1,
         "public": true,
         "slug": "nowornever",
-        "category": 1,
+        "category": 444,
         "created": "2021-02-08T07:45:00.152Z",
-        "updated": "2021-02-16T20:55:18.216Z"
+        "updated": "2021-11-23T03:17:53.458Z"
+    }
+},
+{
+    "model": "gallery.gallery",
+    "pk": 88,
+    "fields": {
+        "name": "Rock on",
+        "user": 1,
+        "public": true,
+        "slug": "rock-on",
+        "category": 444,
+        "created": "2021-11-23T03:57:40.104Z",
+        "updated": "2021-11-23T05:03:04.551Z"
     }
 }
 ]

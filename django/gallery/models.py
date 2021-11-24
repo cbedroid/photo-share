@@ -168,23 +168,19 @@ class Gallery(models.Model):
 class Photo(models.Model):
     title = models.CharField(max_length=80, validators=[MinLengthValidator(3)])
     image = models.ImageField(upload_to="gallery")
-    slug = models.SlugField(blank=False, editable=False, db_index=True)
-    gallery = models.ForeignKey(
-        Gallery, related_name="photos", null=True, blank=True, db_index=True, on_delete=models.CASCADE
-    )
-    tags = models.ManyToManyField(Tag, blank=True)
-    views = models.PositiveIntegerField(default=0)
+    gallery = models.ForeignKey(Gallery, related_name="photos", blank=True, db_index=True, on_delete=models.CASCADE)
     is_cover = models.BooleanField(default=False)
+    views = models.PositiveIntegerField(default=0)
     downloads = models.PositiveIntegerField(default=0)
+    tags = models.ManyToManyField(Tag, blank=True)
     created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
+    slug = models.SlugField(blank=False, editable=False, db_index=True)
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        # This whole method can be deleted.
-        # SlugField should also be deleted,It's only valid for API lookups
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
@@ -195,6 +191,7 @@ class Photo(models.Model):
         return reverse("gallery:photo-delete", kwargs={"pk": self.pk})
 
     def get_download_title(self):
+        """Creates filename for download from photo title"""
         user = self.gallery.user
         app_name = settings.ROOT_URLCONF.split(".")[0].title()
         photo = re.sub(" ", "_", str(self))
@@ -217,11 +214,8 @@ class Photo(models.Model):
 class Rate(models.Model):
     like = models.BooleanField(default=False)
     star = models.BooleanField(default=False)
-    photo = models.ForeignKey(Photo, blank=True, on_delete=models.CASCADE)
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
     user = models.ForeignKey(User, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        photo = ""
-        if self.photo:
-            photo = self.photo.title
-        return f"{self.user} {photo} - Like: {int(self.like)} Star: {int(self.star)}"
+        return f"{self.user} {self.photo.title} - Like: {int(self.like)} Star: {int(self.star)}"
