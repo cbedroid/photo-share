@@ -3,6 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from .config.allauth_config import *  # noqa: F401
 from .debug_toolbar_config import *  # noqa: F401
 
 load_dotenv()
@@ -11,13 +12,10 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = int(os.getenv("DEBUG", default=0))
 
+if DEBUG:
+    ACCOUNT_EMAIL_VERIFICATION = "none"
 
-AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
-    "django.contrib.auth.backends.ModelBackend",
-    # `allauth` specific authentication methods, such as login by e-mail
-    "allauth.account.auth_backends.AuthenticationBackend",
-]
+
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(" ")
 # Application definition
 
@@ -135,10 +133,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 
 AUTH_USER_MODEL = "users.User"
-LOGIN_REDIRECT_URL = "core:index"
+# LOGIN_REDIRECT_URL = "core:index"
+LOGOUT_REDIRECT_URL = "core:index"
 ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
+
 
 # To run behind HTTPS proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -171,10 +177,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-LOGIN_URL = "/account/login/"
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -235,7 +237,7 @@ JAZZMIN_SETTINGS = {
 
 # ********************* #
 # *** Email Service *** #
-# ********************* #
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("SUPPORT_EMAIL_HOST", "DebuggingServer")
-EMAIL_PORT = os.getenv("SUPPORT_EMAIL_PORT", 587)
+# # ********************* #
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = os.getenv("SUPPORT_EMAIL_HOST", "DebuggingServer")
+# EMAIL_PORT = os.getenv("SUPPORT_EMAIL_PORT", 587)
