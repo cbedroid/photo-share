@@ -4,7 +4,7 @@
 {% include 'gallery/snippets/gallery_delete_modal.html' %}
 {% endblock modal %}
 
-{% block body %}
+{% block content %}
 {% url 'gallery:gallery-detail' pk=object.pk as current_url %}
 <section id="gallery-section" class="theme-ws clear top mx-2 py-2">
   <!-- Gallery Header-->
@@ -256,4 +256,4 @@
   </div>
 </section>
 
-{% endblock body %}
+{% endblock content %}

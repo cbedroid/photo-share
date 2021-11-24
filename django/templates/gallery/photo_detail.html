@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static  gallery_extras  social_share %}
 
-{% block body %}
+{% block content %}
 <div id="gallery-section" class="theme-ws clear top mx-2 pb-2">
   <div class="container mx-auto p-3 sm:p-6">
     <div class="row">
@@ -69,7 +69,7 @@
             </div>
             <div class="border-t border-gray-200">
               <dl>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt class="text-sm font-medium text-gray-500">
                     Image Type
                   </dt>
@@ -77,7 +77,7 @@
                     {{object.mime_type}}
                   </dd>
                 </div>
-                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt class="text-sm font-medium text-gray-500">
                     Dimension
                   </dt>
@@ -85,7 +85,7 @@
                     {{object.dimension}}
                   </dd>
                 </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt class="text-sm font-medium text-gray-500">
                     Date Published
                   </dt>
@@ -93,7 +93,7 @@
                     {{photo.created|date:"M d, Y"}}
                   </dd>
                 </div>
-                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt class="text-sm font-medium text-gray-500">
                     Last Update
                   </dt>
@@ -101,7 +101,7 @@
                     {{photo.updated|date:"M d, Y"}}
                   </dd>
                 </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt class="text-sm font-medium text-gray-500">
                     Views
                   </dt>
@@ -109,7 +109,7 @@
                     {{object.views}}
                   </dd>
                 </div>
-                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt class="text-sm font-medium text-gray-500">
                     Download
                   </dt>
@@ -126,4 +126,4 @@
     </div>
   </div>
 </div>
-{% endblock body %}
+{% endblock content %}
