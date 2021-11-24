@@ -126,10 +126,10 @@ class Gallery(models.Model):
     objects = GalleryManager()
 
     name = models.CharField(max_length=75, validators=[MinLengthValidator(3)])
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="gallery", on_delete=models.CASCADE)
     public = models.BooleanField(default=True)
     slug = models.SlugField(blank=False, editable=False, db_index=True)
-    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL, db_index=True)
+    category = models.ForeignKey(Category, related_name="gallery", null=True, on_delete=models.SET_NULL, db_index=True)
     created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 

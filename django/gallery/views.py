@@ -85,7 +85,7 @@ class GalleryDetailView(DetailView, MultipleObjectMixin):
     def get_context_data(self, **kwargs):
         object_list = self.object.photos.order_by("-pk")
         context = super().get_context_data(object_list=object_list, **kwargs)
-        related_gallery = self.object.category.gallery_set
+        related_gallery = self.object.category.gallery
         user = self.request.user
         if related_gallery.exists():
             # Filter galleries by creator or its public status
