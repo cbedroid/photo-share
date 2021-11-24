@@ -8,7 +8,7 @@ User = get_user_model()
 
 
 def re_strip(value):
-    """ Helper function to uniform and strip whitespace incoming data"""
+    """Helper function to uniform and strip whitespace incoming data"""
     value = value or ""
     return re.sub(r"\s{1,}", " ", value).strip()
 
@@ -16,12 +16,8 @@ def re_strip(value):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = (
-            "pk",
-            "username",
-            "email",
-            "password",
-        )
+        fields = "__all__"
+
         extra_kwargs = {
             # This is crucial not to leak user password or email
             "password": {"write_only": True, "required": True},
@@ -44,52 +40,40 @@ class GallerySerializer(serializers.ModelSerializer):
     public = serializers.BooleanField(default=True, initial=True)
 
     # For Read Only - string representation of gallery photos
-    photos = serializers.StringRelatedField(
-        source="photo", many=False, read_only=True
-    )
+    photos = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Gallery
-        # fmt: off
-        fields = ("id", "name", "category", "public", "created", "updated", "user", "image", "title", "photos",)
+        fields = "__all__"
         read_only_fields = ["user"]
 
     def get_uri(self, obj):
-        """ Get object reversed slug url"""
+        """Get object reversed slug url"""
         request = self.context.get("request")
         return obj.get_api_url(request)
 
     def get_fields(self, *args, **kwargs):
-        # Override get_fields  making image and title not required for
+        # Override get_fields making image and title not required for
         # PATCH and PUT
-
         fields = super(GallerySerializer, self).get_fields(*args, **kwargs)
-        request = self.context.get('request', None)
-        if request and getattr(request, 'method', None) in ['PUT', 'PATCH']:
-            fields['image'].required = False
-            fields['title'].required = False
+        request = self.context.get("request", None)
+        if request and getattr(request, "method", None) in ["PUT", "PATCH"]:
+            fields["image"].required = False
+            fields["title"].required = False
         return fields
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        date_format = "%m-%d-%Y"
-        photos = list(
-            dict(id=photo.id, title=photo.title) for photo in instance.photos.all()
-        )
+        photos = list(dict(id=photo.id, title=photo.title) for photo in instance.photos.all())
 
         representation["uri"] = self.get_uri(instance)
         representation["category"] = instance.category.get_name_display()
         representation["photos"] = photos
-        representation["id"] = instance.pk
-        representation["updated"] = instance.updated.strftime(date_format)
-        representation["created"] = instance.created.strftime(date_format)
-        representation["user"] = dict(
-            id=instance.user.pk, username=instance.user.username
-        )
+        representation["uploader"] = dict(id=instance.user.pk, username=instance.user.username)
         return representation
 
     def validate_category(self, value):
-        """ Validate Category is available """
+        """Validate Category is available"""
         value = re_strip(str(value))
         category = Category.choicefield_filter(value)
         if category.exists():
@@ -97,16 +81,13 @@ class GallerySerializer(serializers.ModelSerializer):
         raise serializers.ValidationError("Sorry, that category does not exist!")
 
     def validate_name(self, value):
-        """ Validate Albums name are not the same """
-
+        """Validate Albums name are not the same"""
         instance = self.context.get("instance")
         qs = Gallery.objects.filter(name__iexact=value)
         if instance:
             qs = qs.exclude(name__iexact=instance.name)
         if qs.exists():
-            raise serializers.ValidationError(
-                "Sorry, that gallery name is already taken"
-            )
+            raise serializers.ValidationError("Sorry, that gallery name is already taken")
         return value
 
     def create(self, validated_data):
@@ -135,17 +116,19 @@ class GallerySerializer(serializers.ModelSerializer):
 class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
-        fields = "__all__"
-        read_only_fields = ("slug", "created", 'pk', "updated",)
+        exclude = ("slug",)
+        read_only_fields = (
+            "views",
+            "created",
+            "pk",
+            "updated",
+        )
 
     def to_representation(self, instance):
         # Converting the timezone DateFields
         # into a string representation date format
         representation = super().to_representation(instance)
-        date_format = "%m-%d-%Y"
         representation["gallery"] = {"id": instance.gallery.id, "name": instance.gallery.name}
-        representation["updated"] = instance.updated.strftime(date_format)
-        representation["created"] = instance.created.strftime(date_format)
         return representation
 
     def validate_title(self, value):
@@ -158,9 +141,7 @@ class PhotoSerializer(serializers.ModelSerializer):
             # if the object is the instance, then exclude it
             qs = qs.exclude(pk=self.instance.pk)
         if qs.exists():
-            raise serializers.ValidationError(
-                "Sorry, that photo title is already taken. Try again"
-            )
+            raise serializers.ValidationError("Sorry, that photo title is already taken. Try again")
         return value
 
     def create(self, validated_data):
@@ -169,7 +150,5 @@ class PhotoSerializer(serializers.ModelSerializer):
         title_data = validated_data.pop("title")
 
         gallery, _ = Gallery.objects.get_or_create(name=str(gallery_data))
-        photo = Photo.objects.create(
-            title=title_data, image=image_data, gallery=gallery
-        )
+        photo = Photo.objects.create(title=title_data, image=image_data, gallery=gallery)
         return photo
