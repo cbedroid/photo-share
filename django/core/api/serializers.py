@@ -16,10 +16,9 @@ def re_strip(value):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
-
+        fields = ["id", "username"]
         extra_kwargs = {
-            # This is crucial not to leak user password or email
+            # NOTE: Critical - prevent user's password and email leakage
             "password": {"write_only": True, "required": True},
             "email": {"write_only": True, "required": True},
         }
@@ -32,6 +31,13 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        galleries = instance.gallery
+        representation["total_galleries"] = galleries.count()
+        return representation
 
 
 class GallerySerializer(serializers.ModelSerializer):
@@ -53,8 +59,7 @@ class GallerySerializer(serializers.ModelSerializer):
         return obj.get_api_url(request)
 
     def get_fields(self, *args, **kwargs):
-        # Override get_fields making image and title not required for
-        # PATCH and PUT
+        # Override get_fields making image and title not required for PATCH and PUT
         fields = super(GallerySerializer, self).get_fields(*args, **kwargs)
         request = self.context.get("request", None)
         if request and getattr(request, "method", None) in ["PUT", "PATCH"]:
@@ -125,8 +130,6 @@ class PhotoSerializer(serializers.ModelSerializer):
         )
 
     def to_representation(self, instance):
-        # Converting the timezone DateFields
-        # into a string representation date format
         representation = super().to_representation(instance)
         representation["gallery"] = {"id": instance.gallery.id, "name": instance.gallery.name}
         return representation
@@ -134,7 +137,6 @@ class PhotoSerializer(serializers.ModelSerializer):
     def validate_title(self, value):
         # Validate Photo titles are not the same
 
-        # First we grab the gallery object from views
         value = re_strip(value)
         qs = Photo.objects.filter(title__iexact=value)
         if self.instance:
