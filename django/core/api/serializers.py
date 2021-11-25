@@ -39,6 +39,13 @@ class UserSerializer(serializers.ModelSerializer):
         representation["total_galleries"] = galleries.count()
         return representation
 
+    def validate_username(self, value):
+        """Validate User is available"""
+        user = User.objects.filter(username=value)
+        if user.exists():
+            raise serializers.ValidationError("Sorry, that category does not exist!")
+        return value
+
 
 class GallerySerializer(serializers.ModelSerializer):
     title = serializers.CharField(write_only=True)
