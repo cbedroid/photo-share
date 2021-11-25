@@ -3,6 +3,7 @@ import re
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms.models import inlineformset_factory
+from django.utils.safestring import mark_safe
 
 from .models import Category, Gallery, Photo
 
@@ -11,7 +12,7 @@ class GalleryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
         # Helper variable that user to pass the current Gallery's
-        # form.instance to PhotoForm's clean method when Gallery is updating
+        # form.instance to PhotoForm's clean method when Gallery is being updated.
         self.gallery_update_obj = kwargs.pop("gallery_update_obj", None)
         super().__init__(*args, **kwargs)
 
@@ -36,35 +37,27 @@ class GalleryForm(forms.ModelForm):
         name = self.cleaned_data.get("name", "")
         name = re.sub(r"\s{1,}", " ", name).strip()
 
-        """
-            Adding Gallery uniqueness here in clean's method instead
-            of adding it to the Gallery model.
-
-            This way each users can have an Gallery with the same name as other users,
-            but each user can only have one Gallery with a specific name
-            Data cleaning will be handle by Model's form class
-        """
-        # Added uniqueness for user here
+        # Using form instance id to determine if a form is being updated or created.
         gallery_obj = Gallery.objects.filter(name__iexact=name, user=self.request.user)
-        if self.instance.id:
-            # Exclude form instance itself from existing queryset
-            gallery_obj = gallery_obj.exclude(pk=self.instance.id)
 
-        # If form does not have an id, then a new Gallery is being created,
-        #  otherwise it being updated.
+        if self.instance.id:
+            # Adding gallery uniqueness per user.
+            gallery_obj = gallery_obj.exclude(pk=self.instance.id)
         if gallery_obj.exists():
             raise ValidationError("Sorry, This Gallery already exist!")
         return name
 
 
 class PhotoForm(forms.ModelForm):
-    CUSTOM_IMAGE_LABEL = """
+    IMAGE_PREVIEW = mark_safe(
+        """
         <label class="photoset__image_label">
+            <div><p class="image__label text-ellipsis font-bold text-gray-900 text-center py-4">add photo</p></div>
             <div class="image--wrapper">
-                <img class="image form-image " src="static/assets/add_image.png"/>
+                <img class="image form-image w-full" src="static/assets/add_image.png" style="height:200px;"/>
             </div>
-            <div><p class="image__label text-ellipsis mt-1">upload</p></div>
         </label>"""
+    )
 
     class Meta:
         model = Photo
@@ -75,24 +68,18 @@ class PhotoForm(forms.ModelForm):
         label=False,
         widget=forms.TextInput(attrs={"placeholder": "Image title", "class": "photo-form text-center"}),
     )
-    image = forms.ImageField(required=True, label=CUSTOM_IMAGE_LABEL, widget=forms.FileInput)
+    image = forms.ImageField(required=True, label=IMAGE_PREVIEW, widget=forms.FileInput)
 
     def clean_title(self):
         title = self.cleaned_data.get("title")
-
         if not title:
             raise ValidationError("Sorry, This photo must have a title")
         title = re.sub(r"\s{1,}", " ", title).strip()
 
-        # Not checking Photo title if form does NOT have an instance id.
-        # If there is no form id, then the form was called from CreateView,
-        #  so the Gallery is here will be new.
+        # NOTE: Only checking the photo title if the gallery form is being updated.
+        #       Forms can be empty only if updating gallery, otherwise each field are required.
         gallery_id = self.instance.gallery_id
         if gallery_id:
-            # First, get the Gallery's object by pk
-            # Check whether this gallery objects has
-            #  a photo with this photo title
-            #
             title_exist = Photo.objects.filter(title__iexact=title, gallery__pk=gallery_id)
             if title_exist.exists():
                 raise ValidationError("Sorry, This image title is already taken")
@@ -103,6 +90,6 @@ GalleryFormSet = inlineformset_factory(
     Gallery,
     Photo,
     form=PhotoForm,
-    fields=["title", "image"],
-    extra=2,
+    fields=["title", "image", "is_cover"],
+    extra=4,
 )
