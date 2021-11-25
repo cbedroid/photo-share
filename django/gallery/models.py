@@ -187,6 +187,9 @@ class Photo(models.Model):
     def get_absolute_url(self):
         return reverse("gallery:photo-detail", kwargs={"pk": self.pk})
 
+    def get_update_url(self):
+        return reverse("gallery:photo-update", kwargs={"pk": self.pk})
+
     def get_delete_url(self):
         return reverse("gallery:photo-delete", kwargs={"pk": self.pk})
 

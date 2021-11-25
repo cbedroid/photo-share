@@ -42,13 +42,26 @@
     "model": "gallery.gallery",
     "pk": 54,
     "fields": {
-        "name": "lakers",
+        "name": "Laker",
         "user": 1,
         "public": true,
-        "slug": "lakers",
+        "slug": "laker",
         "category": 455,
         "created": "2021-01-18T10:14:37.391Z",
-        "updated": "2021-11-23T04:29:12.597Z"
+        "updated": "2021-11-25T08:15:19.258Z"
+    }
+},
+{
+    "model": "gallery.gallery",
+    "pk": 73,
+    "fields": {
+        "name": "Rockin On 🎸🤘",
+        "user": 1,
+        "public": true,
+        "slug": "rockin-on",
+        "category": 1,
+        "created": "2021-01-18T23:53:24.055Z",
+        "updated": "2021-11-25T04:23:20.772Z"
     }
 },
 {
@@ -68,13 +81,13 @@
     "model": "gallery.gallery",
     "pk": 88,
     "fields": {
-        "name": "Rock on",
+        "name": "Qwae the goat",
         "user": 1,
         "public": true,
-        "slug": "rock-on",
+        "slug": "qwae-the-goat",
         "category": 444,
         "created": "2021-11-23T03:57:40.104Z",
-        "updated": "2021-11-23T05:03:04.551Z"
+        "updated": "2021-11-24T21:53:50.672Z"
     }
 }
 ]

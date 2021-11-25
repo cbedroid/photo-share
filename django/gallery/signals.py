@@ -6,7 +6,7 @@ from .models import Photo
 
 
 @receiver(post_save, sender=Photo)
-def resizeImage(sender, instance, **kwargs):
+def resizeImage(sender, created, instance, **kwargs):
     """Resize large uploaded image"""
     """
      Scaling images will help reduce load time on the server and client.
@@ -20,22 +20,22 @@ def resizeImage(sender, instance, **kwargs):
           outweights this small computation time.
     """
     try:
-        if instance.image:
-            image = Image.open(instance.image.path)
-            if image.width > 400 or image.height > 300:
-                output_size = (400, 300)
-                image = image.resize(output_size, Image.ANTIALIAS)
-                image.save(instance.image.path)
+        if created:
+            if instance.image:
+                image = Image.open(instance.image.path)
+                if image.width > 400 or image.height > 300:
+                    output_size = (400, 300)
+                    image = image.resize(output_size, Image.ANTIALIAS)
+                    image.save(instance.image.path)
     except:  # noqa
         pass
 
 
 @receiver(post_save, sender=Photo)
-def set_gallery_cover(sender, instance, created, **kwargs):
-    """Set photo album cover to newly create photo image"""
-    if created:
-        photos = instance.gallery.photos.all()
+def set_gallery_cover(sender, instance, **kwargs):
+    """Set album cover from photos on save"""
+    photos = instance.gallery.photos.filter(is_cover=True).exclude(pk=instance.id)
+    if instance.is_cover:
         for photo in photos:
             photo.is_cover = False
-        instance.is_cover = True  # set the current photo as the cover
-        instance.save()
+            photo.save()

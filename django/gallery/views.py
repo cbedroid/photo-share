@@ -1,6 +1,9 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
+from django.http.response import JsonResponse
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from django.views.generic.list import MultipleObjectMixin
@@ -83,7 +86,8 @@ class GalleryDetailView(DetailView, MultipleObjectMixin):
             return Gallery.objects.filter(public=True)
 
     def get_context_data(self, **kwargs):
-        object_list = self.object.photos.order_by("-pk")
+        obj = self.get_object()
+        object_list = obj.photos.order_by("-pk")
         context = super().get_context_data(object_list=object_list, **kwargs)
         related_gallery = self.object.category.gallery
         user = self.request.user
@@ -98,6 +102,8 @@ class GalleryDetailView(DetailView, MultipleObjectMixin):
                 related_gallery = related_gallery.filter(public=True).exclude(pk=self.object.pk)
 
         context["related_gallery"] = related_gallery[:20]
+        context["is_user"] = obj.user == self.request.user
+        context["cover_photo"] = obj.photos.filter(is_cover=True).last()
         return context
 
 
@@ -118,20 +124,14 @@ class GalleryUpdateView(CRUDMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         context = self.get_context_data()
         formset = context.get("formset")
-        if form.is_valid():
-            self.object = form.save()
-            # since we are using gallery name as slug and
-            # slug as lookup field for this view,
-            # we have to catch gallery name changes here
-            self.success_url = self.object.get_update_url()
 
-            # check whether images were added during update
-            if formset.has_changed():
-                formset.full_clean()
-                # if images were added but failed, then fail all forms!
-                if not formset.is_valid():
-                    context["formset"] = formset
-                    return super().form_invalid(form)
+        if not form.is_valid() or not formset.is_valid():
+            context["form"] = form
+            context["formset"] = formset
+            return super().form_invalid(form)
+
+        self.object = form.save()
+        self.success_url = self.object.get_update_url()
         return super().form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
@@ -177,8 +177,8 @@ class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         """Test whether the Photo belongs to the current user"""
-        photo = self.get_object()
-        return self.request.user == photo.gallery.user
+        user = self.get_object().gallery.user
+        return user == self.request.user
 
     def get_success_url(self, *args, **kwargs):
         gallery = self.object.gallery
@@ -201,6 +201,27 @@ class PhotoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
                 ),
             )
         return response
+
+
+class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Photo
+    login_url = "account_login"
+
+    def test_func(self):
+        """Test whether the Photo belongs to the current user"""
+        user = self.get_object().gallery.user
+        return user == self.request.user
+
+    def post(self, *args, **kwargs):
+        if self.request.is_ajax():
+            response = {"status": False}
+            obj = self.get_object()
+            data = json.loads(self.request.body)
+            obj.is_cover = data.get("cover")
+            obj.save()
+            response["status"] = True
+            return JsonResponse(response)
+        super().post(*args, **kwargs)
 
 
 class CategoryDetailView(DetailView):
