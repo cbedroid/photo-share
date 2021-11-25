@@ -1,67 +1,120 @@
 {% extends 'base.html' %}
-{% load static %}
-{% load crispy_forms_tags %}
+{% load static  widget_tweaks crispy_forms_tags %}
+
+{% block extra_js %}
+<script src="{% static 'js/gallery_form.js' %}"></script>
+{% endblock extra_js %}
 
 {% block content %}
 <section class="gallery-form-section clear-top theme-ws">
   <!-- gallery-->
-  {# TODO: Add Aside on the right for large screen. There is too much extra space #}
-  <div class="content-container container p-3 pb-5 sm:p-6 w-100">
-    <!-- gallery Content Form -->
-
+  <div class="xxl:container p-3 pb-5 sm:p-6 mh-full">
+    {% if form.instance.id %}
+    <div class="cta-actions flex place-content-end gap-x-2 p-3 mb-8">
+      <a class="btn btn-primary hover:text-gray-200" href="{{object.get_absolute_url}}" style="padding:10px 16px">view gallery</a>
+    </div>
+    {% endif %}
     <form action="" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       {{ formset.management_form }}
       <!-- Gallery  Form -->
-      <fieldset id="galleryset-form" class="gallery-form space-y-8">
-        <legend class="content-title border-bottom mb-4">
-          <i class="far fa-images"></i>
-          {% if form.instance.id %}
-          Update Gallery
-          {% else %}
-          Create Gallery
-          {% endif %}
-        </legend>
-        <div class="form-group space-y-4 w-100">
-          {{ form|crispy }}
-        </div>
-      </fieldset>
-      <!-- End Gallery Form -->
-
-      <!-- Photo Form -->
-      <fieldset id="photoset-form" class="mt-2">
-        <div class="card-wrapper grid grid-cols-2 space-x-2 max-w-xl">
-          {% for gallery_form in formset %}
-          <!-- Form {{forloop.counter}}-->
-          <div class="photoform__card card bg-white shadow-md">
-            <div class="card__body text-center">
-              {{gallery_form.title}}
-              {% if gallery_form.title.errors %}
-              <ul class="title-errors alert-danger">
-                {{gallery_form.title.errors|unordered_list}}
-              </ul>
-              {% endif %}
-              {{gallery_form.image.label|safe}}
-              {{gallery_form.image}}
-              {% if gallery_form.image.errors %}
-              <ul class="image-errors alert-danger">
-                {{gallery_form.image.errors|unordered_list}}
-              </ul>
-              {% endif %}
+      <div class="form-content grid grid-cols-1 md:grid-cols-3 gap-x-12 ">
+        <fieldset id="galleryset-form" class="gallery-card border-2 bg-white rounded-md px-8 py-4 pb-24 space-y-4">
+          <legend class="font-bold text-3xl mb-4">
+            <i class="far fa-images"></i>
+            {% if form.instance.id %}
+            Update Gallery
+            {% else %}
+            Create Gallery
+            {% endif %}
+          </legend>
+          <div class="form-group">
+            <label for="category" class="ml-2 block text-sm text-gray-900">
+              {{form.name.label}}
+            </label>
+            {% render_field form.name|add_class:"appearance-none rounded-none relative block w-1/2 h-8 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md  focus:ring-indigo-500focus:z-10 sm:text-sm" %}
+          </div>
+          <div class="form-group">
+            <label for="category" class="ml-2 block text-sm text-gray-900">
+              Select Category
+            </label>
+            {%render_field form.category|add_class:"w-1/2  text-gray-900 mt-1 focus:ring-indigo-500 border-gray-300 rounded" %}
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              {%render_field form.public|add_class:"h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %}
+              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+                Public
+              </label>
             </div>
           </div>
-          <!-- -->
-          {% endfor %}
-        </div>
-      </fieldset>
+          <div class="form-actions flex gap-x-2 p-3 mb-8">
+            {% if form.instance.id %}
+            <input class="cta cta--outline-yellow md:w-1/4" type="submit" value="Update" style="padding:4px 16px">
+            <a class="cta cta--outline-red md:w-1/4" href="{{object.get_absolute_url}}" style="padding:6px 16px">Cancel</a>
+            {% else %}
+            <input class="cta cta--outline-cyan md:w-1/4" type="submit" value="Submit" style="padding:4px 16px">
+            <a class="cta cta--outline-red md:w-1/4" href="{% url 'core:index' %}" style="padding:6px 16px">Cancel</a>
+            {% endif %}
+          </div>
+        </fieldset>
+        <!-- End Gallery Form -->
 
-      <div class="cta--btn-group align-center space-x-3 mt-4">
-        {% if form.instance.id %}
-        <input class="cta cta--outline-yellow" type="submit" value="Update" style="padding:4px 16px">
-        {% else %}
-        <input class="cta cta--outline-cyan" type="submit" value="Add" style="padding:4px 16px">
-        {% endif %}
-        <a class="cta cta--outline-red" href="{% url 'core:index' %}" style="padding:6px 16px">Cancel</a>
+        <!-- Photo Form -->
+        <fieldset id="photoset-field" class="bg-white border-gray-100 col-span-2 mt-6 md:mt-2 py-2">
+          <legend class="font-bold text-3xl ml-5 mb-2">
+            Upload Photo
+          </legend>
+          <div class="form-actions flex place-content-end gap-x-2 p-3 mb-8">
+            {% if form.instance.id %}
+            <input class="cta cta--outline-yellow md:w-1/8" type="submit" value="Update photos" style="padding:4px 16px">
+            <a class="cta cta--outline-red md:w-1/8" href="{{object.get_absolute_url}}" style="padding:6px 16px">Cancel</a>
+            {% else %}
+            <input class="cta cta--outline-cyan md:w-1/8" type="submit" value="Add photos" style="padding:4px 16px">
+            <a class="cta cta--outline-red md:w-1/8" href="{% url 'core:index' %}" style="padding:6px 16px">Cancel</a>
+            {% endif %}
+          </div>
+          <div class="photo-card grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-5 mg:gap-2 p-4 mh-full">
+            {% for gallery_form in formset %}
+            <!-- Form {{forloop.counter}}-->
+            <div class="card bg-white  shadow drop-shadow-xl  text-accent-content rounded-md hover:border-gray-200 hover:drop-shadow-2xl">
+              <div class="card-body card__body pb-6 md:pb-8">
+                <div class="image-label">
+                  {{gallery_form.image.label|safe}}
+                </div>
+                <div class="hidden">
+                  {{gallery_form.image}}
+                </div>
+                {% if gallery_form.image.errors %}
+                <ul class="image-errors alert-danger">
+                  {{gallery_form.image.errors|unordered_list}}
+                </ul>
+                {% endif %}
+                <div class="card-actions">
+                  {% if gallery_form.title.errors %}
+                  <ul class="title-errors alert-danger">
+                    {{gallery_form.title.errors|unordered_list}}
+                  </ul>
+                  {% endif %}
+                  <div class="form-group mt-2">
+                    {% render_field gallery_form.title|add_class:"appearance-none rounded-none relative block w-full h-8 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md  focus:ring-indigo-500focus:z-10 sm:text-sm"   %}
+                  </div>
+                  <div class="my-3">
+                    <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                      {% render_field gallery_form.is_cover|add_class:"checked:bg-green-500 outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer"|attr:"name:toggle"|attr:"id:cover_toggle_{{forloop.counter}}" %}
+                      <label for="cover_toggle_{{forloop.counter}}" class="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer">
+                      </label>
+                    </div>
+                    <span class="text-gray-900 font-medium">
+                      set as gallery cover
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </fieldset>
       </div>
     </form>
   </div>

@@ -36,7 +36,7 @@
         <h4><b>Trending Category</b></h4>
         <ul class="category category--slider">
           {% for category in top_category %}
-          <li class="badge category__badge {{category.label}} rounded-full p-1">
+          <li class="category__badge badge  {{category.label}} rounded-full py-4">
             <a class="whitespace-nowrap text-sm sm:text-lg mx-1" href="{{ category.get_absolute_url }}#gallery-collection">{{category}}</a>
           </li>
           {% endfor %}
