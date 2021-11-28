@@ -6,16 +6,16 @@
   <div class="container mx-auto p-3 sm:p-6">
     <div class="row">
       <div class="header">
-        <h1 class="py-1 text-center text-ellipsis  font-semibold font-serif">{{photo.title}}</h1>
+        <h1 class="text-center text-ellipsis font-semibold font-serif py-1 my-4">{{photo.title}}</h1>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 xxl:grid-cols-4  gap-y-2 sm:gap-6 my-1 sm:p-1">
+      <div class="grid grid-cols-1 sm:grid-cols-2 xxl:grid-cols-4 gap-y-2 sm:gap-6 my-1 sm:p-1">
         <!-- Photo Card Details -->
         <div class="content--left">
           <!-- photo image-->
           <div class="photo__card bg-white border border-gray-400 rounded-md shadow-lg hover:shadow-2xl  drop-shadow-md">
             <div class="img-container" style="height: 550px">
               <a href="{{photo.image.url}}">
-                <img class="block w-full h-full" src="{{photo.image.url}}" alt="{{photo.gallery}} {{photo}} photo" >
+                <img class="block w-full h-full" src="{{photo.image.url}}" alt="{{photo.gallery}} {{photo}} photo">
               </a>
             </div>
             <!-- -->

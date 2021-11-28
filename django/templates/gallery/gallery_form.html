@@ -79,20 +79,21 @@
             <!-- Form {{forloop.counter}}-->
             <div class="card bg-white  shadow drop-shadow-xl  text-accent-content rounded-md hover:border-gray-200 hover:drop-shadow-2xl">
               <div class="card-body card__body pb-6 md:pb-8">
+                {% if gallery_form.image.errors %}
+                <ul class="text-red-500 text-center text-semibold">
+                  {{gallery_form.image.errors|unordered_list}}
+                </ul>
+                {% endif %}
                 <div class="image-label">
                   {{gallery_form.image.label|safe}}
                 </div>
                 <div class="hidden">
                   {{gallery_form.image}}
                 </div>
-                {% if gallery_form.image.errors %}
-                <ul class="image-errors alert-danger">
-                  {{gallery_form.image.errors|unordered_list}}
-                </ul>
-                {% endif %}
+
                 <div class="card-actions">
                   {% if gallery_form.title.errors %}
-                  <ul class="title-errors alert-danger">
+                  <ul class="text-red-500 text-center text-semibold">
                     {{gallery_form.title.errors|unordered_list}}
                   </ul>
                   {% endif %}
