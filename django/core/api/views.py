@@ -13,11 +13,12 @@ class GalleryViewSet(ModelViewSet):
     serializer_class = GallerySerializer
 
     def get_queryset(self):
-        if self.request and self.request.user.is_authenticated:
+        user = self.request.user
+        if user.is_authenticated:
             # Query Gallery album based on its public status.
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
-            return Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
+            return Gallery.objects.filter(Q(public=True) | Q(user=user))
         return Gallery.objects.filter(public=True)
 
     def get_serializer_context(self, **kwargs):
@@ -38,11 +39,12 @@ class PhotoViewSet(ModelViewSet):
     serializer_class = PhotoSerializer
 
     def get_queryset(self):
-        if hasattr(self, "request") and self.request.user.is_authenticated:
+        user = self.request.user
+        if user.is_authenticated:
             # Query Gallery album based on its public status.
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
-            return Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=self.request.user))
+            return Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=user))
         return Photo.objects.filter(gallery__public=True)
 
     def perform_destroy(self, instance):
