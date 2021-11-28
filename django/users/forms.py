@@ -1,6 +1,8 @@
 from allauth.account.forms import LoginForm
+from django import forms
 from django.conf import settings
-from django.contrib.auth import forms, get_user_model
+from django.contrib.auth import forms as userforms
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from profanity.validators import validate_is_profane
@@ -8,16 +10,23 @@ from profanity.validators import validate_is_profane
 User = get_user_model()
 
 
-class UserUpdateForm(forms.UserChangeForm):
+class UserUpdateForm(userforms.UserChangeForm):
     password = None
+    image = forms.ImageField(widget=forms.FileInput())
 
     class Meta:
         model = User
         fields = (
+            "username",
             "first_name",
             "last_name",
+            "email",
+            "image",
         )
-        exclude = ("email",)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
 
     def validate_name(self, data):
         # Check the name for profanity
@@ -44,7 +53,7 @@ class UserUpdateForm(forms.UserChangeForm):
         return instance
 
 
-class UserSignUpForm(forms.UserCreationForm):
+class UserSignUpForm(userforms.UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserSignUpForm, self).__init__(*args, **kwargs)
         # self.fields["captcha"].label = ""
@@ -80,7 +89,6 @@ class UserSignUpForm(forms.UserCreationForm):
                     )
                 )
             )
-
         try:
             user = User.objects.filter(username__iexact=username)
             if user.exists():
@@ -108,10 +116,36 @@ class UserSignUpForm(forms.UserCreationForm):
 
 class UserLoginForm(LoginForm):
     pass
-    # captcha = ReCaptchaField(widget=ReCaptchaV3)
-    # def __init__(self, *args, **kwargs):
-    #     super(UserLoginForm, self).__init__(*args, **kwargs)
-    #     self.fields["captcha"].label = ""
 
-    # def login(self, *args, **kwargs):
-    #     return super(UserLoginForm, self).login(*args, **kwargs)
+
+class AccountDeleteForm(forms.ModelForm):
+    delete_account = forms.BooleanField(initial=False)
+    password = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "confirm-password"}),
+        help_text=("Confirm password for your account"),
+    )
+
+    class Meta:
+        model = User
+        fields = ("delete_account", "password")
+
+    def clean_password(self):
+        """
+        Validate that the password field is correct before deleting account.
+        """
+        password = self.cleaned_data["password"]
+        if not self.user.check_password(password):
+            raise ValidationError(
+                _("The password you enter was incorrect"),
+                code="password_incorrect",
+            )
+        return password
+
+    def save(self, commit=True):
+        """Delete User Account"""
+        if commit:
+            print("Delete User Account")
+            # self.user.delete()
+        return self.user
