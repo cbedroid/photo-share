@@ -26,5 +26,8 @@
         "tzname",
         "undelete",
         "untoggle"
-    ]
+    ],
+    "editor.fontSize": 16,
+    "editor.tabSize": 2,
+    "python.formatting.provider": "black"
 }
