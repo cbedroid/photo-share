@@ -1,93 +1,102 @@
 {% load static %}
 <div id="site-navigation">
-  <nav id="main-nav" class="p-1 sm:py-4 sm:px-8">
-    <div class="inner-nav flex flex-col sm:flex-row sm:items-center sm:justify-between">
-      <div class="nav__brand flex justify-between items-center sm:flex-none border-bottom">
-        <img id="site-logo" src="{% static 'assets/PhotoShare-logo.png' %}" alt="Photo Share logo">
-        <a class="nav__brand-title" href="{% url 'core:index' %}">
-          <span class="text-2xl font-extrabold text__accent">PhotoShare</span>
-        </a>
-
-        <!-- Mini Nav Secondary Menu-->
-        <div class="flex-wrapper flex-none  invisible mobile-show md:hidden trans-400" data-scroll-show="true">
-          <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-          <div x-data="{ dropdownOpen: false }" class="relative">
-            <button @click="dropdownOpen = !dropdownOpen" class="relative z-10 block rounded-md bg-white p-2 focus:outline-none">
-              <span class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-                menu
-                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </span>
-            </button>
-            <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10"></div>
-            <div x-show="dropdownOpen" class="absolute right-2 pb-3 w-80 text-white bg-gray-700 divide-y-4 divide-gray-300 rounded-md shadow-xl z-20" style="z-index: 2000;">
-              <div class="nav-menu">
-                <h4 class="menu-title text-shadow font-extrabold bg-white text-black px-2">Menu</h4>
-                <ul class="block space-y-3 my-2 px-2">
-                  <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Stories</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Capabilites</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Company</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-                </ul>
-              </div>
-              <div class="nav-menu nav--sub-menu pb-3">
-                <h4 class="menu-title text-shadow font-extrabold bg-white text-black px-2">Account</h4>
-                <ul id="mini-menu" class="mini-nav_secondary-menu nav__list space-y-3  mb-2 p-2 trans-300">
-                  <li>
-                    <p class="nav-link font-semibold text-lg text__accent sm:px-6">{{request.user.username}}</p>
-                  </li>
-                  <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
-                  {% if request.user.is_authenticated %}
-                  <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
-                  {% else %}
-                  <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
-                  {% endif %}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- -->
+  <div class="navbar shadow-lg bg-neutral text-neutral-content">
+    <div class="flex-1 px-2 mx-2">
+      <div class="flex-none">
+        <label for="aside_checkbox" class="px-2">
+          <span class="btn btn-square btn-ghost">
+            <svg class="inline-block toggler toggler-bar w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <svg class="hidden toggler toggler-times w-6 h-6 stroke-current" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </span>
+        </label>
       </div>
-      <ul class="nav__list collapse text__sm sm:flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 trans-300" data-expanded="false" data-target="nav-list">
-        <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Stories</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Capabilites</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Company</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
-      </ul>
-
-      <ul class="nav__list collapse nav__account mt-2 sm:mt-0 sm:flex flex-col sm:flex-row sm:space-x-2 trans-300" data-expanded="false" data-target="nav-list">
-        {% if request.user.is_authenticated %}
-        <li>
-          <p class="nav-link">{{request.user.username}}</p>
-        </li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
-        {% else %}
-        <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
-        {% endif %}
-      </ul>
+      <div class="nav-brand text-lg font-bold">
+        <a class="nav__brand-title" href="{% url 'core:index' %}">
+          <img id="site-logo" src="{% static 'assets/PhotoShare-logo.png' %}" alt="Photo Share logo">
+          <span class="hidden sm:inline-block sm:text-2xl font-extrabold text__accent">PhotoShare</span>
+        </a>
+      </div>
     </div>
-  </nav>
-  <!-- Mini Nav-->
-  <div id="mini-nav">
-    <div class="flex justify-between sm:justify-start items-center w-full p-2">
-      <label for="aside_checkbox" class="px-4 ">
-        <i id="aside_menu_btn" class="fa fa-bars" style="font-size:22px"></i>
-      </label>
-      <!-- Navigation Search-->
-      <form action="/">
-        <div class="mt-1 flex rounded-md shadow-sm">
-          <input class="search_bar focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" type="text" list="category-list" name="q" placeholder="search category or gallery" aria-label="search bar" style="padding: 6px;">
-          <button type="submit" class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-            <i class="search-icon fa fa-search"></i>
-          </button>
+    {% if request.user.is_authenticated %}
+    <form class="hidden flex-1 md:flex" action="/">
+      <div class="form-control">
+        <input class="input input-ghost h-10" type="text" name="q" placeholder="search category or gallery" aria-label="search bar" style="border:none;border-radius:5px;padding-left:8px">
+      </div>
+      <button type="submit" class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+    </form>
+    <div class="flex-none">
+      <button class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="flex-none">
+      <div class="avatar">
+        <div class="rounded-full w-10 h-10 m-1">
+          <img src="{{request.user.get_profile_pic}}" alt="user avatar">
         </div>
-      </form>
+      </div>
     </div>
-    <!-- -->
+    {% else %}
+    <div class="px-2 mx-2 navbar-center lg:flex">
+      <div class="flex items-stretch">
+        <a class="btn btn-ghost btn-sm rounded-btn" href="{% url 'core:index' %}">Home</a>
+        <a class="btn btn-ghost btn-sm rounded-btn">Portfolio</a>
+        <a class="btn btn-ghost btn-sm rounded-btn">About</a>
+        <a class="btn btn-ghost btn-sm rounded-btn">Contact</a>
+      </div>
+    </div>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+    <div class="dropdown dropdown-left">
+      <button tabindex="0" class="btn btn-square btn-ghost mr-3">
+        <svg class="cursor-pointer" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M10.325 4.317C10.751 2.561 13.249 2.561 13.675 4.317C13.7389 4.5808 13.8642 4.82578 14.0407 5.032C14.2172 5.23822 14.4399 5.39985 14.6907 5.50375C14.9414 5.60764 15.2132 5.65085 15.4838 5.62987C15.7544 5.60889 16.0162 5.5243 16.248 5.383C17.791 4.443 19.558 6.209 18.618 7.753C18.4769 7.98466 18.3924 8.24634 18.3715 8.51677C18.3506 8.78721 18.3938 9.05877 18.4975 9.30938C18.6013 9.55999 18.7627 9.78258 18.9687 9.95905C19.1747 10.1355 19.4194 10.2609 19.683 10.325C21.439 10.751 21.439 13.249 19.683 13.675C19.4192 13.7389 19.1742 13.8642 18.968 14.0407C18.7618 14.2172 18.6001 14.4399 18.4963 14.6907C18.3924 14.9414 18.3491 15.2132 18.3701 15.4838C18.3911 15.7544 18.4757 16.0162 18.617 16.248C19.557 17.791 17.791 19.558 16.247 18.618C16.0153 18.4769 15.7537 18.3924 15.4832 18.3715C15.2128 18.3506 14.9412 18.3938 14.6906 18.4975C14.44 18.6013 14.2174 18.7627 14.0409 18.9687C13.8645 19.1747 13.7391 19.4194 13.675 19.683C13.249 21.439 10.751 21.439 10.325 19.683C10.2611 19.4192 10.1358 19.1742 9.95929 18.968C9.7828 18.7618 9.56011 18.6001 9.30935 18.4963C9.05859 18.3924 8.78683 18.3491 8.51621 18.3701C8.24559 18.3911 7.98375 18.4757 7.752 18.617C6.209 19.557 4.442 17.791 5.382 16.247C5.5231 16.0153 5.60755 15.7537 5.62848 15.4832C5.64942 15.2128 5.60624 14.9412 5.50247 14.6906C5.3987 14.44 5.23726 14.2174 5.03127 14.0409C4.82529 13.8645 4.58056 13.7391 4.317 13.675C2.561 13.249 2.561 10.751 4.317 10.325C4.5808 10.2611 4.82578 10.1358 5.032 9.95929C5.23822 9.7828 5.39985 9.56011 5.50375 9.30935C5.60764 9.05859 5.65085 8.78683 5.62987 8.51621C5.60889 8.24559 5.5243 7.98375 5.383 7.752C4.443 6.209 6.209 4.442 7.753 5.382C8.753 5.99 10.049 5.452 10.325 4.317Z"
+            stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <ul tabindex="0" class="p-2 shadow menu dropdown-content top-10 bg-base-100 text-gray-600 font-semibold rounded-box w-52" style="top:50px;right:20px">
+        <li>
+          <a class="text-sm" href="{{request.user.get_update_url}}">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="ml-1">Update Account</span>
+          </a>
+        </li>
+        <li>
+          <a class="text-sm" href="{%url 'account_logout'%}">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span class="ml-1">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    {% else %}
+    <a class="btn bg-gradient-to-r from-yellow-400  to-[#FF6E0A]" href="{% url 'account_login' %}">
+      <span class="animate-bounce rounded-full font-bold  w-2 h-2 bg-purple-400 mr-2"></span>
+      Get Started
+    </a>
+
+
+    {% endif %}
   </div>
-  <!-- End Mini Nav-->
 </div>
