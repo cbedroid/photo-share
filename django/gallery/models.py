@@ -129,7 +129,13 @@ class Gallery(models.Model):
     user = models.ForeignKey(User, related_name="gallery", on_delete=models.CASCADE)
     public = models.BooleanField(default=True)
     slug = models.SlugField(blank=False, editable=False, db_index=True)
-    category = models.ForeignKey(Category, related_name="gallery", null=True, on_delete=models.SET_NULL, db_index=True)
+    category = models.ForeignKey(
+        Category,
+        related_name="gallery",
+        null=True,
+        on_delete=models.SET_NULL,
+        db_index=True,
+    )
     created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
@@ -168,7 +174,13 @@ class Gallery(models.Model):
 class Photo(models.Model):
     title = models.CharField(max_length=80, validators=[MinLengthValidator(3)])
     image = models.ImageField(upload_to="gallery")
-    gallery = models.ForeignKey(Gallery, related_name="photos", blank=True, db_index=True, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(
+        Gallery,
+        related_name="photos",
+        blank=True,
+        db_index=True,
+        on_delete=models.CASCADE,
+    )
     is_cover = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
     downloads = models.PositiveIntegerField(default=0)

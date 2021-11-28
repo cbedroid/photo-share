@@ -1,34 +1,14 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from PIL import Image
+from utils.methods import resizeScale
 
 from .models import Photo
 
 
 @receiver(post_save, sender=Photo)
-def resizeImage(sender, created, instance, **kwargs):
-    """Resize large uploaded image"""
-    """
-     Scaling images will help reduce load time on the server and client.
-     Pros:
-        - Reduce client side load time. Images will load faster in client's browser.
-        - Reduce storage's costs using cloud base services such as AWS S3 Bucket.
-        - Improve overall UI Deign, making images uniformed throughout the entire website.
-    Cons:
-        - Slight tradeoff in load time, being that all image will be rescaled on every upload.
-          This would add an additional load on the server, but the end results will highly
-          outweights this small computation time.
-    """
-    try:
-        if created:
-            if instance.image:
-                image = Image.open(instance.image.path)
-                if image.width > 400 or image.height > 300:
-                    output_size = (400, 300)
-                    image = image.resize(output_size, Image.ANTIALIAS)
-                    image.save(instance.image.path)
-    except:  # noqa
-        pass
+def resizePhoto(sender, created, instance, **kwargs):
+    if created and instance.image:
+        resizeScale(instance.image)
 
 
 @receiver(post_save, sender=Photo)
