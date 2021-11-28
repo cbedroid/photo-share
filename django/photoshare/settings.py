@@ -153,7 +153,10 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"],
-    "DEFAULT_PARSER_CLASSES": ("rest_framework.parsers.FormParser", "rest_framework.parsers.MultiPartParser"),
+    "DEFAULT_PARSER_CLASSES": (
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
+    ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 25,
     "DEFAULT_THROTTLE_CLASSES": [
@@ -224,6 +227,9 @@ JAZZMIN_SETTINGS = {
         "gallery.photo": "fa fa-image",
         "gallery.rate": "fa fa-thumbs-up",
         "gallery.tag": "fa fa-tags",
+        "sites.sites": "fas fa-globe",
+        "socialaccount.socialapp": "fab fa-app-store-ios",
+        "users.user": "fas fa-users",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
