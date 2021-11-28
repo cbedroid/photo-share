@@ -1,5 +1,4 @@
 import os
-import random
 import re
 
 from django import template
@@ -21,28 +20,17 @@ def get_user_gallery(context):
     request = context["request"]
     if request.user.is_authenticated:
         user = request.user
-        context["user_gallery"] = Gallery.objects.filter(user=user)[:10]
-        # Interesting enough here,we are not returning any data
-        # as Django documentation states. Because we are manipulating
-        # the context data here. There is no need to pass additional
-        # data 'user_gallery', context will handle this functionality itself.
-
-    """
-     TODO: Figure out why not returning any data here results in rendering
-            a "None" value when instalizing this filter tag in the template.
-            I believe the problem is cause by using the wrong filter tag here??
-            I worked around this issue by returning an empty string, but this
-            may not be best practice to do so.
-    """
+        context["user_gallery"] = Gallery.objects.filter(user=user).order_by("-updated", "-pk")[:10]
     return ""
 
 
 @register.filter("random_cover")
-def random_cover(gallery):
+def random_cover(gallery_pk):
+    """random select a photo from gallery"""
     try:
-        photos = gallery.photos.all()
-        if photos is not None:
-            return random.choices(photos)[0]
-    except:
+        qs = Gallery.objects.filter(pk=gallery_pk)
+        if qs.exists():
+            gallery = qs.first()
+            return gallery.photos.order_by("?").first()
+    except:  # noqa
         pass
-    return "/".join((settings.MEDIA_URL, "/defaults/default_image.jpg"))
