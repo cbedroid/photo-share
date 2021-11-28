@@ -41,15 +41,6 @@ $(document).ready(function () {
     $(target).attr("data-expanded", !is_expanded);
   });
 
-  /* --------------------------------
-      Aside Sidebar
-  ------------------------------------*/
-  const toggleCheckBoxMenu = () => {
-    const aside_menu_btn = $("#aside_menu_btn");
-    $("#aside_checkbox").prop("checked")
-      ? $(aside_menu_btn).removeClass("fa fa-bars").addClass(" fas fa-times")
-      : $(aside_menu_btn).removeClass("fas fa-times").addClass(" fa fa-bars");
-  };
 
   $(".preview").bind(CLICK, function () {
     const toggler = $(this).find(".preview__toggler").first();
@@ -59,19 +50,12 @@ $(document).ready(function () {
   });
 
   /* --------------------------------
-     Register Checkbox Event
+   iAside CheckBox Events
   ------------------------------------*/
-  $("#aside_checkbox").on("change", function () {
-    toggleCheckBoxMenu();
-  });
+  $("#aside_checkbox").bind("change", function () {
+    // swap aside toggler from bars to times and vice-versa.
+    $('svg.toggler').toggleClass('hidden');
 
-  /* --------------------------------
-      Window and Main Events
-  ------------------------------------*/
-  $("#site-main,#main-overlay").on(CLICK, function () {
-    // close aside menu
-    $("#aside_checkbox").prop("checked", false);
-    toggleCheckBoxMenu();
   });
 
   // Navigation Scroll Shadow

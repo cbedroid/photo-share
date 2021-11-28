@@ -116,8 +116,6 @@ h1,h2,h3,h4,h5,h6,p
 /* Typography */
 
 /* Base Css */
-section
-  margin: 30px 0
 ul
   padding: 0
 
@@ -134,6 +132,12 @@ img
 a,i,button,.btn
   cursor: pointer !important
   +cross-browser(transition, all .3s ease-in-out)
+
+
+// Firefox remover form  text field background images
+form
+  input[type="text"],input[type="password"],input[type="email"]
+    background-image: none !important
 
 /* End Base Css */
 
@@ -394,7 +398,7 @@ form
     display: flex
     align-items: center
     justify-content: center
-    font-weight: 9700
+    font-weight: 700
     font-size: 1.25rem
     cursor: pointer
     min-width: 30px
@@ -508,31 +512,21 @@ form
 
 #gallery-sidebar
   position: absolute
-  top: -20%
+  top: 0
   left: -85%
   display: flex
   flex-direction: column
   width: 0
-  height: 100%
+  height: 100vh
   +cross-browser(transition, 300ms ease-in-out)
   transition-property: left, right, opacity, width
   z-index: 600
-  .wrapper
-    display: flex
-    flex-direction: column
-    background: $color-primary-dark
-    color: #fff
-    box-sizing: border-box
-    padding: 20px 15px
-    width: 100%
-    height: 100%
-    overflow-y: auto
-    z-index: 600
+
 
 #aside_checkbox:checked ~ #main-overlay::before
   content: ""
   position: fixed
-  top: 0
+  top: 0px
   left: 0
   display: flex
   flex-direction: column
@@ -541,117 +535,22 @@ form
   background: rgba(0,0,0,.5) !important
   z-index: 600
 
+
 #aside_checkbox:checked ~ #main #gallery-sidebar
   position: absolute
-  top: -30px
+  top: 0
   left: 0
   display: flex
-  width: 60vw
-  min-height: calc(100vh ) /* to clear header navigation*/
-  height: 100%
   box-sizing: border-box
   opacity: 1
+  height: calc(100% + 30px)
 
-  .search-tray
-    color: #ccc
-    font-weight: 400
-    position: relative
-    border: .5px solid #ccc !important
-    border-radius: 7px
-    padding: 0 5px
-    *
-      transition: all 300ms ease-in-out
-      transform-style: preserve-3d
-    input[type="text"]
-      padding: 2px 10px 2px 2px
-      color: #a3a3a3
-      font-style: italic
-      border: none !important
-      outline-width: .5px !important
-      outline-color: transparent !important
-      opacity: .2
-      &:hover,&:active,&:focus
-        border: none !important
-        outline: none !important
-        box-shadow: none !important
-        opacity: 1
-    &--icon
-      button
-        font-size: 1.125rem
-        color: #ccc
-        position: absolute
-        top: 0
-        right: 0
-        display: grid
-        align-items: center
-        justify-content: end
-        height: 100%
-        padding: 2px 5px
-        z-index: 500
+  .menu-content
+    padding: 20px
+    max-height: 400px
+    overflow-y: auto
 
-    &--collapse
-      .search_bar
-        width: 60px
-        height: 30px
-        &::placeholder
-          opacity: 0
-        &:focus
-          position: relative
-          width: 100%
-          z-index: 400
-          padding-right: 30px
-          &::placeholder
-            opacity: 1
-      &:hover
-        .search_bar
-          position: relative
-          width: 100%
-          z-index: 400
-          &::placeholder
-            opacity: 1
 
-  .preview
-    &--toggler
-      padding: 7px 9px
-      border-radius: 3px
-      cursor: pointer
-      +cross-browser(transition, all 300ms ease-in-out)
-      &:hover
-        background: rgba(92, 118, 153,.675)
-        box-shadow: 2px 2px 8px rgba(255,255,255,.2)
-    &__right
-      .photo-badge
-        display: inline-block
-        .badge
-          min-width: 25px !important
-          max-width: 40px !important
-          min-height: 25px !important
-          max-height: 40px !important
-          border-radius: 50%
-
-  .photo-count
-    display: grid
-    height: 100%
-    width: 100%
-    place-items: center
-
-  .photo-list
-    border-radius: 5px
-    padding: 6px 4px
-    &__item
-      cursor: pointer
-      font-weight: 500
-      border-radius: 5px
-      padding: 4px 6px
-      +cross-browser(transition, .3s ease-in-out)
-      &:hover
-        color: #a3a3a3
-      .img-link img
-        border-radius: 3px
-
-    &[data-expanded="true"]
-      color: #fff
-      background: rgba(0,0,0,.3) !important
 
 #intro-hero
   display: block
@@ -661,7 +560,8 @@ form
   background-attachment: absolute
   background-repeat: no-repeat no-repeat
   background-size: cover
-  background-position: 10% 60%
+  background-position: 0% 50%
+
   .content
     width: 65%
     transform: translateY(40%)
@@ -728,9 +628,10 @@ form
     height: 0
     transition: visibility 0s, opacity 0.2s ease-in-out
 
-  #aside_checkbox:checked ~ #main #gallery-sidebar
-    width: 60%
 
+  #aside_checkbox:checked ~ #main #gallery-sidebar
+    display: block
+    width: 60vw
   .social-share
     display: grid
     place-items: center
