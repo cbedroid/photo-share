@@ -7,9 +7,9 @@
 
 {% block content %}
 {% url 'gallery:gallery-detail' pk=object.pk as current_url %}
-<section id="gallery-section" class="theme-ws clear top mx-2 py-2">
+<section id="gallery-section" class=" theme-ws clear top mx-2 py-2">
   <!-- Gallery Header-->
-  <div class="container-lg mx-auto px-8 w-100">
+  <div class="container-lg mx-auto px-8 w-100 bg-white  dark:bg-black">
     <div class="header py-2">
       <div class="header-top">
         <!-- header user__actions -->
@@ -23,7 +23,7 @@
             </a>
           </div>
           <!-- Actions -->
-          {% if request.user == gallery.user %}
+          {% if is_user %}
           {# desktop action #}
           <div class="gallery-action hidden md:flex content-end">
             <div class="action__btn">
@@ -118,10 +118,11 @@
             <li class="photo__card card bg-white border rounded-lg drop-shadow-lg p-1 pb-4 hover:shadow-xl">
               <!-- Photo Image-->
               <div class="card-img-top group">
-                {% if is_user and cover_photo == photo %}
+                {% if cover_photo == photo %}
                 <a class="card-link relative w-full h-full" href="{{photo.get_absolute_url}}">
                   <img class="w-full" src="{{photo.image.url}}" alt="{{photo.gallery.name}} {{photo}} photo">
                 </a>
+                {% if is_user %}
                 <div class="absolute top-2 left-0 w-full transition-all text-right hover:opacity-0 z-40">
                   <div class="action-box w-full mt-1">
                     <div class="px-3">
@@ -140,15 +141,17 @@
                     </div>
                   </div>
                 </div>
-                {% elif is_user and cover_photo != photo %}
+                {% endif %}
+                {% elif cover_photo != photo %}
                 <a class="card-link relative" href="{{photo.get_absolute_url}}">
                   <img class="w-full" src="{{photo.image.url}}" alt="{{photo.gallery.name}} {{photo}} photo">
                 </a>
+                {% if is_user %}
                 <div class="absolute opacity-0 top-2 left-0 w-full z-40 transition-all text-right group-hover:opacity-100">
                   <div class="action-box w-full mt-1">
                     <div class="px-3">
-                      <div>
-                        <span class="text-gray-100 font-semibold">
+                      <div class="bg-black bg-opacity-30 font-semibold p-1 rounded-sm">
+                        <span class="text-gray-100">
                           set as gallery cover
                         </span>
                         <div class="relative inline-block w-10 ml-2 align-middle select-none">
@@ -162,6 +165,7 @@
                     </div>
                   </div>
                 </div>
+                {% endif %}
                 {% endif %}
               </div>
               <!-- -->
@@ -390,25 +394,23 @@
       <!-- -->
     </div>
   </div>
-</section>
-<!-- -->
-<section id="related_gallery">
-  <div class="container-lg mx-auto px-8 w-100">
-    <div class="header mb-10">
-      <div class="content-title font-black">
-        <h2 class="fw-bold px-2  w-max">
+  <!-- -->
+  <section id="related_gallery" class="pt-8">
+    <div class="container-lg mx-auto w-full">
+      <div class="header font-black">
+        <h2 class="text-2xl md:text-4xl font-bold px-2">
           <span>Related Gallery</span>
           <span>&nbsp;&#9472;&nbsp;</span>
           <span class="text-gray-400"> {{gallery.category.get_name_display|title}}</span>
         </h2>
       </div>
+      <div class="row wrapper">
+        <!-- Gallery Card Collection -->
+        {% include 'gallery/snippets/gallery_cards.html' with galleries=related_gallery %}
+        <!-- End Gallery Collection -->
+      </div>
     </div>
-    <div class="row wrapper">
-      <!-- Gallery Card Collection -->
-      {% include 'gallery/snippets/gallery_cards.html' with galleries=related_gallery %}
-      <!-- End Gallery Collection -->
-    </div>
-  </div>
+  </section>
 </section>
 
 
