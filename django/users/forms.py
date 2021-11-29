@@ -146,6 +146,5 @@ class AccountDeleteForm(forms.ModelForm):
     def save(self, commit=True):
         """Delete User Account"""
         if commit:
-            print("Delete User Account")
-            # self.user.delete()
+            self.user.delete()
         return self.user
