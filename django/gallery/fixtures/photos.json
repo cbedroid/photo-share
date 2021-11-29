@@ -38,11 +38,11 @@
         "title": "Sonny Ragg",
         "image": "gallery/SonnyRagg.jpg",
         "gallery": 2,
-        "is_cover": true,
+        "is_cover": false,
         "views": 105,
         "downloads": 9,
         "created": "2021-11-23T23:31:44.615Z",
-        "updated": "2021-11-24T06:36:36.541Z",
+        "updated": "2021-11-29T05:03:02.377Z",
         "slug": "sonny-ragg",
         "tags": []
     }
@@ -54,11 +54,11 @@
         "title": "2021 New Years",
         "image": "gallery/2021-Word-Balloons.jpg",
         "gallery": 1,
-        "is_cover": true,
+        "is_cover": false,
         "views": 52,
         "downloads": 4,
         "created": "2021-11-23T23:31:44.623Z",
-        "updated": "2021-11-24T06:36:36.544Z",
+        "updated": "2021-11-29T05:03:02.357Z",
         "slug": "2021-new-years",
         "tags": []
     }
@@ -70,11 +70,11 @@
         "title": "Merry Christmas",
         "image": "gallery/presents_under_the_tree.jpg",
         "gallery": 1,
-        "is_cover": true,
+        "is_cover": false,
         "views": 30,
         "downloads": 1,
         "created": "2021-11-23T23:31:44.634Z",
-        "updated": "2021-11-24T06:36:36.547Z",
+        "updated": "2021-11-29T05:03:02.362Z",
         "slug": "merry-christmas",
         "tags": []
     }
@@ -150,11 +150,11 @@
         "title": "Software Survey",
         "image": "gallery/Survey_Meta_image.jpg",
         "gallery": 25,
-        "is_cover": false,
+        "is_cover": true,
         "views": 12,
         "downloads": 62,
         "created": "2021-11-23T23:31:44.686Z",
-        "updated": "2021-11-25T09:04:23.057Z",
+        "updated": "2021-11-29T05:03:48.444Z",
         "slug": "software-survey",
         "tags": []
     }
@@ -204,6 +204,38 @@
         "created": "2021-11-25T09:21:39.652Z",
         "updated": "2021-11-25T13:10:33.271Z",
         "slug": "mamba-forever",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 105,
+    "fields": {
+        "title": "NFL 2021",
+        "image": "gallery/mmqb-preictions.png",
+        "gallery": 73,
+        "is_cover": false,
+        "views": 4,
+        "downloads": 0,
+        "created": "2021-11-29T13:29:35.151Z",
+        "updated": "2021-11-29T13:32:41.046Z",
+        "slug": "nfl-2021",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 106,
+    "fields": {
+        "title": "Brady and McHomes",
+        "image": "gallery/tom-brady-patrick-mahomes-madden.jpg",
+        "gallery": 73,
+        "is_cover": true,
+        "views": 0,
+        "downloads": 0,
+        "created": "2021-11-29T13:32:41.004Z",
+        "updated": "2021-11-29T13:32:41.004Z",
+        "slug": "brady-and-mchomes",
         "tags": []
     }
 }

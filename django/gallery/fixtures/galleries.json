@@ -55,13 +55,13 @@
     "model": "gallery.gallery",
     "pk": 73,
     "fields": {
-        "name": "Rockin On 🎸🤘",
+        "name": "NFL",
         "user": 1,
         "public": true,
-        "slug": "rockin-on",
-        "category": 1,
+        "slug": "nfl",
+        "category": 455,
         "created": "2021-01-18T23:53:24.055Z",
-        "updated": "2021-11-25T04:23:20.772Z"
+        "updated": "2021-11-29T13:32:41.050Z"
     }
 },
 {
