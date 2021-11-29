@@ -32,10 +32,10 @@
     {% block modal %}{% endblock modal %}
     <input class="hidden" type="checkbox" id="aside_checkbox">
     {% include 'snippets/navigation.html' %}
+    {% include 'snippets/alert_message.html' %}
     <div id="main-overlay"></div>
     <!-- Site-Main -->
-    <main id="main" class="bg-light relative ">
-      {% include 'snippets/alert_message.html' %}
+    <main role="main" id="main" class="relative">
       {% include 'snippets/aside.html' %}
       <div id="site-main" class="site-main">
         {% block content %}
@@ -43,13 +43,15 @@
       </div>
       <!-- End Site-Main -->
     </main>
+    <!--footer -->
+    {% include 'snippets/footer.html' %}
     <!-- JQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js" integrity="sha512-C1zvdb9R55RAkl6xCLTPt+Wmcz6s+ccOvcr6G57lbm8M2fbgn2SUjUJbQ13fEyjuLViwe97uJvwa1EUf4F1Akw=="
       crossorigin="anonymous"></script>
     <script src="{% static 'js/aside.js' %}"></script>
     <script src="{% static 'js/app.js' %}"></script>
     {% block extra_js %}{% endblock extra_js %}
-    {% comment %} <script src="http://livejs.com/live.js"></script> {% endcomment %}
+    {# <script src="http://livejs.com/live.js"></script> #}
   </body>
 
 </html>

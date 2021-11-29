@@ -1,24 +1,14 @@
 {% load static %}
-
+<div id="alert_message" class="flex flex-col space-y-2 w-full bg-transparent ">
   {% for message in messages %}
-<div class="site-alert w-screen  mx-auto px-6">
-  {% if message.tags == 'error' %}
-    <div id="alert_message" class="alert alert-danger alert-dismissible fade show flex w-screen justify-center content-center"  role="alert"  style="width:100%;">
-      <svg class="w-6 h-6 mx-2 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+  <div class="alert alert-{{message.tags}} flex w-full">
+    <span class="text-center mx-auto">{{message}}</span>
+    <button type=" button" class="close " data-dismiss="alert" aria-label="Close">
+      <svg class=" hover:text-gray-600 align-middle" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
-      <span>{{ message }}<span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  {% else %}
-    <div id="alert_message"  class="alert alert-{{message.tags}} alert-dismissible fade  flex w-screenshow" role="alert" style="width:100%;">
-      <span>{{ message }}</span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  {% endif %}
-</div>
+    </button>
+  </div>
   {% endfor %}
+</div>
