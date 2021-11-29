@@ -141,7 +141,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 AUTH_USER_MODEL = "users.User"
-# LOGIN_REDIRECT_URL = "core:index"
+LOGIN_REDIRECT_URL = "core:index"
 LOGOUT_REDIRECT_URL = "core:index"
 ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
 
@@ -201,7 +201,7 @@ JAZZMIN_SETTINGS = {
     # Title on the brand, and the login screen (19 chars max)
     "site_header": "PHOTO-SHARE",
     # square logo to use for your site, must be present in static files, used for favicon and brand on top left
-    "site_logo": "static/assets/PhotoShare-logo.png",
+    "site_logo": "static/assets/images/PhotoShare-logo.png",
     # Welcome text on the login screen
     "welcome_sign": "Welcome to Photo-Share",
     # Copyright on the footer
