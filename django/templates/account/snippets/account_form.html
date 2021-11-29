@@ -4,8 +4,8 @@
 {% block content %}
 <section class="h-screen bg-gray-100 bg-opacity-50 mt-4">
   <div class="container mx-auto">
-    <div class="header mb-4">
-      <h2 class="text-gray-700 font-bold border-b-2 pb-2 ">
+    <div class="header flex  place-items-center border-b-2 mb-4">
+      <h2 class="flex-1 text-gray-700 font-bold pb-2 ">
         <svg class="inline" viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
           <path
@@ -14,6 +14,15 @@
         </svg>
         <span>{% trans "Account Settings" %}</span>
       </h2>
+      <div class="header__action flex">
+        <a class="font-semibold hover:text-site delay-200" href="{% url 'core:index' %}">
+          <svg class="inline mr-1 " viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <div class="inline-block my-auto">Home</div>
+        </a>
+      </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 md:gap-5">
       <div class="artboard artboard-demo bg-base-200 border-t-2 border-indigo-400 rounded-lg shadow w-full">
