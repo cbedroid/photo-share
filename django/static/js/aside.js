@@ -1,6 +1,5 @@
 
 $(document).ready(() => {
-  console.log('running')
   const menu_toggler = $('#gallery-sidebar .menu-toggler');
   $(menu_toggler).bind('click', function () {
 
