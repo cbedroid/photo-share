@@ -2,14 +2,20 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db.models import Q
+from django.db.models import Count, Q, Sum
 from django.http.response import JsonResponse
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 from django.views.generic.list import MultipleObjectMixin
 
 from .forms import GalleryForm, GalleryFormSet
-from .models import Gallery, Photo
+from .models import Category, Gallery, Photo
 
 
 class CRUDMixin(LoginRequiredMixin):
@@ -75,7 +81,7 @@ class GalleryDetailView(DetailView, MultipleObjectMixin):
     model = Gallery
     template_name = "gallery/gallery_detail.html"
     object_list = None
-    paginate_by = 24
+    paginate_by = 25
 
     # Throws 404 if gallery is private
     def get_queryset(self):
@@ -109,9 +115,36 @@ class GalleryDetailView(DetailView, MultipleObjectMixin):
 
 class GalleryCreateView(CRUDMixin, CreateView):
     model = Gallery
+    login_url = reverse_lazy("account_login")
 
     def get_success_url(self, *args, **kwargs):
         return self.object.get_absolute_url()
+
+
+class GalleryListView(ListView):
+    model = Gallery
+    template_name = "gallery/gallery_list.html"
+    paginated_by = 25
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            qs = Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
+        qs = Gallery.objects.filter(public=True)
+
+        # Preform lookup searches in all Gallery's related field
+        search = self.request.GET.get("q")
+        if search:
+            return Gallery.objects.query_search(search, qs)
+
+        # show only top 20 gallery with the most views
+        return qs.annotate(photo_views=Sum("photos__views")).order_by("-photo_views")[:20]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # show top 20 trending category
+        context["by_search"] = self.request.GET.get("q", False)
+        context["top_category"] = Category.objects.alias(c=Count("gallery")).order_by("-c")[:20]
+        return context
 
 
 class GalleryUpdateView(CRUDMixin, UserPassesTestMixin, UpdateView):

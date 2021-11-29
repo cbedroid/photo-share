@@ -52,10 +52,8 @@ class PhotoForm(forms.ModelForm):
     IMAGE_PREVIEW = mark_safe(
         """
         <label class="photoset__image_label">
-            <div><p class="image__label text-ellipsis font-bold text-gray-900 text-center py-4">add photo</p></div>
-            <div class="image--wrapper">
-                <img class="image form-image w-full" src="static/assets/add_image.png" style="height:200px;"/>
-            </div>
+            <p class="image__label text-ellipsis font-bold text-gray-900 text-center py-4">add photo</p>
+            <img class="image form-image w-full" src="static/assets/images/add_image.png" style="height:200px;"/>
         </label>"""
     )
 

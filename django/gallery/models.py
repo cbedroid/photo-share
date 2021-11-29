@@ -97,7 +97,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("core:index") + f"?q={self.slug}"
+        return reverse("gallery:gallery-list") + f"?q={self.slug}"
 
     @classmethod
     def choicefield_filter(cls, lookup):
