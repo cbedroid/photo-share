@@ -1,7 +1,14 @@
 {
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Path": "/usr/local/bin/flake8",
+    "python.formatting.provider": "black",
+    "python.formatting.blackPath":"/usr/local/bin/black",
+    "python.formatting.blackArgs": [
+        "--line-length","120"
+    ],
     "python.envFile":   "${workspaceFolder}/.envs",
     "python.pythonPath": "${workspaceFolder}/django/venv/bin/python3",
-    "python.venvPath": "${workspaceFolder}/django/venv/",
+    "python.pipenvPath": "${workspaceFolder}/django/venv/",
     "python.testing.unittestArgs": [
         "-v",
         "-s",
