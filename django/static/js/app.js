@@ -15,9 +15,9 @@ $(document).ready(function () {
    *
    */
   (function handleMagnificPopup() {
-    $("#gallery-photo-collections .photo__card").each(function () {
-      $(this)
-        .find(".share_popup")
+    $("body").each(function () {
+      $(this).
+        find(".share_popup")
         .magnificPopup({
           items: [
             {
@@ -30,6 +30,7 @@ $(document).ready(function () {
         });
     });
   })();
+
 
   /**
    * Aside CheckBox Events
