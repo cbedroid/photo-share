@@ -1,4 +1,9 @@
 {
+    "editor.fontSize": 16,
+    "editor.tabSize": 2,
+    "[python]": {
+      "editor.tabSize": 4,
+    },
     "python.linting.flake8Enabled": true,
     "python.linting.flake8Path": "/usr/local/bin/flake8",
     "python.formatting.provider": "black",
@@ -22,6 +27,22 @@
     "python.testing.pytestArgs": [
         "django"
     ],
+ 
+
+    "html.format.enable": true,
+    "html.format.wrapLineLength": 220,
+    "html.format.indentInnerHtml": true,
+    "html.format.indentHandlebars": true,
+    "emmet.includeLanguages": { "django-html": "html" },
+    "files.associations": {
+            "**/*.html": "html",
+            "**/templates/**/*.html": "django-html",
+            "**/templates/**/*": "django-txt",
+            "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+        },
+    "jshint.packageManager": "npm",
+    "jshint.nodePath": "/usr/local/lib/node_modules/jshint",
+
     "cSpell.words": [
         "Assesssment",
         "csrftoken",
@@ -34,7 +55,5 @@
         "undelete",
         "untoggle"
     ],
-    "editor.fontSize": 16,
-    "editor.tabSize": 2,
-    "python.formatting.provider": "black"
+
 }
