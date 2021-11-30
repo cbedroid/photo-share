@@ -37,7 +37,20 @@
     <!-- Site-Main -->
     <main role="main" id="main" class="relative">
       {% include 'snippets/aside.html' %}
-      <div id="site-main" class="site-main">
+      <div id="site-main" class="site-main bg-white">
+        <div class="container-sm w-full">
+          {% block breadcrumb %}
+          <nav class="flex place-content-end px-10" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol id="site-breadcrumb" class=" flex space-x-1 breadcrumb font-serif p-5">
+              <li class="breadcrumb-item"><a class="font-semibold text-blue-500" href="{% url 'core:index' %}">Home </a>
+                <i class="fa fa-angle-right text-gray-500"></i>
+              </li>
+              {% block breadcrumb_link %}
+              {% endblock breadcrumb_link %}
+            </ol>
+          </nav>
+          {% endblock breadcrumb %}
+        </div>
         {% block content %}
         {% endblock content %}
       </div>
