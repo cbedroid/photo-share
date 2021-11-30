@@ -1,0 +1,32 @@
+{% load static  social_share %}
+
+{# Must be include with 'photo' variable #}
+
+<!--Photo share Modal-->
+<div class="photoshare-social-share share__hidden hidden row align-content-center">
+  <div class="social-share py-2">
+    <div class="social-share__content bg-white shadow-sm">
+      <div class="share-grid grid grid-cols-12 gap-4 my-1 sm:p-1">
+        <div class="social-share__img-wrapper col-start-1 col-span-12 flex-center">
+          <img src="{{photo.image.url}}" class="social-share__img" alt="{{photo.title}}">
+        </div>
+        <div class="share-card col-start-1 col-span-12">
+          <div class="share-card__content py-2">
+            <h4 class="text-3xl font-semibold">{{photo}}</h4>
+            <p class="text-muted font-italic">created by: <i class="fa fa-user-circle mx-1"></i>{{photo.gallery.user}}</p>
+          </div>
+          <!-- Social media links-->
+          <div class="link col-start-6 col-span-6 my-4 border-2 border-grey-200 no-underline rounded-md py-4 px-2">
+            <h4 class="text-center">Share this on your social media.</h4>
+            <div class="flex flex-row space-x-4 justify-center mt-2">
+              {% post_to_facebook photo.image.url '<div class="flex place-content-center place-items-center gap-x-3 group drop-shadow-md duration-300 p-1 bg-white text-gray-400 border border-gray-200  hover:border-gray-400 rounded-sm h-15"><i class="fab fa-facebook-f font-sm bg-[#1877f2] text-white rounded-full p-2"></i><p class="text-sm group-hover:text-gray-700 ml-4">Facebook</p></div>' link_class='social-link' %}
+              {% post_to_twitter 'Post your amazing photo using Photo-Share' photo.image.url '<div class="flex place-content-center place-items-center gap-x-3 group drop-shadow-md duration-300 p-1 bg-white text-gray-400 border border-gray-200  hover:border-gray-400 rounded-sm h-15"><i class="fab fa-twitter font-sm bg-[#1da1f2] text-white rounded-full p-2"></i><p class="text-sm group-hover:text-gray-700 ml-4">Twitter</p></div>' link_class='social-link' %}
+              {% post_to_gplus photo.image.url '<div class="flex place-content-center place-items-center gap-x-3 group drop-shadow-md  duration-300 p-1 bg-white text-gray-400 border border-gray-200  hover:border-gray-400 rounded-sm h-15"><i class="fab fa-google-plus font-sm bg-[#ea4335] text-white rounded-full p-2"></i><p class="text-sm group-hover:text-gray-700 ml-4">Google &#43;</p></div>' link_class='social-link' %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- -->
