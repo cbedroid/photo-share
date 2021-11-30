@@ -6,6 +6,11 @@
     margin: 0;
   }
 </style>
+
+{% block breadcrumb_link %}
+<li class="breadcrumb-item"><span class="text-gray-400">Gallery</span></li>
+{% endblock breadcrumb_link %}
+
 {% endblock extra_head %}
 {% block content %}
 {% url 'gallery:gallery-list' as current_url %}

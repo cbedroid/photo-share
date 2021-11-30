@@ -1,57 +1,162 @@
 {% extends 'base.html' %}
-{% load static  gallery_extras  social_share %}
+{% load static  gallery_extras  %}
+
+
+{% block breadcrumb_link %}
+<li class="breadcrumb-item"><a class="font-semibold text-blue-500" href="{{object.gallery.get_absolute_url}}">Photo</a>
+  <i class="fa fa-angle-right text-gray-500"></i>
+
+</li>
+<li class="breadcrumb-item"><span class="text-gray-400">{{object.title}}</span></li>
+{% endblock breadcrumb_link %}
+
 
 {% block content %}
-<div id="gallery-section" class="theme-ws clear top mx-2 pb-2">
+{# Social Share Modal #}
+{% include 'gallery/snippets/social-share.html' with photo=object %}
+{#  #}
+
+<div id="gallery-section" class="theme-ws clear top mx-2 pb-40 ">
   <div class="container mx-auto p-3 sm:p-6">
     <div class="row">
       <div class="header">
-        <h1 class="text-center text-ellipsis font-semibold font-serif py-1 my-4">{{photo.title}}</h1>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 xxl:grid-cols-4 gap-y-2 sm:gap-6 my-1 sm:p-1">
-        <!-- Photo Card Details -->
-        <div class="content--left">
-          <!-- photo image-->
-          <div class="photo__card bg-white border border-gray-400 rounded-md shadow-lg hover:shadow-2xl  drop-shadow-md">
-            <div class="img-container" style="height: 550px">
-              <a href="{{photo.image.url}}">
-                <img class="block w-full h-full" src="{{photo.image.url}}" alt="{{photo.gallery}} {{photo}} photo">
+        <h1 class="text-center text-ellipsis font-semibold font-serif py-1 my-4">{{object.title}}</h1>
+        <div class="header-top">
+          <!-- header user__actions -->
+          <div class="header__action flex-between items-center mb-6">
+            <div class="share-cta flex md:text-2xl text-gray-400">
+              <a href="#" class="border-2 border-gray-200 py-2 px-4  m-auto hover:text-red-600 mr-1">
+                <i class="fa fa-heart"></i>
+              </a>
+              <a href="#" class="border-2 border-gray-200 py-1.5 px-4 m-auto hover:text-blue-300">
+                <i class="text-xl md:text-3xl fa fa-share-square"></i>
               </a>
             </div>
-            <!-- -->
-            <!-- Photo card spec -->
-            <div class="card-body flex flex-col sm:flex-row sm:space-x-1  p-3">
-              <small class="detail__date w-50 sm:flex-1 sm:text-left">
-                <i class="fa fa-clock mr-1"></i>
-                {{photo.created|date:"M d, Y"}}
-              </small>
-              <small class="detail__user text-ellipsis nowrap sm:text-right sm:flex-1" style="max-width:calc(100% / 2);">
-                <i class="fa fa-user mr-1"></i>
-                <span class="text-truncated">{{photo.gallery.user}}</span>
-              </small>
-            </div>
-            <!-- -->
-            <!--Photo actions-->
-            <div class="card-footer p-2">
-              <div class="share-action flex-between space-x-1 relative bottom-0 left-0">
-                {% if request.user.is_authenticated and request.user == photo.gallery.user %}
-                <a class="cta cta--red cta--full-block" href="{{object.get_delete_url}}">
-                  <i class="fas fa-trash"></i>
-                </a>
-                {% else %}
-                <a class="cta cta--red cta--full-block" href="#">
-                  <i class="fas fa-heart"></i>
-                </a>
-                {% endif %}
-                <a class="cta cta--blue cta--full-block share_popup" href="#">
-                  <i class="fas fa-share-alt"></i>
-                </a>
-                <a id="photo-download" class="cta cta--green cta--full-block" href="#">
-                  <i class="fas fa-cloud-download-alt"></i>
+            <!-- Actions -->
+            {# desktop action #}
+            <div class="gallery-action hidden md:flex content-end">
+              <div class="action__btn">
+                <a class="font-semibold  text-gray-500 hover:text-gray-800 duration-300" href="{{object.gallery.get_absolute_url}}">
+                  <svg class="inline mb-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="24" height="24" stroke="currentColor" stroke-width="2" fill="currentColor">
+                    <path
+                      d="M 11.957031 13.988281 C 11.699219 14.003906 11.457031 14.117188 11.28125 14.308594 L 1.015625 25 L 11.28125 35.691406 C 11.527344 35.953125 11.894531 36.0625 12.242188 35.976563 C 12.589844 35.890625 12.867188 35.625 12.964844 35.28125 C 13.066406 34.933594 12.972656 34.5625 12.71875 34.308594 L 4.746094 26 L 48 26 C 48.359375 26.003906 48.695313 25.816406 48.878906 25.503906 C 49.058594 25.191406 49.058594 24.808594 48.878906 24.496094 C 48.695313 24.183594 48.359375 23.996094 48 24 L 4.746094 24 L 12.71875 15.691406 C 13.011719 15.398438 13.09375 14.957031 12.921875 14.582031 C 12.753906 14.203125 12.371094 13.96875 11.957031 13.988281 Z">
+                    </path>
+                  </svg>
+                  <span class="ml-1">Back to album</span>
                 </a>
               </div>
             </div>
           </div>
+          <!-- header user__actions -->
+        </div>
+        <!-- header gallery info -->
+        {% with object.gallery as gallery  %}
+        <div class="header__title">
+          <h3 class="pb-1 my-2 font-bold"><i class="fas fa-user-circle mr-1"></i>{{gallery.user}}</h3>
+          <div class="gallery-title flex items-center text-lg md:text-2xl">
+            <h4 class="pb-1 "><b>{{gallery}}</b></h4>
+            <span class="divider font-bold mx-1 my-auto" style="height:35px;">&#8211;</span>
+            <h5><span class="badge badge-lg rounded-md hover:text-black  {{gallery.category.label}} py-4 px-6">{{gallery.category.get_name_display|title}}</span>
+            </h5>
+          </div>
+        </div>
+        {% endwith %}
+        <!--  -->
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 xxl:grid-cols-4 gap-y-2 sm:gap-6 my-1 sm:p-1">
+        <!-- Photo Card Details -->
+        <div class="content--left">
+          {% with object as photo  %}
+          <div class="photo__card card bg-white border rounded-lg drop-shadow-lg p-1 pb-4 hover:shadow-xl">
+            <!-- Photo Image-->
+            <div class="card-img-top group">
+              <img class="w-full" src="{{object.image.url}}" alt="{{object.gallery.name}} {{photo}} photo" style="height:550px">
+            </div>
+            <!-- -->
+            <!-- Photo Details -->
+            <div class="card-body w-full mh-1/4 p-1">
+              <h4 class="photo__title py-1 mb-4 text-center text-ellipsis text-sm sm:text-base font-semibold font-serif">
+                {{object.title}}</h4>
+              <div class="content-wrapper flex place-content-between  flex-wrap sm:space-x-1 ">
+                <small class="detail__date w-50 sm:flex-1 sm:text-left">
+                  <i class="fa fa-clock mr-1"></i>
+                  {{object.created|date:"M d, Y"}}
+                </small>
+                <small class="detail__user text-ellipsis nowrap sm:text-right sm:flex-1" style="max-width:calc(100% / 2);">
+                  <i class="fa fa-user mr-1"></i>
+                  <span class="text-truncated">{{object.gallery.user}}</span>
+                </small>
+              </div>
+            </div>
+            <!-- -->
+            <!-- card footer -->
+            <div class="card-footer box w-full pt-2">
+              <!-- photo details  -->
+              <div class="photo-details wrapper flex place-content-between w-full">
+                <ul class="detail-info box--left flex  flex-col space-y-1">
+                  <li class="text-sm text-gray-600">
+                    <span class="font-medium">views:</span>
+                    <span class="font-light ml-1">{{object.views}}</span>
+                  </li>
+                  <li class="text-sm text-gray-600">
+                    <span class="font-medium">download:</span>
+                    <span class="font-light ml-1">coming soon!</span>
+                  </li>
+                </ul>
+                <!-- footer action buttons -->
+                <ul class="action-box box--right flex align-items-center space-x-2">
+                  {% if is_user %}
+                  <!-- trash button-->
+                  <li class="group h-10 w-12">
+                    <a class="flex place-content-center  bg-gray-50  border rounded-md hover:bg-white hover:border-gray-200 h-full w-full" href="{% url 'gallery:photo-delete' photo.pk %}">
+                      <svg class="place-self-center" viewBox="0 0 24 24" width="18" height="18" stroke="#767676" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    </a>
+                  </li>
+                  {% else %}
+                  <!-- heart  button-->
+                  <li class="group h-10 w-12">
+                    <a id="heart_btn_{{forloop.counter}}" class="share_popup flex place-content-center  bg-gray-50  border rounded-md hover:bg-white hover:border-gray-200 h-full w-full" href="javascript:void(0);">
+                      <svg class="css-i6dzq1 my-auto" viewBox="0 0 24 28" width="18" height="18" stroke="#767676" stroke-width="1" fill="#767676" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                      </svg>
+                    </a>
+                  </li>
+                  {% endif %}
+                  <!-- share button-->
+                  <li class="group h-10 w-12">
+                    <a id="share_btn_{{forloop.counter}}" class="share_popup flex place-content-center  bg-gray-50  border rounded-md hover:bg-white hover:border-gray-200 h-full w-full" href="javascript:void(0);">
+                      <svg class="css-i6dzq1 my-auto" viewBox="0 0 24 24" width="18" height="18" stroke="#767676" stroke-width="1" fill="#767676" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                      </svg>
+                    </a>
+                  </li>
+                  <!-- download button-->
+                  <li class="group h-10 w-12">
+                    <a class="bg-white m-auto" href="javascript:void(0);">
+                      <a id="download_btn_{{forloop.counter}}" class="share_popup flex place-content-center  bg-gray-50  border rounded-md hover:bg-white hover:border-gray-200  h-full w-full" href="javascript:void(0);">
+                        <svg class="css-i6dzq1 my-auto" viewBox="0 0 24 24" width="20" height="18" stroke="#767676" stroke-width="1" fill="#767676" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                          <polyline points="7 10 12 15 17 10"></polyline>
+                          <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                      </a>
+                  </li>
+                </ul>
+              </div>
+              <!-- -->
+            </div>
+            <!-- -->
+          </div>
+          {% endwith %}
           <!-- -->
         </div>
         <!-- -->
@@ -90,7 +195,7 @@
                     Date Published
                   </dt>
                   <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{photo.created|date:"M d, Y"}}
+                    {{object.created|date:"M d, Y"}}
                   </dd>
                 </div>
                 <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -98,7 +203,7 @@
                     Last Update
                   </dt>
                   <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {{photo.updated|date:"M d, Y"}}
+                    {{object.updated|date:"M d, Y"}}
                   </dd>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
