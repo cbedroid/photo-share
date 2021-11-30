@@ -103,10 +103,10 @@
         "image": "gallery/kobebryant.original.jpg",
         "gallery": 54,
         "is_cover": false,
-        "views": 664,
+        "views": 670,
         "downloads": 203,
         "created": "2021-11-23T23:31:44.659Z",
-        "updated": "2021-11-25T13:04:43.409Z",
+        "updated": "2021-11-30T05:59:53.954Z",
         "slug": "kobe-the-mamba",
         "tags": []
     }
@@ -183,10 +183,10 @@
         "image": "gallery/rockstar.jpeg",
         "gallery": 88,
         "is_cover": true,
-        "views": 3445,
+        "views": 3543,
         "downloads": 0,
         "created": "2021-11-23T05:03:04.527Z",
-        "updated": "2021-11-24T21:54:12.824Z",
+        "updated": "2021-11-30T17:34:44.588Z",
         "slug": "qwae-the-goat",
         "tags": []
     }
@@ -199,10 +199,10 @@
         "image": "gallery/rs_600x600-200128100818-600-Kobe-Bryant-Gianna-Bryant_ch1vYLL.jpg",
         "gallery": 54,
         "is_cover": true,
-        "views": 7,
+        "views": 1796,
         "downloads": 0,
         "created": "2021-11-25T09:21:39.652Z",
-        "updated": "2021-11-25T13:10:33.271Z",
+        "updated": "2021-11-30T13:49:41.278Z",
         "slug": "mamba-forever",
         "tags": []
     }
@@ -236,6 +236,70 @@
         "created": "2021-11-29T13:32:41.004Z",
         "updated": "2021-11-29T13:32:41.004Z",
         "slug": "brady-and-mchomes",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 107,
+    "fields": {
+        "title": "Lakers 2021",
+        "image": "gallery/Laker_2021_Stars.jpg",
+        "gallery": 54,
+        "is_cover": false,
+        "views": 5363,
+        "downloads": 0,
+        "created": "2021-11-30T08:05:05.919Z",
+        "updated": "2021-11-30T17:37:16.010Z",
+        "slug": "lakers-2021",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 108,
+    "fields": {
+        "title": "Shaq and Kobe",
+        "image": "gallery/Shaq_and_Kobe.jpg",
+        "gallery": 54,
+        "is_cover": false,
+        "views": 0,
+        "downloads": 0,
+        "created": "2021-11-30T08:05:05.962Z",
+        "updated": "2021-11-30T08:05:05.962Z",
+        "slug": "shaq-and-kobe",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 109,
+    "fields": {
+        "title": "Angels of the NBA",
+        "image": "gallery/Kobe_and_daughter_Gigi.jpeg",
+        "gallery": 54,
+        "is_cover": false,
+        "views": 0,
+        "downloads": 0,
+        "created": "2021-11-30T08:05:06.013Z",
+        "updated": "2021-11-30T08:05:06.013Z",
+        "slug": "angels-of-the-nba",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 110,
+    "fields": {
+        "title": "Welcome to GreenWood",
+        "image": "gallery/QweatheGoat_Welcome_2_Greenwood.jpeg",
+        "gallery": 88,
+        "is_cover": false,
+        "views": 2164,
+        "downloads": 0,
+        "created": "2021-11-30T14:34:42.657Z",
+        "updated": "2021-11-30T15:30:31.146Z",
+        "slug": "welcome-to-greenwood",
         "tags": []
     }
 }
