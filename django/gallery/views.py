@@ -15,10 +15,11 @@ from django.views.generic import (
 from django.views.generic.list import MultipleObjectMixin
 
 from .forms import GalleryForm, GalleryFormSet
+from .mixins import UserAccessPermissionMixin
 from .models import Category, Gallery, Photo
 
 
-class CRUDMixin(LoginRequiredMixin):
+class GalleryFormMixin(LoginRequiredMixin):
     model = Gallery
     form_class = GalleryForm
     formset_class = GalleryFormSet
@@ -98,8 +99,8 @@ class GalleryDetailView(DetailView, MultipleObjectMixin):
         related_gallery = self.object.category.gallery
         user = self.request.user
         if related_gallery.exists():
-            # Filter galleries by creator or its public status
-            # Include all public or galleries belonging to the current user
+            # Filter galleries by owner or its public state
+            # Only display galleries if user is the owner or gallery is public
             if user.is_authenticated:
                 related_gallery = related_gallery.filter(
                     Q(public=True) | Q(user=self.request.user),
@@ -113,7 +114,7 @@ class GalleryDetailView(DetailView, MultipleObjectMixin):
         return context
 
 
-class GalleryCreateView(CRUDMixin, CreateView):
+class GalleryCreateView(GalleryFormMixin, CreateView):
     model = Gallery
     login_url = reverse_lazy("account_login")
 
@@ -129,25 +130,24 @@ class GalleryListView(ListView):
     def get_queryset(self):
         if self.request.user.is_authenticated:
             qs = Gallery.objects.filter(Q(public=True) | Q(user=self.request.user))
-        qs = Gallery.objects.filter(public=True)
+        else:
+            qs = Gallery.objects.filter(public=True)
 
-        # Preform lookup searches in all Gallery's related field
         search = self.request.GET.get("q")
         if search:
             return Gallery.objects.query_search(search, qs)
 
-        # show only top 20 gallery with the most views
-        return qs.annotate(photo_views=Sum("photos__views")).order_by("-photo_views")[:20]
+        return qs.annotate(photo_views=Sum("photos__views")).order_by("-photo_views")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # show top 20 trending category
+        # Show top 20 trending category
         context["by_search"] = self.request.GET.get("q", False)
         context["top_category"] = Category.objects.alias(c=Count("gallery")).order_by("-c")[:20]
         return context
 
 
-class GalleryUpdateView(CRUDMixin, UserPassesTestMixin, UpdateView):
+class GalleryUpdateView(GalleryFormMixin, UserPassesTestMixin, UpdateView):
     model = Gallery
 
     def test_func(self):
@@ -171,9 +171,10 @@ class GalleryUpdateView(CRUDMixin, UserPassesTestMixin, UpdateView):
         return self.get_object().get_absolute_url()
 
 
-class GalleryDeleteView(CRUDMixin, UserPassesTestMixin, DeleteView):
+class GalleryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Gallery
-    template_name = "gallery/gallery_confirm_delete.html"
+    template_name = "galle(ry/gallery_confirm_delete.html"
+    login_url = reverse_lazy("account_login")
     success_url = reverse_lazy("core:index")
 
     def test_func(self):
@@ -182,7 +183,7 @@ class GalleryDeleteView(CRUDMixin, UserPassesTestMixin, DeleteView):
 
 
 # PHOTO
-class PhotoDetailView(DetailView):
+class PhotoDetailView(UserAccessPermissionMixin, DetailView):
     model = Photo
     template_name = "gallery/photo_detail.html"
     context_object_name = "photo"
@@ -195,6 +196,12 @@ class PhotoDetailView(DetailView):
             return Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=self.request.user))
         else:
             return Photo.objects.filter(gallery__public=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = self.get_object()
+        context["is_user"] = obj.gallery.user == self.request.user
+        return context
 
     def get(self, *args, **kwargs):
         self.object = self.get_object()
