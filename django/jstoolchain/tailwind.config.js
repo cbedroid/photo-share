@@ -1,19 +1,21 @@
 
 const plugin = require("tailwindcss/plugin");
 
-// const siblingCheckedPlugin = plugin(function ({ addVariant, e }) {
-//   addVariant("sibling-checked", ({ container }) => {
-//     container.walkRules((rule) => {
-//       rule.selector = `:checked + .sibling-checked\\:${rule.selector.slice(1)}`;
-//     });
-//   });
-// });
 
 module.exports = {
   mode: "jit",
   purge: ["../templates/**/*.html"],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
+    container: {
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '4rem',
+        xl: '5rem',
+        '2xl': '6rem',
+      },
+    },
     extend: {
       fill: theme => ({
         'red': theme('colors.red.500'),
