@@ -27,7 +27,7 @@
     "python.testing.pytestArgs": [
         "django"
     ],
- 
+
 
     "html.format.enable": true,
     "html.format.wrapLineLength": 220,
