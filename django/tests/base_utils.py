@@ -1,5 +1,4 @@
 import os
-import shutil
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -14,15 +13,16 @@ User = get_user_model()
 
 
 PATH = os.path.dirname(os.path.abspath(__file__))
-FIXTURE_PATH = os.path.abspath(os.path.join(PATH, "..", "fixtures/"))
 TEST_MEDIA_ROOT = os.path.join(settings.BASE_DIR, "test_media/")
-TEST_IMAGE_DIR = os.path.join(settings.BASE_DIR, "tests/mediaFixture/gallery/")
+TEST_IMAGE_DIR = os.path.join(PATH, "FakeImages/")
 
 
 def override_setting_config():
     # Change django settings for testing
     global settings
 
+    setattr(settings, "ACCOUNT_EMAIL_VERIFICATION", "none")
+    setattr(settings, "MEDIA_ROOT", os.path.join(settings.BASE_DIR, "test_media"))
     setattr(
         settings,
         "DEBUG_TOOLBAR_CONFIG",
@@ -35,7 +35,7 @@ def override_setting_config():
 
 class BaseObjectUtils(object):
 
-    fixtures = ["test_users.json", "test_category.json", "test_galleries.json", "test_photos"]
+    fixtures = ["test_fixtures"]
     override_setting_config()
 
     MODERATOR_GROUP = Group.objects.get(name="moderator")
@@ -76,15 +76,25 @@ class BaseObjectUtils(object):
         "password": "test_staff_password123",
     }
 
-    def create_media_root(self):
-        if not TEST_MEDIA_ROOT:
-            shutil.copytree(TEST_IMAGE_DIR, TEST_MEDIA_ROOT)
+    # Account Urls
+    login_url = reverse("account_login")
+    logout_url = reverse("account_logout")
+
+    # Core Urls
+    index_url = reverse("core:index")  # index
+
+    # API URLS
+    gallery_api_list_url = api_reverse("api:gallery-list")
+    photo_api_list_url = api_reverse("api:photo-list")
+    user_api_list_url = api_reverse("api:user-list")
+
+    # Gallery urls
+    gallery_create_url = reverse("gallery:gallery-create")
+    gallery_detail_url = reverse("gallery:gallery-detail", kwargs={"pk": "1"})
+    gallery_update_url = reverse("gallery:gallery-update", kwargs={"pk": "1"})
+    gallery_delete_url = reverse("gallery:gallery-delete", kwargs={"pk": "1"})
 
     def create_test_objects(self, *args, **kwargs):
-        self.fixtures = ["test_users", "test_category", "test_galleries", "test_photos"]
-
-        self.create_media_root()
-
         self.test_category = Category.objects.get(pk=1)
         # # Test Users
         self.test_user_1 = get_object_or_404(User, pk=1)
@@ -98,41 +108,16 @@ class BaseObjectUtils(object):
         self.test_gallery_3 = get_object_or_404(Gallery, pk=3)
 
         # # Test Photos
-        self.test_photo_1 = self.create_photo(self.test_gallery_1, title="test_image_1")
-        self.test_photo_2 = self.create_photo(
-            self.test_gallery_2,
-            title="test_image_2",
-            path=TEST_IMAGE_DIR + "test_image_2.jpg",
-        )
-        self.test_photo_blank = self.create_photo(
-            self.test_gallery_3,
-            title="test_blank_image",
-            path=TEST_IMAGE_DIR + "test_blank_image.jpg",
-        )
+        self.test_photo = self.create_photo(self.test_gallery_1, title="test_image_1")
 
-        self.login_url = reverse("account_login")
-        self.logout_url = reverse("account_logout")
-        self.home_url = reverse("gallery:index")  # index
-        self.gallery_create_url = reverse("gallery:gallery-create")
-        self.test_gallery_detail_url = reverse("gallery:gallery-detail", kwargs={"pk": "1"})
-        self.update_url = reverse("gallery:gallery-update", kwargs={"pk": "1"})
-        self.delete_url = reverse("gallery:gallery-delete", kwargs={"pk": "1"})
+    def fake_image(self, name, path="test_image.jpg"):
+        path = os.path.join(TEST_IMAGE_DIR, path)
+        assert os.path.isfile(path)
+        with open(path, "rb") as image_file:
+            return SimpleUploadedFile(name=name + ".jpg", content=image_file.read(), content_type="image/jpeg")
 
-        # API URLS
-        self.gallery_api_list_url = api_reverse("api:gallery-list")
-        self.photo_api_list_url = api_reverse("api:photo-list")
-        self.user_api_list_url = api_reverse("api:user-list")
-
-    def create_user(
-        self,
-        username="test_user_1",
-        email="test_user_1@test.com",
-        password="test_password",
-    ):
-        user, _ = User.objects.get_or_create(
-            username=username,
-            email=email,
-        )
+    def create_user(self, username="test_user_1", email="test_user_1@test.com", password="test_password"):
+        user, _ = User.objects.get_or_create(username=username, email=email)
         user.set_password(password)
         user.save()
         return user
@@ -141,10 +126,6 @@ class BaseObjectUtils(object):
         gallery, _ = Gallery.objects.get_or_create(name=name, user=user, public=True, category=self.test_category)
         return gallery
 
-    def fake_image(self, name, path=TEST_IMAGE_DIR + "test_image_1.jpg"):
-        with open(path, "rb") as image_file:
-            return SimpleUploadedFile(name=name + ".jpg", content=image_file.read(), content_type="image/jpeg")
-
     def create_photo(self, gallery, title="test_image_1", **kwargs):
         photo, _ = Photo.objects.get_or_create(
             title=title,
@@ -152,11 +133,3 @@ class BaseObjectUtils(object):
             gallery=gallery,
         )
         return photo
-
-    def create_category(self):
-        # Create all categories for testing
-        for index in range(len(self.category_choices)):
-            Category.objects.create(
-                name=index,
-                label="s",
-            )
