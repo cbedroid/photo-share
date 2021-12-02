@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     "profanity",
     "widget_tweaks",
     "crispy_forms",
-    "core",
     "users",
+    "core",
     "gallery",
     "django_cleanup",
 ] + ALLAUTH_APPS
@@ -81,7 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "photoshare.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -115,6 +114,14 @@ CACHES = {
         },
     }
 }
+
+# Configure Redis to handle Django session cache
+# https://github.com/jazzband/django-redis#configure-as-session-backend
+# NOTE: May have to change this during testing... Maybe..reading more docs on this
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -133,6 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
@@ -145,28 +153,6 @@ LOGIN_REDIRECT_URL = "core:index"
 LOGOUT_REDIRECT_URL = "core:index"
 ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
 
-
-# To run behind HTTPS proxy
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"],
-    "DEFAULT_PARSER_CLASSES": (
-        "rest_framework.parsers.FormParser",
-        "rest_framework.parsers.MultiPartParser",
-    ),
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 25,
-    "DEFAULT_THROTTLE_CLASSES": [
-        "rest_framework.throttling.AnonRateThrottle",
-    ],
-    "DEFAULT_THROTTLE_RATES": {
-        "anon": "120/min",
-    },
-    "NUM_PROXIES": 1,
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -195,6 +181,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
+
 JAZZMIN_SETTINGS = {
     # title of the window
     "site_title": "Photo-Share Admin",
@@ -205,7 +192,7 @@ JAZZMIN_SETTINGS = {
     # Welcome text on the login screen
     "welcome_sign": "Welcome to Photo-Share",
     # Copyright on the footer
-    "copyright": "NoworNever LLC",
+    "copyright": "NowOrNever LLC",
     # The model admin to search from the search bar, search bar omitted if excluded
     "search_model": "users.User",
     # Order the auth app before the books app, other apps will be alphabetically placed after these
@@ -237,8 +224,32 @@ JAZZMIN_SETTINGS = {
     # Relative paths to custom CSS/JS scripts (must be present in static files)
     "custom_css": None,
     "custom_js": None,
-    # Whether to show the UI customizer on the sidebar
+    # Whether to show the UI customized on the sidebar
     "show_ui_builder": False,
+}
+
+
+# To run behind HTTPS proxy
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"],
+    "DEFAULT_PARSER_CLASSES": (
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
+    ),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 25,
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "120/min",
+    },
+    "NUM_PROXIES": 1,
 }
 
 # ********************* #
