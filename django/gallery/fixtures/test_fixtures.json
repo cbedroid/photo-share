@@ -1,15 +1,5 @@
 [
- {
-    "model": "auth.group",
-    "pk": 1,
-    "fields": {
-      "name": "moderator",
-      "permissions": [
-        21, 22, 23, 24, 25, 26, 27, 28, 33, 34, 35, 36, 5, 6, 7, 8, 1, 2, 3, 4,
-        29, 30, 31, 32
-      ]
-    }
-  },
+
 
   {
     "model": "users.user",
@@ -48,42 +38,6 @@
     }
   },
   {
-    "model": "users.user",
-    "pk": 3,
-    "fields": {
-      "password": "pbkdf2_sha256$216000$CifVBaK2D9d0$UxO+V0EIBNkQZT7CURgXKpOKnScx3sy5aBHZgCfmEeg=",
-      "last_login": null,
-      "is_superuser": false,
-      "username": "test_moderator",
-      "first_name": "",
-      "last_name": "",
-      "email": "test_moderator@email.com",
-      "is_staff": false,
-      "is_active": true,
-      "date_joined": "2021-02-14T07:34:31.489Z",
-      "groups": [1],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "users.user",
-    "pk": 4,
-    "fields": {
-      "password": "pbkdf2_sha256$216000$IxDaKgQDSQs7$3j3EhFmMo7L/7+jeHmxVe5gMKuBgIu4lhnIyTGU7nGc=",
-      "last_login": null,
-      "is_superuser": false,
-      "username": "test_staff_user",
-      "first_name": "",
-      "last_name": "",
-      "email": "test_staff_user@email.com",
-      "is_staff": true,
-      "is_active": true,
-      "date_joined": "2021-02-14T07:34:32.093Z",
-      "groups": [],
-      "user_permissions": []
-    }
-  },
-  {
     "model": "gallery.category",
     "pk": 1,
     "fields": {
@@ -103,10 +57,23 @@
     "model": "gallery.gallery",
     "pk": 1,
     "fields": {
-      "name": "test_gallery_1",
+      "name": "test_gallery",
       "user": 1,
       "public": true,
-      "slug": "test_gallery_1",
+      "slug": "test_gallery",
+      "category": 1,
+      "created": "2021-02-14T07:34:32.661Z",
+      "updated": "2021-02-14T07:34:32.662Z"
+    }
+  },
+{
+    "model": "gallery.gallery",
+    "pk": 2,
+    "fields": {
+      "name": "private_gallery",
+      "user": 1,
+      "public": false,
+      "slug": "private_gallery",
       "category": 1,
       "created": "2021-02-14T07:34:32.661Z",
       "updated": "2021-02-14T07:34:32.662Z"
@@ -116,9 +83,25 @@
     "model": "gallery.photo",
     "pk": 1,
     "fields": {
-      "title": "test_image_1",
-      "image": "gallery/test_image_1.png",
-      "slug": "test-image-1",
+      "title": "test_image",
+      "image": "gallery/test_image.png",
+      "slug": "test-image",
+      "gallery": 1,
+      "views": 10,
+      "is_cover": true,
+      "downloads": 10,
+      "created": "2021-02-16T20:24:33.020Z",
+      "updated": "2021-10-06T07:25:32.830Z",
+      "tags": []
+    }
+  },
+{
+    "model": "gallery.photo",
+    "pk": 2,
+    "fields": {
+      "title": "test_image_2",
+      "image": "gallery/test_image_2.png",
+      "slug": "test-image-2",
       "gallery": 1,
       "views": 10,
       "is_cover": true,
