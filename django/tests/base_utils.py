@@ -1,8 +1,8 @@
 import os
+import shutil
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -22,7 +22,7 @@ def override_setting_config():
     global settings
 
     setattr(settings, "ACCOUNT_EMAIL_VERIFICATION", "none")
-    setattr(settings, "MEDIA_ROOT", os.path.join(settings.BASE_DIR, "test_media"))
+    setattr(settings, "MEDIA_ROOT", TEST_MEDIA_ROOT)
     setattr(
         settings,
         "DEBUG_TOOLBAR_CONFIG",
@@ -34,46 +34,36 @@ def override_setting_config():
 
 
 class BaseObjectUtils(object):
-
-    fixtures = ["test_fixtures"]
     override_setting_config()
+    fixtures = ["test_fixtures"]
 
-    MODERATOR_GROUP = Group.objects.get(name="moderator")
-    category_choices = Category.CATEGORY_LIST
     default_formset = {
         "name": "new_gallery",
         "category": ["1"],
         "public": "on",
-        "photo-TOTAL_FORMS": "2",
+        "photo-TOTAL_FORMS": "4",
         "photo-INITIAL_FORMS": "0",
         "photo-MIN_NUM_FORMS": "0",
-        "photo-MAX_NUM_FORMS": "1000",
+        "photo-MAX_NUM_FORMS": "4",
         "photo-0-title": "",
         "photo-0-image": "",
         "photo-1-title": "",
         "photo-1-image": "",
+        "photo-2-title": "",
+        "photo-2-image": "",
+        "photo-3-title": "",
+        "photo-3-image": "",
     }
 
-    user_1_account = {
+    user_1_cred = {
         "username": "test_user_1",
         "password": "test_password",
         "email": "test_user1@test.com",
     }
-    user_2_account = {
+    user_2_cred = {
         "username": "test_user_2",
         "password": "test_password",
         "email": "test_user_2@test.com",
-    }
-
-    moderator_account = {
-        "username": "test_moderator",
-        "email": "test_moderator@email.com",
-        "password": "test_moderator_password123",
-    }
-    staff_account = {
-        "username": "test_staff_user",
-        "email": "test_staff_user@email.com",
-        "password": "test_staff_password123",
     }
 
     # Account Urls
@@ -94,25 +84,37 @@ class BaseObjectUtils(object):
     gallery_update_url = reverse("gallery:gallery-update", kwargs={"pk": "1"})
     gallery_delete_url = reverse("gallery:gallery-delete", kwargs={"pk": "1"})
 
-    def create_test_objects(self, *args, **kwargs):
-        self.test_category = Category.objects.get(pk=1)
+    def setUp(self, *args, **kwargs):
+        # Initialize test objects making them available throughout all tests.
+        # Using setUp, instead of setUpClass to prevent test variable from being affect by previous/other tests
+        super().setUp(*args, **kwargs)
+        self.create_test_objects()
+
+    @classmethod
+    def tearDownClass(cls):
+        super(BaseObjectUtils, cls).tearDownClass()
+        if os.path.isdir(TEST_MEDIA_ROOT):
+            shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
+            print("Test media Removed")
+
+    def create_test_objects(self):
+        """NOTE: This function is needed, otherwise pytest will throw Database not Access Error."""
+
         # # Test Users
         self.test_user_1 = get_object_or_404(User, pk=1)
         self.test_user_2 = get_object_or_404(User, pk=2)
-        self.test_moderator = get_object_or_404(User, pk=3)
-        self.test_staff = get_object_or_404(User, pk=4)
+
+        # # Test Category
+        self.test_category = Category.objects.get(pk=1)
 
         # # Test Galleries
         self.test_gallery_1 = get_object_or_404(Gallery, pk=1)
         self.test_gallery_2 = get_object_or_404(Gallery, pk=2)
-        self.test_gallery_3 = get_object_or_404(Gallery, pk=3)
 
-        # # Test Photos
-        self.test_photo = self.create_photo(self.test_gallery_1, title="test_image_1")
-
-    def fake_image(self, name, path="test_image.jpg"):
+    def create_fake_image(self, name, path="test_image.jpg"):
         path = os.path.join(TEST_IMAGE_DIR, path)
         assert os.path.isfile(path)
+        name = name.replace(" ", "_")
         with open(path, "rb") as image_file:
             return SimpleUploadedFile(name=name + ".jpg", content=image_file.read(), content_type="image/jpeg")
 
@@ -123,13 +125,18 @@ class BaseObjectUtils(object):
         return user
 
     def create_gallery(self, user, name="test_gallery_1"):
-        gallery, _ = Gallery.objects.get_or_create(name=name, user=user, public=True, category=self.test_category)
+        gallery, _ = Gallery.objects.get_or_create(
+            name=name,
+            user=user,
+            public=True,
+            category=self.test_category,
+        )
         return gallery
 
     def create_photo(self, gallery, title="test_image_1", **kwargs):
         photo, _ = Photo.objects.get_or_create(
             title=title,
-            image=self.fake_image(title, **kwargs),
+            image=self.create_fake_image(title, **kwargs),
             gallery=gallery,
         )
         return photo
