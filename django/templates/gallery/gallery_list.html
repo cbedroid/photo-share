@@ -6,12 +6,13 @@
     margin: 0;
   }
 </style>
+{% endblock extra_head %}
 
 {% block breadcrumb_link %}
 <li class="breadcrumb-item"><span class="text-gray-400">Gallery</span></li>
 {% endblock breadcrumb_link %}
 
-{% endblock extra_head %}
+
 {% block content %}
 {% url 'gallery:gallery-list' as current_url %}
 <section id="gallery_list_section">
@@ -31,7 +32,7 @@
     <!-- Gallery Content-->
     <div class="gallery-content px-1 sm:px-2">
       <div class="row">
-        <div class="content-header flex place-items-center">
+        <div class="content-header flex gap-x-5 place-items-center">
           <!--Pagination-->
           {% if is_paginated %}
           <div class="px-4 py-3 sm:px-6">
@@ -135,9 +136,10 @@
               </button>
             </div>
           </form>
+
         </div>
         <!-- Gallery Card Collection -->
-        {% include 'gallery/snippets/gallery_cards.html' with galleries=object_list %}
+        {% include 'gallery/snippets/gallery_cards.html' with galleries=page_obj %}
         <!-- End Gallery Collection -->
 
         <!-- Pagination-->

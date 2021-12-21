@@ -75,17 +75,18 @@
             <!-- -->
             <!-- Photo Details -->
             <div class="card-body w-full mh-1/4 p-1">
-              <h4 class="photo__title py-1 mb-4 text-center text-ellipsis text-sm sm:text-base font-semibold font-serif">
-                {{object.title}}</h4>
+              <h2 class="photo__title py-1 mb-4 text-center text-ellipsis sm:text-lg md:text-2xl font-semibold font-serif">
+                {{object.title}}
+              </h2>
               <div class="content-wrapper flex place-content-between  flex-wrap sm:space-x-1 ">
                 <small class="detail__date w-50 sm:flex-1 sm:text-left">
                   <i class="fa fa-clock mr-1"></i>
                   {{object.created|date:"M d, Y"}}
                 </small>
-                <small class="detail__user text-ellipsis nowrap sm:text-right sm:flex-1" style="max-width:calc(100% / 2);">
+                <span class="detail__user text-ellipsis nowrap sm:text-right sm:flex-1" style="max-width:calc(100% / 2);">
                   <i class="fa fa-user mr-1"></i>
                   <span class="text-truncated">{{object.gallery.user}}</span>
-                </small>
+                </span>
               </div>
             </div>
             <!-- -->
@@ -94,11 +95,11 @@
               <!-- photo details  -->
               <div class="photo-details wrapper flex place-content-between w-full">
                 <ul class="detail-info box--left flex  flex-col space-y-1">
-                  <li class="text-sm text-gray-600">
+                  <li class="text-gray-600">
                     <span class="font-medium">views:</span>
                     <span class="font-light ml-1">{{object.views}}</span>
                   </li>
-                  <li class="text-sm text-gray-600">
+                  <li class="text-gray-600">
                     <span class="font-medium">download:</span>
                     <span class="font-light ml-1">coming soon!</span>
                   </li>
