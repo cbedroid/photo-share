@@ -155,8 +155,21 @@ img {
 a, i, button, .btn {
   cursor: pointer !important; }
 
+svg {
+  display: inline-block; }
+
 form input[type="text"], form input[type="password"], form input[type="email"] {
   background-image: none !important; }
+form .input-shrink {
+  width: auto !important;
+  min-width: 2px !important; }
+form input.ghost-focus {
+  border: none !important;
+  outline: none !important; }
+form input.ghost-focus:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important; }
 
 /* End Base Css */
 /* Modules */

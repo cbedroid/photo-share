@@ -134,11 +134,26 @@ a,i,button,.btn
   +cross-browser(transition, all .3s ease-in-out)
 
 
+svg
+  display: inline-block
 // Firefox remover form  text field background images
 form
   input[type="text"],input[type="password"],input[type="email"]
     background-image: none !important
 
+  .input-shrink
+    width: auto  !important
+    min-width: 2px!important
+
+
+
+  input.ghost-focus
+    border: none !important
+    outline: none  !important
+    &:focus
+      border: none !important
+      outline: none !important
+      box-shadow: none !important
 
 
 /* End Base Css */
