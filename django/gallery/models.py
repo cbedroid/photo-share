@@ -85,7 +85,7 @@ class Category(models.Model):
         ("bgc-pink text-white", "pink & white"),
         ("bgc-purple text-white", "purple & white"),
     )
-    name = models.IntegerField(choices=CATEGORY_LIST, default=0, db_index=True)
+    name = models.IntegerField(choices=CATEGORY_LIST, default=0, unique=True, db_index=True)
     label = models.CharField(max_length=80, choices=CATEGORY_LABEL, default="gy")
     slug = models.SlugField(blank=False, editable=False, db_index=True)
 
@@ -101,13 +101,14 @@ class Category(models.Model):
 
     @classmethod
     def choicefield_filter(cls, lookup):
-        """Choicefield lookup filter"""
+        """Perform lookup on Category by either it's label or display label"""
         lookup = str(lookup)
-        reverse_dict_category = dict(map(reversed, Category.CATEGORY_LIST))
-        value = reverse_dict_category.get(lookup)
+        # reverse category label to its display label
+        display_labels = dict(map(reversed, Category.CATEGORY_LIST))
+        label = display_labels.get(lookup)
         if not lookup.isnumeric():
             lookup = None
-        return cls.objects.filter(Q(name=value) | Q(name=lookup))
+        return cls.objects.filter(Q(name=label) | Q(name=lookup))
 
     def __str__(self):
         return self.get_name_display()
@@ -128,7 +129,7 @@ class Gallery(models.Model):
     name = models.CharField(max_length=75, validators=[MinLengthValidator(3)])
     user = models.ForeignKey(User, related_name="gallery", on_delete=models.CASCADE)
     public = models.BooleanField(default=True)
-    slug = models.SlugField(blank=False, editable=False, db_index=True)
+    slug = models.SlugField(editable=False, db_index=True)
     category = models.ForeignKey(
         Category,
         related_name="gallery",
@@ -138,6 +139,8 @@ class Gallery(models.Model):
     )
     created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
+
+    REQUIRED_FIELDS = ["name"]
 
     class Meta:
         ordering = ["-created"]

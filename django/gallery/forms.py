@@ -90,4 +90,5 @@ GalleryFormSet = inlineformset_factory(
     form=PhotoForm,
     fields=["title", "image", "is_cover"],
     extra=4,
+    max_num=20,
 )
