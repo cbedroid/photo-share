@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django_social_share",
     "debug_toolbar",
     "rest_framework",
+    "rest_framework.authtoken",
     "profanity",
     "widget_tweaks",
     "crispy_forms",
@@ -188,7 +189,7 @@ JAZZMIN_SETTINGS = {
     # Title on the brand, and the login screen (19 chars max)
     "site_header": "PHOTO-SHARE",
     # square logo to use for your site, must be present in static files, used for favicon and brand on top left
-    "site_logo": "static/assets/images/PhotoShare-logo.png",
+    "site_logo": "assets/images/PhotoShare-logo.png",
     # Welcome text on the login screen
     "welcome_sign": "Welcome to Photo-Share",
     # Copyright on the footer
@@ -214,7 +215,9 @@ JAZZMIN_SETTINGS = {
         "gallery.photo": "fa fa-image",
         "gallery.rate": "fa fa-thumbs-up",
         "gallery.tag": "fa fa-tags",
-        "sites.sites": "fas fa-globe",
+        "sites.site": "fas fa-globe",
+        "socialaccount.socialaccount": "fa fa-thumbs-up",
+        "socialaccount.socialtoken": "fas fa-coins",
         "socialaccount.socialapp": "fab fa-app-store-ios",
         "users.user": "fas fa-users",
     },
@@ -236,6 +239,11 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"],
     "DEFAULT_PARSER_CLASSES": (
         "rest_framework.parsers.FormParser",
@@ -251,6 +259,7 @@ REST_FRAMEWORK = {
     },
     "NUM_PROXIES": 1,
 }
+
 
 # ********************* #
 # *** Email Service *** #
