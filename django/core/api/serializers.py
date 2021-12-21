@@ -1,16 +1,8 @@
-import re
-
 from django.contrib.auth import get_user_model
 from gallery.models import Category, Gallery, Photo
 from rest_framework import serializers
 
 User = get_user_model()
-
-
-def re_strip(value):
-    """Helper function to uniform and strip whitespace incoming data"""
-    value = value or ""
-    return re.sub(r"\s{1,}", " ", value).strip()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -51,6 +43,7 @@ class GallerySerializer(serializers.ModelSerializer):
     title = serializers.CharField(write_only=True)
     image = serializers.ImageField(max_length=None, allow_empty_file=False, write_only=True)
     public = serializers.BooleanField(default=True, initial=True)
+    is_cover = serializers.BooleanField(default=False, initial=False)
 
     # For Read Only - string representation of gallery photos
     photos = serializers.StringRelatedField(many=True, read_only=True)
@@ -63,13 +56,15 @@ class GallerySerializer(serializers.ModelSerializer):
     def get_uri(self, obj):
         """Get object reversed slug url"""
         request = self.context.get("request")
+        # see galley models for implementation
         return obj.get_api_url(request)
 
     def get_fields(self, *args, **kwargs):
-        # Override get_fields making image and title not required for PATCH and PUT
+        # Override get_fields making image and title field not required
+        #  for create and update methods
         fields = super(GallerySerializer, self).get_fields(*args, **kwargs)
-        request = self.context.get("request", None)
-        if request and getattr(request, "method", None) in ["PUT", "PATCH"]:
+        request = self.context.get("request")
+        if request and getattr(request, "method", None) in ["PUT", "PATCH", "POST"]:
             fields["image"].required = False
             fields["title"].required = False
         return fields
@@ -86,16 +81,15 @@ class GallerySerializer(serializers.ModelSerializer):
 
     def validate_category(self, value):
         """Validate Category is available"""
-        value = re_strip(str(value))
         category = Category.choicefield_filter(value)
-        if category.exists():
-            return category.first()
-        raise serializers.ValidationError("Sorry, that category does not exist!")
+        if not category.exists():
+            raise serializers.ValidationError("Sorry, that category does not exist!")
+        return category.first()
 
     def validate_name(self, value):
-        """Validate Albums name are not the same"""
-        instance = self.context.get("instance")
+        """Validate Gallery name are not the same"""
         qs = Gallery.objects.filter(name__iexact=value)
+        instance = self.context.get("instance")
         if instance:
             qs = qs.exclude(name__iexact=instance.name)
         if qs.exists():
@@ -105,9 +99,10 @@ class GallerySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         image = validated_data.pop("image", None)
         title = validated_data.pop("title", None)
+        is_cover = validated_data.pop("is_cover", None)
         gallery = Gallery.objects.create(**validated_data)
         if image and title:
-            Photo.objects.create(title=title, image=image, gallery=gallery)
+            Photo.objects.create(title=title, image=image, is_cover=is_cover, gallery=gallery)
         return gallery
 
     def partial_update(self, instance, data):
@@ -144,7 +139,6 @@ class PhotoSerializer(serializers.ModelSerializer):
     def validate_title(self, value):
         # Validate Photo titles are not the same
 
-        value = re_strip(value)
         qs = Photo.objects.filter(title__iexact=value)
         if self.instance:
             # if the object is the instance, then exclude it
