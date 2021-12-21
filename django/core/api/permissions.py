@@ -10,13 +10,15 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     Custom permission to only allow owners of an object to edit it.
     """
 
-    def has_object_permissions(self, request, view, obj):
+    def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
         # Write permissions are only allowed to the owner of the snippet.
 
+        # If methods  in Create or Update methods
         if isinstance(obj, Gallery):
-            return obj.user == request.user
+            perm = obj.user == request.user
+            return perm
         elif isinstance(obj, Photo):
             # check permission on gallery instead of photo
             # because the photo doesn't have a user,
@@ -24,6 +26,8 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return obj.gallery.user == request.user
         elif isinstance(obj, User):
             return obj == request.user
+
+        return False
 
 
 class IsAuthOrStaff(permissions.BasePermission):

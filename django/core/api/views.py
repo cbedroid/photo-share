@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from gallery.models import Gallery, Photo
+from rest_framework.generics import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 
+from .permissions import IsOwnerOrReadOnly
 from .serializers import *
 
 user = get_user_model()
@@ -11,6 +13,7 @@ user = get_user_model()
 class GalleryViewSet(ModelViewSet):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         user = self.request.user
@@ -20,6 +23,16 @@ class GalleryViewSet(ModelViewSet):
             # include his/her private galleries as well.
             return Gallery.objects.filter(Q(public=True) | Q(user=user))
         return Gallery.objects.filter(public=True)
+
+    def get_object(self):
+        # NOTE: Added get_object permission to here to alter HTTP response.
+        #      Changed status 403 to 404 to hide that the gallery even exists.
+        #      This can help protect against hackers by disgusing that gallery is not found.
+        #
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        perm = self.check_object_permissions(self.request, obj)
+        print("detail obj", obj, perm)
+        return obj
 
     def get_serializer_context(self, **kwargs):
         context = super().get_serializer_context(**kwargs)
