@@ -7,6 +7,12 @@ module.exports = {
   purge: ["../templates/**/*.html"],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
+    minHeight: {
+      '90': '90vh',
+      '80': '80vh',
+      '75': '75vh',
+      '50': '50vh'
+    },
     container: {
       padding: {
         DEFAULT: '1rem',
