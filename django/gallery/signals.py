@@ -12,10 +12,16 @@ def resizePhoto(sender, created, instance, **kwargs):
 
 
 @receiver(post_save, sender=Photo)
-def set_gallery_cover(sender, instance, **kwargs):
+def set_gallery_cover(sender, created, instance, **kwargs):
     """Set album cover from photos on save"""
-    photos = instance.gallery.photos.filter(is_cover=True).exclude(pk=instance.id)
-    if instance.is_cover:
+    photos = instance.gallery.photos
+    if created and photos.count() == 1:
+        # Save first and only photo as the gallery album cover
+        photo = photos.first()
+        instance.is_cover = True
+        instance.save()
+    elif instance.is_cover:
+        photos = photos.filter(is_cover=True).exclude(pk=instance.id)
         for photo in photos:
             photo.is_cover = False
             photo.save()
