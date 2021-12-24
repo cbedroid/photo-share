@@ -1,0 +1,159 @@
+@import 'variables'
+@import 'mixins'
+
+/* Base Css */
+*, *::before, *::after
+  +cross-browser(box-sizing, border-box)
+
+html
+  overflow-x: hidden
+
+body
+  width: 100%
+  height: 100%
+  font-family: "Montserrat", sans-serif
+  font-size: 16px
+  line-height: 1.5
+  color: #333
+  background: #fff
+  margin: 0
+  scroll-behavior: smooth
+  +cross-browser(font-smoothing, antialiase)
+  +cross-browser(text-rendering, optimizeLegibility)
+
+.disabled
+  pointer-events: none
+.bgc
+  /* Create all bootstrap background color */
+  +bootstrap-background-color()
+
+.scrollbar
+  &--hz::-webkit-scrollbar
+    height: 2px
+    transition: all 300ms ease-in-out
+  &--hz:hover::-webkit-scrollbar
+    height: 2px
+    background: grey
+  &--vt::-webkit-scrollbar
+    transition: all 300ms ease-in-out
+    width: 2px
+  &--vt:hover::-webkit-scrollbar
+    width: 2px
+    background: grey
+
+::-webkit-scrollbar
+  width: 8px
+  height: 8px
+  &-track
+    background: lightgray
+  &-thumb
+    background: darkgray
+    width: 3px
+    height: 3px
+    border-radius: 10px
+
+/* Typography */
+@for $s from 1 through 6
+  $i: 6 - $s
+  $header: h#{$i}
+  #{$header}
+    font-size: #{$s / 2.5 + .5}rem
+
+h1,h2,h3,h4,h5,h6,p
+  margin: 0
+
+.text-responsive
+  font-size: clamp(28px, 5vw, 52px) !important
+
+.fw-bold
+  font-weight: 700
+
+.fw-med
+  font-weight: 500
+
+.fw-light
+  font-weight: 300
+
+.text__sm
+  font-size: 14px
+
+.text__lg
+  font-size: 26px
+  font-weight: 500
+
+.text-muted
+  color: #6c757d
+
+.text__secondary
+  color: $text-secondary
+
+.text__accent
+  color: $text-accent
+
+.text-ellipsis
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+  max-width: 100%
+
+.shadow
+  +cross-browser(box-shadow, 0 0 12px rgba(0,0,0,.25) !important)
+  &-sm
+    +cross-browser(box-shadow, 0 0 16px rgba(0,0,0,.25) !important)
+  &-md
+    +cross-browser(box-shadow, 0 0 24px rgba(0,0,0,.3) !important)
+  &-lg
+    +cross-browser(box-shadow, 0 0 32px rgba(0,0,0,.3) !important)
+
+.text-shadow-dark
+  text-shadow: 2px 5px 5px rgba(0,0,0,.8)
+
+.text-shadow-md
+  text-shadow: 2px 5px 5px rgba(0,0,0,.5)
+
+.text-shadow-lt
+  text-shadow: 2px 5px 5px rgba(0,0,0,.3)
+
+/* Typography */
+
+ul
+  padding: 0
+
+li
+  list-style: none
+
+a, a:hover
+  text-decoration: none
+  color: inherit
+
+img
+  cursor: pointer
+
+a,i,button,.btn
+  cursor: pointer !important
+  +cross-browser(transition, all .3s ease-in-out)
+
+
+svg
+  display: inline-block
+// Firefox remover form  text field background images
+form
+  input[type="text"],input[type="password"],input[type="email"]
+    background-image: none !important
+
+  .input-shrink
+    width: auto  !important
+    min-width: 2px!important
+
+
+
+  input.ghost-focus
+    border: none !important
+    outline: none  !important
+    &:focus
+      border: none !important
+      outline: none !important
+      box-shadow: none !important
+
+
+/* End Base Css */

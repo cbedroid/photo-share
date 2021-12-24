@@ -17,10 +17,12 @@ if [ -d "venv" ]; then
   source venv/bin/activate
 fi;
 
-
 python manage.py makemigrations
 python manage.py migrate
+python manage.py createsuper --noinput
+python manage.py loaddata categories
+python manage.py loaddata galleries
+python manage.py loaddata photos
 python manage.py collectstatic --noinput
-
 
 exec "$@"

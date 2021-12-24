@@ -1,15 +1,11 @@
-from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.urls import re_path
 
+from . import views
+
+app_name = "user"
+# fmt: off
 urlpatterns = [
-    path(
-        "login/",
-        auth_views.LoginView.as_view(template_name="account/login.html"),
-        name="account_login",
-    ),
-    path(
-        "logout/",
-        auth_views.LogoutView.as_view(),
-        name="account_logout",
-    ),
+    re_path(r"^profile/update/(?P<slug>.*)/$", views.UserUpdateView.as_view(), name="user-update"),
+    re_path(r"^account/delete/(?P<slug>.*)/$", views.UserAccountDeleteView.as_view(), name="user-delete"),
 ]
+# fmt: on

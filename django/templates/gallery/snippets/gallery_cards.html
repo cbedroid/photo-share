@@ -1,0 +1,51 @@
+<section id="gallery-collection" class="gallery-card-deck my-5 py-5">
+  <ul class="gallery-list grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xxl:grid-cols-8 gap-4 sm:gap-3 lg:gap-4">
+    {% for gallery in galleries %}
+    <li class="gallery__card  relative shadow" style="height:300px;max-width:500px;">
+      <!--card image overlay -->
+      <img class="block rounded-lg w-full h-full p-0" src="{{gallery.cover_photo}}" alt="{{gallery}} {{gallery.cover_photo}}">
+      <div class="image-overlay absolute rounded-lg top-0 left-0 overlay--bgdark overlay--hovershow text-white w-full h-full">
+        <div class="overlay__content grid grid-flow-rows w-fit p-2">
+          <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
+            <a class="text-ellipsis" href="{{gallery.get_absolute_url}}"><b>{{gallery}}</b></a>
+            <h6 class="mt-1"><span class="badge badge--pill rounded-full {{gallery.category.label}} p-2">{{gallery.category.get_name_display}}</span></h6>
+          </div>
+          <div class="flex-center text-xs sm:text-base mx-1 overflow-hidden">
+            <a class="text-shadow p-3" href="{{gallery.get_absolute_url}}"><b>view gallery</b></a>
+          </div>
+          <div class="flex-box flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
+            <div class="flex-box--left flex place-items-center space-x-2">
+              <span>{{gallery.photos.count}}</span>
+              <i class="fas fa-images"></i>
+            </div>
+            <div class="flex-box--right flex place-items-center space-x-2 font-italic text-ellipsis">
+              <img class="inline rounded-full w-6 h-6" src="{{gallery.user.get_profile_pic}}" alt="user">
+              <span class="font-semibold">
+                {{gallery.user.username}}
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- -->
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% if not galleries %}
+  <div class="mx-auto">
+    <div class="content-empty text-center px-1 max-w-full">
+      <h1 class="font-bold text-3xl">No gallery found {% if by_search %}for <span class="mt-2 text-gray-400">"{{ by_search }}"</span>{% endif %}</h1>
+      {% if not object %}
+      <p class="my-3">Be the first to create this gallery</p>
+      {% else %}
+      <p class="my-3">Create a related gallery for this category</p>
+      {% endif %}
+      <div class="block w-56 mt-4">
+        <a class="btn  btn-warning  border-yellow-400 text-yellow-400 bg-transparent px-5 shadow-lg  hover:text-white  hover:border-yellow-400 hover:bg-yellow-400 duration-300"
+          href="{% url 'gallery:gallery-create' %}">Create Gallery
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</section>

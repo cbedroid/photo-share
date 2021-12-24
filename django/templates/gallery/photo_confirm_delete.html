@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<section id="photo-deletion" class="clear-top bg-gray-50 h-screen">
+  <div class="content-section p-2 px-4">
+    <form method="POST">
+      {% csrf_token %}
+      <fieldset class="form-group p-2">
+        <legend class="content__title content-title mb-4">
+          <i class="fa fa-photo sm:text-3xl"></i>
+          Delete Photo
+        </legend>
+        <hr>
+        <div class="confirmation-text text-2xl font-semibold font-serif text-gray-500 text-opacity-75 mt-4">
+          <h2>Are you sure you want to delete this photo? </h2>
+          <h4>
+            <span>&ldquo;</span>
+            <span class="text-red-500 text-shadow">{{object}}</span>
+            <span>&rdquo;</span>
+          </h4>
+        </div>
+        <div class="content__card bg-white shadow-xl mt-4 py-8 px-2" style="width:fit-content">
+          <h4 class="py-2 font-semibold font-serif text-center">{{ object.title }}</h4>
+          <div class="card__body bg-black bg-opacity-75 p-1">
+            <img src="{{object.image.url}}" alt="{{object.title}} image" class="img-fluid" style="max-height:280px">
+          </div>
+          <div class="card__footer mt-2">
+            <button class="cta cta--outline-red" type="submit">Yes, Delete</button>
+            <a class="cta cta--outline-grey" href="{{object.gallery.get_absolute_url}}">Cancel</a>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
+{% endblock content %}

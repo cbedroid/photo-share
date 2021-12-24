@@ -1,0 +1,283 @@
+
+/* Modules */
+// pagination
+.page-item
+  background: #fff
+  min-width: 25px
+  min-height: 25px
+  width: auto
+  height: auto
+  text-align: center
+  border: 1px solid #c3c3c3
+  font-weight: 600
+
+  .page-link
+    display: grid
+    padding: 4px
+    place-items: center
+    width: 100%
+    height: 100%
+    transition: .3s ease-in-out
+    &.active
+      background: $color-cyan
+
+    &.page-number
+      min-width: 35px
+
+  &.page-prev
+    border-radius: 7px 0 0 7px
+  &.page-next
+    border-radius: 0 7px 7px 0
+
+  &.page-prev, &.page-next
+    &.disabled
+      background: lightgray
+      opacity: .85
+      color: gray
+
+  &:hover:not(.disabled)
+    background: $color-blue
+    color: #fff
+
+.pos-relative
+  position: relative
+
+.group-vert-center
+  *
+    vertical-align: center
+
+.clear-top
+  margin-top: 30px
+
+.theme-ws
+  background: whitesmoke
+
+.flex-around
+  display: flex
+  justify-content: space-around
+  align-items: center
+  width: 100%
+  vertical-align: middle
+
+.flex-between
+  display: flex
+  justify-content: space-between
+  align-items: center
+  vertical-align: middle
+  width: 100%
+
+.flex-evenly
+  display: flex
+  justify-content: space-between
+  align-items: center
+  vertical-align: middle
+
+.flex-center
+  display: flex
+  justify-content: center
+  align-items: center
+  vertical-align: middle
+  width: 100%
+
+.dropdown
+  transition: all ease-in-out
+
+.dropdown.expanded
+  display: flex
+  flex-direction: row
+  *
+    padding: 2px 5px
+
+form
+  input[type="text"], input[type="email"], input[type="password"],
+    color: #000
+    padding: 2px 4px
+    outline: 1px solid transparent
+    border: 1px solid #c3c3c3
+    border-radius: 2px
+    &:focus
+      box-shadow: 0 0 4px rgb(12,202,240)
+
+.content-title
+  font-size: 1.425rem
+  font-family: "Lato", sans-serif
+  font-weight: 900
+
+.card
+  padding: 6px
+  border: 1px solid rgba(211,204,204,.3)
+  border-radius: 2px
+
+
+.card-img
+  // Gallery main image container
+  display: block
+  min-width: 200px
+  max-width: 450px
+  max-height: 325px
+  width: auto
+  height: auto
+
+.overlay
+  display: block
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 500
+  &--bgdrk
+    background: rgba(0, 0, 0, 0.3)
+  &--hovershow .overlay__content
+    visibility: hidden
+    background: rgba(0,0,0,.5)
+  &--hovershow:hover .overlay__content
+    height: 100%
+    visibility: visible
+
+.col-wrapper
+  display: block
+  height: 100%
+  padding: 10px 15px
+  margin-left: 5px
+  margin-right: 5px
+
+.img-wrapper
+  max-width: 100%
+  overflow: hidden
+  img
+    width: 100%
+  &--h200
+    max-height: 200px
+  &--h300
+    max-height: 300px
+  &--h400
+    max-height: 400px
+
+.img-full
+  width: 690px
+  height: 400px
+
+.img__upload-wrapper
+  img
+    display: block
+    width: 300px
+
+.trans-300
+  transition: all 300ms ease-in-out
+
+.social-share
+  display: grid
+  place-items: center
+  &__content
+    padding: 25px 35px
+  &__img
+    @extend .img-full
+
+  .share-grid
+    place-content: center
+    .share-card .share__icon
+      display: grid
+      place-items: center
+      border-radius: 4px
+      min-width: 110px
+      font-size: 3rem
+      padding: 4px 6px
+      color: #fff
+      transition: .3s ease-in-out
+      &:hover
+        color: inherit
+      p
+        text-align: center
+        font-size: 1.5rem
+
+.badge
+  box-shadow: 3px 2px 3px rgba(14, 13, 13, 0.133)
+  box-sizing: border-box
+  cursor: pointer
+  text-align: center
+  font-weight: 700
+  text-align: center
+  +cross-browser(transition,.3s ease-in-out)
+  &:hover
+    box-shadow: 3px 2px 6px rgba(0,0,0,.3)
+  &--shw
+    &:hover
+      box-shadow: 3px 2px 20px rgba(255,255,255,.2)
+
+.cta
+  background: #fff
+  display: inline-block
+  cursor: pointer
+  padding: 8px
+  border-radius: 5px
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+  font-weight: 600
+  letter-spacing: .115ch
+  +cross-browser(transition, all .3s ease-in-out)
+  text-align: center
+  vertical-align: center
+  box-shadow: 2px 2px 12px rgba(0,0,0,.2)
+  +bootstrap-normal-button()
+  +bootstrap-outline-button()
+  &--full-block
+    display: flex
+    align-items: center
+    justify-content: center
+    font-weight: 700
+    font-size: 1.25rem
+    cursor: pointer
+    min-width: 30px
+    min-height: 30px
+    width: 100%
+    padding: 2px 4px
+    text-align: center
+
+  &--lg-full
+    display: flex
+    align-items: center
+    justify-content: center
+    font-weight: 9700
+    font-size: 1.25rem
+    cursor: pointer
+    min-width: 100px
+    min-height: 55px
+    padding: 2px 4px
+    text-align: center
+  &--px-plus
+    *
+      padding: 4px 24px
+
+  &--navigation
+    transition: 300ms ease-in-out
+    &:hover
+      @extend .text__accent
+      box-shadow: 0px 0px 8px rgba(255,255,255,.2)
+  &:hover
+    box-shadow: 0px 0px 12px rgba(0,0,0,.2)
+
+.content-container
+  display: block
+  width: 100%
+
+.content-empty
+  display: grid
+  place-items: center
+  width: 100vw
+  height: 100%
+  color: gray
+  padding: 30px 8px
+
+
+
+.photo-list
+  &.collapse
+    visibility: hidden
+    opacity: 0
+    height: 0
+    transition: visibility 0s, opacity 0.2s ease-in-out
+
+.hover-dark
+  &:hover
+    background: $text-primary
+/* End Modules */

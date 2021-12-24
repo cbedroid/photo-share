@@ -1,89 +1,118 @@
 {% load static %}
 <div id="site-navigation">
-  <nav id="main-nav" class="p-1 sm:py-4 sm:px-8">
-    <div class="inner-nav flex flex-col sm:flex-row sm:items-center sm:justify-between">
-      <div class="nav__brand flex justify-between items-center sm:flex-none border-bottom">
-        <img id="site-logo" src="{% static 'assets/PhotoShare-logo.png' %}" alt="Photo Share logo">
-        <a class="nav__brand-title" href="{% url 'core:index' %}">
-          <span class="text-2xl font-extrabold text__accent">PhotoShare</span>
-        </a>
+  <div class="navbar flex shadow-lg bg-neutral text-neutral-content">
+    <!-- nav left-->
+    <div class="nav nav--left flex-1">
 
-        <!-- Mini Nav Secondary Menu-->
-        <div class="flex-wrapper flex-none  invisible mobile-show md:hidden trans-400" data-scroll-show="true">
-          <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-          <div x-data="{ dropdownOpen: false }" class="relative">
-            <button @click="dropdownOpen = !dropdownOpen" class="relative z-10 block rounded-md bg-white p-2 focus:outline-none">
-              <span class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-                menu
-                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </span>
-            </button>
-            <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10"></div>
-            <div x-show="dropdownOpen" class="absolute right-2 pb-3 w-80 text-white bg-gray-700 divide-y-4 divide-gray-300 rounded-md shadow-xl z-20" style="z-index: 2000;">
-              <div class="nav-menu">
-                <h4 class="menu-title text-shadow font-extrabold bg-white text-black px-2">Menu</h4>
-                <ul class="block space-y-3 my-2 px-2">
-                  <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Stories</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Capabilites</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Company</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-                </ul>
-              </div>
-              <div class="nav-menu nav--sub-menu pb-3">
-                <h4 class="menu-title text-shadow font-extrabold bg-white text-black px-2" >Account</h4>
-                <ul id="mini-menu" class="mini-nav_secondary-menu nav__list space-y-3  mb-2 p-2 trans-300">
-                  <li><p class="nav-link font-semibold text-lg text__accent sm:px-6">{{request.user.username}}</p></li>
-                  <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
-                  {% if request.user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
-                  {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
-                  {% endif %}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- -->
+      <div class="flex-none">
+        <label for="aside_checkbox">
+          <span class="btn btn-square btn-ghost">
+            <svg class="inline-block toggler toggler-bar w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <svg class="hidden toggler toggler-times w-6 h-6 stroke-current" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </span>
+        </label>
       </div>
-      <ul class="nav__list collapse text__sm sm:flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 trans-300" data-expanded="false" data-target="nav-list">
-        <li class="nav-item active"><a class="nav-link" aria-current="page" href="{% url 'core:index' %}">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Stories</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Capabilites</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Company</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
-      </ul>
-
-      <ul class="nav__list collapse nav__account mt-2 sm:mt-0 sm:flex flex-col sm:flex-row sm:space-x-2 trans-300" data-expanded="false" data-target="nav-list">
-        {% if request.user.is_authenticated %}
-          <li><p class="nav-link">{{request.user.username}}</p></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
-        {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
-        {% endif %}
-      </ul>
+      <div class="nav-brand text-lg font-bold">
+        <a class="nav__brand-title hidden sm:flex place-items-center " href="{% url 'core:index' %}">
+          <img id="site-logo" src="{% static 'assets/images/PhotoShare-logo.png' %}" alt="Photo Share logo">
+          <span class=" hidden lg:inline lg:text-2xl font-extrabold text__accent">PhotoShare</span>
+        </a>
+      </div>
     </div>
-  </nav>
-  <!-- Mini Nav-->
-  <div id="mini-nav">
-    <div class="flex justify-between sm:justify-start items-center w-full p-2">
-      <label for="aside_checkbox" class="px-4 ">
-        <i id="aside_menu_btn" class="fa fa-bars" style="font-size:22px"></i>
-      </label>
-      <!-- Navigation Search-->
-      <form action="/">
-        <div class="search-tray search-tray--icon search-tray--collapse">
-          <input type="text" class="search_bar" list="category-list" placeholder="Search for a gallery &#128269" name="q" aria-label="search bar">
-          <button type="submit">
-            <i class="search-icon fa fa-search"></i>
-          </button>
+    {% if request.user.is_authenticated %}
+    <!-- nav middle -->
+    <div class="nav nav--middle flex-1 px-5">
+      <!-- Search bar -->
+      <div class="search-bar w-24  md:w-80 lg:w-full">
+        <form class="flex input input-ghost  h-10" action="{% url 'gallery:gallery-list' %}">
+          <div class="form-control  flex ">
+            <button type="submit" class="w-4 h-full inline ">
+              <svg class="inline-block text-gray-400 w-4 h-full m-auto align-middle stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+          </div>
+          <input class="inline-block bg-transparent input-shrink ghost-focus p-0  text-gray-200 focus:text-gray-100" type="text" name="q" placeholder="Search for free photos" aria-label="search bar">
+        </form>
+      </div>
+    </div>
+    <!-- end search bar -->
+    {% endif %}
+
+    <!-- Navbar right-->
+    <div class="nav nav--right flex-1 place-content-end">
+      <div class="hidden  md:flex px-2 mx-2 navbar-center">
+        <div class="flex items-stretch">
+          <a class="btn btn-ghost btn-sm rounded-btn" href="{% url 'core:index' %}">Home</a>
+          <a href={% url 'gallery:gallery-list' %} class="btn btn-ghost btn-sm rounded-btn">Gallery</a>
+          {% if not request.user.is_authenticated %}
+          <a class="btn btn-ghost btn-sm rounded-btn">About</a>
+          <a class="btn btn-ghost btn-sm rounded-btn">Contact</a>
+          {% endif %}
         </div>
-      </form>
+      </div>
+      {% if request.user.is_authenticated %}
+      <!-- nav cta -->
+      <div class="flex-none">
+        <a class="btn btn-square btn-ghost" href="{% url 'gallery:gallery-create' %}">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+        </a>
+      </div>
+      <!-- nav noti bell-->
+      <div class="flex-none">
+        <button class="btn btn-square btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+        </button>
+      </div>
+      <!---->
+      <!-- nav account -->
+      <div class="flex-none pr-2">
+        <div class=" avatar dropdown dropdown-left">
+          <div class="rounded-full w-10 h-10 m-1" tabindex="0">
+            <img src="{{request.user.get_profile_pic}}" alt="user avatar">
+          </div>
+          <ul tabindex="0" class="p-2 shadow menu dropdown-content top-10 bg-base-100 text-gray-600 font-semibold rounded-box w-52" style="top:50px;right:20px">
+            <li>
+              <a class="text-sm" href="{{request.user.get_update_url}}">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span class="ml-1">Update Account</span>
+              </a>
+            </li>
+            <li>
+              <a class="text-sm" href="{%url 'account_logout'%}">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <span class="ml-1">Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      {% else %}
+      <a class="btn bg-gradient-to-r from-yellow-400  to-[#FF6E0A]" href="{% url 'account_login' %}">
+        <span class="animate-bounce rounded-full font-bold  w-2 h-2 bg-purple-400 mr-2"></span>
+        Get Started
+      </a>
+      {% endif %}
     </div>
     <!-- -->
   </div>
-  <!-- End Mini Nav-->
 </div>
