@@ -86,7 +86,7 @@ class Category(models.Model):
         ("bgc-purple text-white", "purple & white"),
     )
     name = models.IntegerField(choices=CATEGORY_LIST, default=0, unique=True, db_index=True)
-    label = models.CharField(max_length=80, choices=CATEGORY_LABEL, default="gy")
+    label = models.CharField(max_length=80, choices=CATEGORY_LABEL, default="bgc-black text-white")
     slug = models.SlugField(blank=False, editable=False, db_index=True)
 
     class Meta:
@@ -147,7 +147,7 @@ class Gallery(models.Model):
         unique_together = ["name", "user"]
         verbose_name_plural = "Galleries"
 
-    def save(self, commit=True, *args, **kwargs):
+    def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
