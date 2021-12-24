@@ -105,7 +105,7 @@ class BaseObjectUtils(object):
         self.test_user_2 = get_object_or_404(User, pk=2)
 
         # # Test Category
-        self.test_category = Category.objects.get(pk=1)
+        self.test_category = Category.objects.first()
 
         # # Test Galleries
         self.test_gallery_1 = get_object_or_404(Gallery, pk=1)

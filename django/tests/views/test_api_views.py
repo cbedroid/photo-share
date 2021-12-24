@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from gallery.models import Gallery
-from rest_framework.reverse import reverse as api_reverse
+from model_bakery import baker
 from rest_framework.test import APIClient, APITestCase
 from tests.base_utils import BaseObjectUtils
 
@@ -14,6 +15,7 @@ class TestGalleryViews(BaseObjectUtils, APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.client.login(**self.user_1_cred)
+        self.create_test_objects()
         self.test_user = User.objects.get(pk=1)
         self.test_user_2 = User.objects.get(pk=2)
 
@@ -35,7 +37,7 @@ class TestGalleryViews(BaseObjectUtils, APITestCase):
         self.assertEqual(len(results_pks), 1)
 
     def test_gallery_lookup_404_if_object_not_exist(self):
-        url = api_reverse("api:gallery-detail", kwargs={"pk": "100000000"})
+        url = reverse("api:gallery-detail", kwargs={"pk": "100000000"})
         client = APIClient()
         response = client.get(url, format="json")
         self.assertEqual(response.status_code, 404)
@@ -54,21 +56,172 @@ class TestGalleryViews(BaseObjectUtils, APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-        # # Test total numbers of Gallery available
-        # url = reverse("api:gallery-list")
-        # response = self.client.get(url, format="json")
-        # self.assertEqual(response.status_code, 200)
-        # result_ids = [dict(x)["id"] for x in response.data["results"]]
-        # self.assertNotIn(gallery.pk, result_ids)
-
     def test_gallery_create_method_is_successful(self):
         data = {
-            "name": "new_test_gallery",
-            "category": "1",
+            "name": "some gallery",
             "public": True,
-            "title": "fake_image",
-            "image": self.create_fake_image("fake_image"),
+            "category": self.test_category.name,
+            "title": "images",
+            "image": self.create_fake_image("images.jpg"),
         }
-        url = api_reverse("api:gallery-list")
-        response = self.client.post(url, data=data, format="multipart")
+        url = reverse("api:gallery-list")
+        response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 201)
+
+    def test_gallery_create_method_fails_if_user_not_logged_in(self):
+        data = {
+            "name": "some gallery",
+            "public": True,
+            "category": self.test_category.name,
+            "title": "images",
+            "image": self.create_fake_image("images.jpg"),
+        }
+        url = reverse("api:gallery-list")
+
+        # anonymous user
+        client = APIClient()
+        response = client.post(url, data=data, format="multipart")
+        self.assertEqual(response.status_code, 401)
+
+    def test_gallery_create_method_fails_when_gallery_name_is_NOT_UNIQUE(self):
+        data = {
+            "name": self.test_gallery_1.name,
+            "public": True,
+            "category": self.test_category.name,
+            "title": "images",
+            "image": self.create_fake_image("images.jpg"),
+        }
+        url = reverse("api:gallery-list")
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 400)
+
+        # Test response error
+        self.assertEqual(str(response.data["name"][0]), "Sorry, that gallery name is already taken")
+
+    def test_gallery_create_method_fails_if_photo_is_not_added(self):
+        data = {
+            "name": "testing_gallery_1",
+            "category": self.test_category.name,
+            "title": "images",
+        }
+        url = reverse("api:gallery-list")
+        response = self.client.post(url, data=data, format="multipart", follow=True)
+        self.assertEqual(response.status_code, 400)
+
+        # Test response error
+        self.assertEqual(str(response.data["image"][0]), "No file was submitted.")
+
+    def test_gallery_patch_partial_update_method_is_successful(self):
+        gallery = baker.make("gallery.gallery", user=self.test_user, name="some gallery", category=self.test_category)
+        gallery.save()
+
+        # updated data
+        data = {
+            "name": "Updated Gallery Name",
+            "public": False,
+        }
+
+        url = reverse("api:gallery-detail", kwargs={"pk": gallery.pk})
+        response = self.client.patch(url, data=data, format="multipart")
+
+        # Test gallery update
+        self.assertEqual(response.status_code, 200)
+
+        # Test gallery name is now updated
+        gallery.refresh_from_db()
+        self.assertEqual(response.data["name"], gallery.name)
+        self.assertFalse(gallery.public)
+
+    def test_gallery_update_method_403_when_modified_by_non_authorized_user(self):
+        # Test unauthorized user can not update gallery
+        url = reverse("api:gallery-detail", kwargs={"pk": self.test_gallery_1.pk})
+        data = {
+            "name": "another_name",
+            "category": self.test_category.name,
+        }
+
+        # Log in with user 2 (unauthorized user)
+        client = APIClient()
+        client.login(**self.user_2_cred)
+        self.assertEqual(self.test_gallery_1.user, self.test_user_1)
+
+        # Test patch method throw permission deneied 403
+        response = client.patch(url, data=data, format="json")
+        self.assertEqual(response.status_code, 403)
+
+    def test_gallery_destroy_method_is_successful(self):
+        gallery = baker.make("gallery.Gallery", name="some_gallery", user=self.test_user, category=self.test_category)
+
+        url = reverse("api:gallery-detail", kwargs={"pk": gallery.pk})
+        # Test gallery was deleted successfully
+        response = self.client.delete(url, format="json")
+        self.assertEqual(response.status_code, 204)  # 204/MODIFIED
+
+    def test_gallery_delete_method_403_when_modified_by_non_authorized_user(self):
+        # Test unauthorized user can not update gallery
+        url = reverse("api:gallery-detail", kwargs={"pk": self.test_gallery_1.pk})
+
+        # Log in with user 2 (unauthorized user)
+        client = APIClient()
+        client.login(**self.user_2_cred)
+        self.assertEqual(self.test_gallery_1.user, self.test_user_1)
+
+        # Test deletion/destroy method 403
+        response = client.delete(url, format="json")
+        self.assertEqual(response.status_code, 403)
+
+
+class TestUserViews(BaseObjectUtils, APITestCase):
+    fixtures = ["test_fixtures"]
+
+    def setUp(self):
+        self.client = APIClient()
+        self.client.login(**self.user_1_cred)
+        self.create_test_objects()
+        self.test_user = User.objects.get(pk=1)
+
+    def test_user_basic_authentication_method(self):
+        client = APIClient()
+        url = reverse("api:user-list")
+
+        data = {
+            "email": "some_testemail@test.com",
+            "username": "whocares",
+            "password": "supersecretpassword1029",
+        }
+
+        response = client.post(url, data=data)
+        self.assertEqual(response.status_code, 201)
+        get_object_or_404(User, email=data["email"])
+
+    def test_user_creation_fails_when_email_is_taken(self):
+        client = APIClient()
+        url = reverse("api:user-list")
+
+        data = {
+            "email": self.test_user_1.email,
+            "username": "whocares",
+            "password": "supersecretpassword1029",
+        }
+
+        response = client.post(url, data=data)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(str(response.data["non_field_errors"][0]), "sorry, that email or username is already taken!")
+
+        user = User.objects.filter(username=data["username"])
+        self.assertFalse(user.exists())
+
+    def test_user_creation_fails_when_username_is_taken(self):
+        client = APIClient()
+        url = reverse("api:user-list")
+
+        data = {
+            "email": "some_rando_email@test.com",
+            "username": self.test_user_1.username,
+            "password": "supersecretpassword1029",
+        }
+
+        response = client.post(url, data=data)
+        self.assertEqual(response.status_code, 400)
+        user = User.objects.filter(email=data["email"])
+        self.assertFalse(user.exists())

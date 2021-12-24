@@ -41,9 +41,9 @@
     "model": "gallery.category",
     "pk": 1,
     "fields": {
-      "name": 0,
-      "label": "gy",
-      "slug": "general"
+        "name": 0,
+       "label": "bgc-grey text-white",
+       "slug": "general"
     }
   },
 {
