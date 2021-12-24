@@ -14,8 +14,7 @@ from django.views.generic import (
 )
 from django.views.generic.list import MultipleObjectMixin
 
-from .forms import GalleryForm, GalleryFormSet
-from .mixins import UserAccessPermissionMixin
+from .mixins import GalleryFormMixin, UserAccessPermissionMixin
 from .models import Category, Gallery, Photo
 
 
@@ -81,72 +80,11 @@ class GalleryListView(ListView):
         return context
 
 
-class GalleryFormMixin(LoginRequiredMixin):
-    model = Gallery
-    form_class = GalleryForm
-    formset_class = GalleryFormSet
-    login_url = reverse_lazy("account_login")
-    template_name = "gallery/gallery_form.html"
-    object = None
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.method == "GET":
-            context["form"] = self.form_class(instance=self.object)
-            context["formset"] = self.formset_class(
-                prefix="photo",
-                queryset=Gallery.objects.none(),
-            )
-        else:
-            context["form"] = self.form_class(instance=self.object)
-            context["formset"] = self.formset_class(
-                self.request.POST,
-                self.request.FILES,
-                instance=self.object,
-                prefix="photo",
-            )
-        return context
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["request"] = self.request
-        kwargs["gallery_update_obj"] = self.object
-        return kwargs
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context.get("formset")
-
-        # Set gallery owner and retrieve the gallery object from form
-        form.instance.user = self.request.user
-        self.object = form.save(commit=False)
-
-        # Verify all form and formset are valid before saving
-        if not form.is_valid() or not formset.is_valid():
-            context["form"] = form
-            return super().form_invalid(form)
-
-        # Save gallery form
-        self.object = form.save()
-
-        if formset.has_changed():
-            # Iterate through formset and validated each photo fields individually
-            for subform in formset:
-                subform.full_clean()
-                if not subform.is_valid():
-                    return super().form_invalid(form)
-                title = subform.cleaned_data.get("title")
-                image = subform.cleaned_data.get("image")
-                # Only save photo if it has both an image and title
-                if image and title:
-                    subform.instance.gallery = self.object
-                    subform.save()
-        return super().form_valid(form)
-
-
 class GalleryCreateView(GalleryFormMixin, CreateView):
     model = Gallery
     login_url = reverse_lazy("account_login")
+    template_name = "gallery/gallery_form.html"
+    object = None
 
     def get_success_url(self, *args, **kwargs):
         return self.object.get_absolute_url()
@@ -154,6 +92,9 @@ class GalleryCreateView(GalleryFormMixin, CreateView):
 
 class GalleryUpdateView(GalleryFormMixin, UserPassesTestMixin, UpdateView):
     model = Gallery
+    login_url = reverse_lazy("account_login")
+    template_name = "gallery/gallery_form.html"
+    object = None
 
     def test_func(self):
         """Test whether the Gallery belongs to the current user"""
