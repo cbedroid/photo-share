@@ -1,0 +1,61 @@
+{
+    "editor.fontSize": 15,
+    "editor.tabSize": 2,
+    "[python]": {
+        "editor.tabSize": 4,
+    },
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Path": "/usr/local/bin/flake8",
+    "python.formatting.provider": "black",
+    "python.formatting.blackPath": "/usr/local/bin/black",
+    "python.formatting.blackArgs": [
+        "--line-length", "120"
+    ],
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.pythonPath": "${workspaceFolder}/django/venv/bin/python3",
+    "python.pipenvPath": "${workspaceFolder}/django/venv/",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./django",
+        "-p",
+        "test_*.py"
+    ],
+
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "html.format.enable": true,
+    "html.format.wrapLineLength": 220,
+    "html.format.indentInnerHtml": true,
+    "html.format.indentHandlebars": true,
+    "emmet.includeLanguages": {
+        "django-html": "html"
+    },
+    "files.associations": {
+        "**/*.html": "html",
+        "**/templates/**/*.html": "django-html",
+        "**/templates/**/*": "django-txt",
+        "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+    },
+    "jshint.packageManager": "npm",
+    "jshint.nodePath": "/usr/local/lib/node_modules/jshint",
+
+    "cSpell.words": [
+        "Assesssment",
+        "csrftoken",
+        "filereader",
+        "lightgreen",
+        "lowercased",
+        "pytz",
+        "REFERER",
+        "tzname",
+        "undelete",
+        "untoggle"
+    ],
+    "python.testing.pytestArgs": [
+        "django"
+    ],
+
+
+}

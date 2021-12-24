@@ -1,0 +1,461 @@
+[
+{
+    "model": "gallery.category",
+    "pk": 1,
+    "fields": {
+        "name": 0,
+        "label": "bgc-grey text-white",
+        "slug": "general"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 416,
+    "fields": {
+        "name": 1,
+        "label": "bgc-grey text-white",
+        "slug": "abstract"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 417,
+    "fields": {
+        "name": 2,
+        "label": "bgc-grey text-white",
+        "slug": "adventure"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 418,
+    "fields": {
+        "name": 3,
+        "label": "bgc-grey text-white",
+        "slug": "architectural"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 419,
+    "fields": {
+        "name": 4,
+        "label": "bgc-purple text-white",
+        "slug": "art"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 420,
+    "fields": {
+        "name": 5,
+        "label": "bgc-grey text-white",
+        "slug": "black-and-white"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 421,
+    "fields": {
+        "name": 6,
+        "label": "bgc-blue text-white",
+        "slug": "business"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 422,
+    "fields": {
+        "name": 7,
+        "label": "bgc-grey text-white",
+        "slug": "candid"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 423,
+    "fields": {
+        "name": 8,
+        "label": "bgc-grey text-white",
+        "slug": "cityscape"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 424,
+    "fields": {
+        "name": 9,
+        "label": "bgc-grey text-white",
+        "slug": "commercial"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 425,
+    "fields": {
+        "name": 10,
+        "label": "bgc-grey text-white",
+        "slug": "composite"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 426,
+    "fields": {
+        "name": 11,
+        "label": "bgc-grey text-white",
+        "slug": "creative"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 427,
+    "fields": {
+        "name": 12,
+        "label": "bgc-grey text-white",
+        "slug": "documentary"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 428,
+    "fields": {
+        "name": 13,
+        "label": "bgc-grey text-white",
+        "slug": "drone"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 429,
+    "fields": {
+        "name": 14,
+        "label": "bgc-grey text-white",
+        "slug": "double-exposure"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 430,
+    "fields": {
+        "name": 15,
+        "label": "bgc-grey text-white",
+        "slug": "editorial"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 431,
+    "fields": {
+        "name": 16,
+        "label": "bgc-yellow text-dark",
+        "slug": "event"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 432,
+    "fields": {
+        "name": 17,
+        "label": "bgc-grey text-white",
+        "slug": "family"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 433,
+    "fields": {
+        "name": 18,
+        "label": "bgc-grey text-white",
+        "slug": "fashion"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 434,
+    "fields": {
+        "name": 19,
+        "label": "bgc-grey text-white",
+        "slug": "film"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 435,
+    "fields": {
+        "name": 20,
+        "label": "bgc-grey text-white",
+        "slug": "fine-art"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 436,
+    "fields": {
+        "name": 21,
+        "label": "bgc-grey text-white",
+        "slug": "food"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 437,
+    "fields": {
+        "name": 22,
+        "label": "bgc-yellow text-dark",
+        "slug": "golden-hour"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 438,
+    "fields": {
+        "name": 23,
+        "label": "bgc-red text-white",
+        "slug": "holiday"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 439,
+    "fields": {
+        "name": 24,
+        "label": "bgc-grey text-white",
+        "slug": "indoor"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 440,
+    "fields": {
+        "name": 25,
+        "label": "bgc-grey text-white",
+        "slug": "infrared"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 441,
+    "fields": {
+        "name": 26,
+        "label": "bgc-grey text-white",
+        "slug": "landscape"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 442,
+    "fields": {
+        "name": 27,
+        "label": "bgc-grey text-white",
+        "slug": "lifestyle"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 443,
+    "fields": {
+        "name": 28,
+        "label": "bgc-grey text-white",
+        "slug": "long-exposure"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 444,
+    "fields": {
+        "name": 29,
+        "label": "bgc-blue text-white",
+        "slug": "musical"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 445,
+    "fields": {
+        "name": 30,
+        "label": "bgc-grey text-white",
+        "slug": "milky-way"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 446,
+    "fields": {
+        "name": 31,
+        "label": "bgc-grey text-white",
+        "slug": "minimalist"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 447,
+    "fields": {
+        "name": 32,
+        "label": "bgc-grey text-white",
+        "slug": "newborn"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 448,
+    "fields": {
+        "name": 33,
+        "label": "bgc-black text-white",
+        "slug": "night"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 449,
+    "fields": {
+        "name": 34,
+        "label": "bgc-grey text-white",
+        "slug": "pet"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 450,
+    "fields": {
+        "name": 35,
+        "label": "bgc-grey text-white",
+        "slug": "portrait"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 451,
+    "fields": {
+        "name": 36,
+        "label": "bgc-grey text-white",
+        "slug": "product"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 452,
+    "fields": {
+        "name": 37,
+        "label": "bgc-grey text-white",
+        "slug": "real-estate"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 453,
+    "fields": {
+        "name": 38,
+        "label": "bgc-grey text-white",
+        "slug": "seascape"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 454,
+    "fields": {
+        "name": 39,
+        "label": "bgc-grey text-white",
+        "slug": "social-media"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 455,
+    "fields": {
+        "name": 40,
+        "label": "bgc-yellow text-dark",
+        "slug": "sports"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 456,
+    "fields": {
+        "name": 41,
+        "label": "bgc-grey text-white",
+        "slug": "still-life"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 457,
+    "fields": {
+        "name": 42,
+        "label": "bgc-grey text-white",
+        "slug": "surreal"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 458,
+    "fields": {
+        "name": 43,
+        "label": "bgc-grey text-white",
+        "slug": "street"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 459,
+    "fields": {
+        "name": 44,
+        "label": "bgc-grey text-white",
+        "slug": "time-lapse"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 460,
+    "fields": {
+        "name": 45,
+        "label": "bgc-grey text-white",
+        "slug": "travel"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 461,
+    "fields": {
+        "name": 46,
+        "label": "bgc-blue text-white",
+        "slug": "underwater"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 462,
+    "fields": {
+        "name": 47,
+        "label": "bgc-grey text-white",
+        "slug": "urban-exploration"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 463,
+    "fields": {
+        "name": 48,
+        "label": "bgc-grey text-white",
+        "slug": "war"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 464,
+    "fields": {
+        "name": 49,
+        "label": "bgc-grey text-white",
+        "slug": "wedding"
+    }
+},
+{
+    "model": "gallery.category",
+    "pk": 465,
+    "fields": {
+        "name": 50,
+        "label": "bgc-brown text-white",
+        "slug": "wildlife"
+    }
+}
+]

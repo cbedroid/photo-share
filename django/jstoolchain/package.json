@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.3.11",
+    "postcss-cli": "^9.0.2",
+    "tailwindcss": "^2.2.19",
+    "jshint": "^2.13.1"
+  },
+  "scripts": {
+    "build": "TAILWIND_MODE=watch postcss ./css/tailwind.css -o ../static/css/tailwind.css -w --verbose"
+  },
+  "dependencies": {
+    "@tailwindcss/forms": "^0.3.4",
+    "daisyui": "^1.16.2"
+  }
+}

@@ -1,0 +1,89 @@
+
+/* BreakPoints */
+
+@media (min-width:750)
+  .clear-flex
+    clear: both
+    display: block
+    background: yellow !important
+
+@media (max-width: $sm-breakpoint)
+  .mobile-show
+    display: block !important
+    visibility: visible !important
+
+  #intro-hero
+    display: block
+    width: 100%
+    height: 250px
+    background-color: #000
+    background-attachment: absolute
+    background-repeat: no-repeat no-repeat
+    background-size: cover
+    background-position: 10% 60%
+    .content
+      transform: translateY(30%)
+
+  .collapse
+    visibility: hidden
+    opacity: 0
+    height: 0
+    transition: visibility 0s, opacity 0.2s ease-in-out
+
+
+  #aside_checkbox:checked ~ #main #gallery-sidebar
+    display: block
+    width: 60vw
+  .social-share
+    display: grid
+    place-items: center
+    width: 100%
+    &__content
+      padding: 25px 35px
+    &__img
+      width: 450px
+      height: 250px
+
+    .share-card .share__icon
+      display: grid
+      place-items: center
+      border-radius: 4px
+      min-width: 90px
+      font-size: 2.5rem
+      padding: 4px 6px
+      color: #fff
+      transition: .3s ease-in-out
+      &:hover
+        color: inherit
+        p
+          text-align: center
+          font-size: 1.2rem
+
+  #gallery_list_section
+    .trend-category
+      padding: 12px 8px
+    .category
+      &--slider
+        display: flex
+        justify-content: space-between
+        align-items: center
+        vertical-align: middle
+        width: 100%
+        gap: 8px
+        max-width: 100vw
+        height: 100%
+        padding: 18px 8px
+
+        overflow-x: auto
+        border-top: 2px solid lightgray
+      &__badge
+        min-width: 125px
+
+        flex-grow: 1
+        flex-basis: 120px
+        box-shadow: 4px 4px 8px rgba(0,0,0,.4)
+        +cross-browser(transition, all .3s linear)
+        a
+          font-size: .85rem
+
+/* End BreakPoints */

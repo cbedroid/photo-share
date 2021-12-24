@@ -1,0 +1,306 @@
+[
+{
+    "model": "gallery.photo",
+    "pk": 82,
+    "fields": {
+        "title": "Country Cuzzins",
+        "image": "gallery/country_cuzzins_album_cover.png",
+        "gallery": 87,
+        "is_cover": true,
+        "views": 432,
+        "downloads": 33,
+        "created": "2021-11-23T23:31:44.568Z",
+        "updated": "2021-11-24T06:36:36.535Z",
+        "slug": "country-cuzzins",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 83,
+    "fields": {
+        "title": "Lebron & AD",
+        "image": "gallery/LBJandAD_2.jpg",
+        "gallery": 54,
+        "is_cover": false,
+        "views": 316,
+        "downloads": 121,
+        "created": "2021-11-23T23:31:44.602Z",
+        "updated": "2021-11-25T12:59:22.451Z",
+        "slug": "lebron-ad",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 84,
+    "fields": {
+        "title": "Sonny Ragg",
+        "image": "gallery/SonnyRagg.jpg",
+        "gallery": 2,
+        "is_cover": false,
+        "views": 105,
+        "downloads": 9,
+        "created": "2021-11-23T23:31:44.615Z",
+        "updated": "2021-11-29T05:03:02.377Z",
+        "slug": "sonny-ragg",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 85,
+    "fields": {
+        "title": "2021 New Years",
+        "image": "gallery/2021-Word-Balloons.jpg",
+        "gallery": 1,
+        "is_cover": false,
+        "views": 52,
+        "downloads": 4,
+        "created": "2021-11-23T23:31:44.623Z",
+        "updated": "2021-11-29T05:03:02.357Z",
+        "slug": "2021-new-years",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 86,
+    "fields": {
+        "title": "Merry Christmas",
+        "image": "gallery/presents_under_the_tree.jpg",
+        "gallery": 1,
+        "is_cover": false,
+        "views": 30,
+        "downloads": 1,
+        "created": "2021-11-23T23:31:44.634Z",
+        "updated": "2021-11-29T05:03:02.362Z",
+        "slug": "merry-christmas",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 87,
+    "fields": {
+        "title": "Christmas Decorations",
+        "image": "gallery/christmas-ornament.jpg",
+        "gallery": 1,
+        "is_cover": true,
+        "views": 4,
+        "downloads": 2,
+        "created": "2021-11-23T23:31:44.646Z",
+        "updated": "2021-11-24T06:36:36.550Z",
+        "slug": "christmas-decorations",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 88,
+    "fields": {
+        "title": "Kobe The Mamba",
+        "image": "gallery/kobebryant.original.jpg",
+        "gallery": 54,
+        "is_cover": false,
+        "views": 670,
+        "downloads": 203,
+        "created": "2021-11-23T23:31:44.659Z",
+        "updated": "2021-11-30T05:59:53.954Z",
+        "slug": "kobe-the-mamba",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 89,
+    "fields": {
+        "title": "Legendary Kobe &  Lebron",
+        "image": "gallery/kobe-lebron-lakers.jpg",
+        "gallery": 54,
+        "is_cover": false,
+        "views": 503,
+        "downloads": 390,
+        "created": "2021-11-23T23:31:44.669Z",
+        "updated": "2021-11-25T13:10:33.288Z",
+        "slug": "legendary-kobe-lebron",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 91,
+    "fields": {
+        "title": "CSS Battle",
+        "image": "gallery/CSSBattle3.png",
+        "gallery": 25,
+        "is_cover": false,
+        "views": 28,
+        "downloads": 32,
+        "created": "2021-11-23T23:31:44.676Z",
+        "updated": "2021-11-25T09:04:27.216Z",
+        "slug": "css-battle",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 92,
+    "fields": {
+        "title": "Software Survey",
+        "image": "gallery/Survey_Meta_image.jpg",
+        "gallery": 25,
+        "is_cover": true,
+        "views": 12,
+        "downloads": 62,
+        "created": "2021-11-23T23:31:44.686Z",
+        "updated": "2021-11-29T05:03:48.444Z",
+        "slug": "software-survey",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 93,
+    "fields": {
+        "title": "Ragg Band",
+        "image": "gallery/Ragg_Band.jpg",
+        "gallery": 2,
+        "is_cover": true,
+        "views": 1,
+        "downloads": 30,
+        "created": "2021-11-23T23:31:44.695Z",
+        "updated": "2021-11-24T06:36:36.564Z",
+        "slug": "ragg-band",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 94,
+    "fields": {
+        "title": "Qwae the Goat",
+        "image": "gallery/rockstar.jpeg",
+        "gallery": 88,
+        "is_cover": true,
+        "views": 3543,
+        "downloads": 0,
+        "created": "2021-11-23T05:03:04.527Z",
+        "updated": "2021-11-30T17:34:44.588Z",
+        "slug": "qwae-the-goat",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 104,
+    "fields": {
+        "title": "Mamba Forever",
+        "image": "gallery/rs_600x600-200128100818-600-Kobe-Bryant-Gianna-Bryant_ch1vYLL.jpg",
+        "gallery": 54,
+        "is_cover": true,
+        "views": 1796,
+        "downloads": 0,
+        "created": "2021-11-25T09:21:39.652Z",
+        "updated": "2021-11-30T13:49:41.278Z",
+        "slug": "mamba-forever",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 105,
+    "fields": {
+        "title": "NFL 2021",
+        "image": "gallery/mmqb-preictions.png",
+        "gallery": 73,
+        "is_cover": false,
+        "views": 4,
+        "downloads": 0,
+        "created": "2021-11-29T13:29:35.151Z",
+        "updated": "2021-11-29T13:32:41.046Z",
+        "slug": "nfl-2021",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 106,
+    "fields": {
+        "title": "Brady and McHomes",
+        "image": "gallery/tom-brady-patrick-mahomes-madden.jpg",
+        "gallery": 73,
+        "is_cover": true,
+        "views": 0,
+        "downloads": 0,
+        "created": "2021-11-29T13:32:41.004Z",
+        "updated": "2021-11-29T13:32:41.004Z",
+        "slug": "brady-and-mchomes",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 107,
+    "fields": {
+        "title": "Lakers 2021",
+        "image": "gallery/Laker_2021_Stars.jpg",
+        "gallery": 54,
+        "is_cover": false,
+        "views": 5363,
+        "downloads": 0,
+        "created": "2021-11-30T08:05:05.919Z",
+        "updated": "2021-11-30T17:37:16.010Z",
+        "slug": "lakers-2021",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 108,
+    "fields": {
+        "title": "Shaq and Kobe",
+        "image": "gallery/Shaq_and_Kobe.jpg",
+        "gallery": 54,
+        "is_cover": false,
+        "views": 0,
+        "downloads": 0,
+        "created": "2021-11-30T08:05:05.962Z",
+        "updated": "2021-11-30T08:05:05.962Z",
+        "slug": "shaq-and-kobe",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 109,
+    "fields": {
+        "title": "Angels of the NBA",
+        "image": "gallery/Kobe_and_daughter_Gigi.jpeg",
+        "gallery": 54,
+        "is_cover": false,
+        "views": 0,
+        "downloads": 0,
+        "created": "2021-11-30T08:05:06.013Z",
+        "updated": "2021-11-30T08:05:06.013Z",
+        "slug": "angels-of-the-nba",
+        "tags": []
+    }
+},
+{
+    "model": "gallery.photo",
+    "pk": 110,
+    "fields": {
+        "title": "Welcome to GreenWood",
+        "image": "gallery/QweatheGoat_Welcome_2_Greenwood.jpeg",
+        "gallery": 88,
+        "is_cover": false,
+        "views": 2164,
+        "downloads": 0,
+        "created": "2021-11-30T14:34:42.657Z",
+        "updated": "2021-11-30T15:30:31.146Z",
+        "slug": "welcome-to-greenwood",
+        "tags": []
+    }
+}
+]
