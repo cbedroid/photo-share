@@ -12,7 +12,6 @@
 <li class="breadcrumb-item"><span class="text-gray-400">Gallery</span></li>
 {% endblock breadcrumb_link %}
 
-
 {% block content %}
 {% url 'gallery:gallery-list' as current_url %}
 <section id="gallery_list_section">
@@ -30,7 +29,7 @@
     </div>
     <!-- End Top Category -->
     <!-- Gallery Content-->
-    <div class="gallery-content px-1 sm:px-2">
+    <div class="gallery-content min-h-50 px-1 sm:px-2">
       <div class="row">
         <div class="content-header flex gap-x-5 place-items-center">
           <!--Pagination-->
@@ -38,8 +37,7 @@
           <div class="px-4 py-3 sm:px-6">
             <div class="flex-1 flex justify-between sm:hidden">
               {% if  page_obj.has_previous %}
-              <a href="{{current_url}}?page={{page_obj.previous_page_number}}"
-                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+              <a href="{{current_url}}?page={{page_obj.previous_page_number}}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 Previous
               </a>
               {% else %}
@@ -49,8 +47,7 @@
               {% endif %}
 
               {% if  page_obj.has_next %}
-              <a href="{{current_url}}?page={{page_obj.next_page_number}}"
-                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+              <a href="{{current_url}}?page={{page_obj.next_page_number}}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 Next
               </a>
               {% else %}
@@ -129,8 +126,8 @@
           <!---->
           <form action="{{current_url}}" method='GET'>
             <div class="mt-1 flex rounded-md shadow-sm">
-              <input class="search_bar focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" type="text" name="q" placeholder="search category or gallery"
-                aria-label="search bar" style="padding: 6px;">
+              <input class="search_bar focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" type="text" name="q" placeholder="search category or gallery" aria-label="search bar"
+                style="padding: 6px;">
               <button type="submit" class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                 <i class="search-icon fa fa-search"></i>
               </button>
@@ -147,8 +144,7 @@
         <div class="px-4 py-3 sm:px-6">
           <div class="flex-1 flex justify-between sm:hidden">
             {% if  page_obj.has_previous %}
-            <a href="{{current_url}}?page={{page_obj.previous_page_number}}"
-              class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <a href="{{current_url}}?page={{page_obj.previous_page_number}}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
               Previous
             </a>
             {% else %}
@@ -158,8 +154,7 @@
             {% endif %}
 
             {% if  page_obj.has_next %}
-            <a href="{{current_url}}?page={{page_obj.next_page_number}}"
-              class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <a href="{{current_url}}?page={{page_obj.next_page_number}}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
               Next
             </a>
             {% else %}

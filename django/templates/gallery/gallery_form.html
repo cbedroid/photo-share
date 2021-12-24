@@ -29,6 +29,22 @@
             {% endif %}
           </legend>
           <div class="form-group">
+            {% if form.errors %}
+            {% for field in form  %}
+            {% for error in field.errors  %}
+            <div>
+              <strong class="text-red-500">
+                {{ error|escape }}
+              </strong>
+            </div>
+            {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+            <div class="text-red-500">
+              <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endif %}
             <label for="category" class="ml-2 block text-sm text-gray-900">
               {{form.name.label}}
             </label>
@@ -61,7 +77,7 @@
         <!-- End Gallery Form -->
 
         <!-- Photo Form -->
-        <fieldset id="photoset-field" class="bg-white border-gray-100 col-span-2 mt-6 md:mt-2 py-2">
+        <fieldset id="photoset-field" class="bg-white border-gray-100 col-span-2 mt-6 md:mt-2 py-2 p-4">
           <legend class="font-bold text-3xl ml-5 mb-2">
             Upload Photo
           </legend>
@@ -74,7 +90,13 @@
             <a class="cta cta--outline-red md:w-1/8" href="{% url 'core:index' %}" style="padding:6px 16px">Cancel</a>
             {% endif %}
           </div>
-          <div class="photo-card grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-5 mg:gap-2 p-4 mh-full">
+          {% for error in formset.non_form_errors %}
+          <div class="text-red-500 p-3">
+            <strong>{{ error|escape }}</strong>
+          </div>
+          {% endfor %}
+          <div class="photo-card grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-5 mg:gap-2 mh-full">
+
             {% for gallery_form in formset %}
             <!-- Form {{forloop.counter}}-->
             <div class="card bg-white  shadow drop-shadow-xl  text-accent-content rounded-md hover:border-gray-200 hover:drop-shadow-2xl">
@@ -90,10 +112,9 @@
                 <div class="hidden">
                   {{gallery_form.image}}
                 </div>
-
                 <div class="card-actions">
                   {% if gallery_form.title.errors %}
-                  <ul class="text-red-500 text-center text-semibold">
+                  <ul class="text-red-500 text-center font-semibold">
                     {{gallery_form.title.errors|unordered_list}}
                   </ul>
                   {% endif %}
