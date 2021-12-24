@@ -2,18 +2,29 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from gallery.models import Gallery, Photo
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
-from .permissions import IsOwnerOrReadOnly
-from .serializers import *
+from .permissions import IsAuthOrStaff, IsOwnerOrReadOnly
+from .serializers import GallerySerializer, PhotoSerializer, UserSerializer
 
-user = get_user_model()
+User = get_user_model()
+
+
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            self.permission_classes = (AllowAny,)
+        return super(UserViewSet, self).get_permissions()
 
 
 class GalleryViewSet(ModelViewSet):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly, IsAuthOrStaff]
 
     def get_queryset(self):
         user = self.request.user
@@ -30,8 +41,7 @@ class GalleryViewSet(ModelViewSet):
         #      This can help protect against hackers by disgusing that gallery is not found.
         #
         obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
-        perm = self.check_object_permissions(self.request, obj)
-        print("detail obj", obj, perm)
+        self.check_object_permissions(self.request, obj)
         return obj
 
     def get_serializer_context(self, **kwargs):
@@ -66,8 +76,3 @@ class PhotoViewSet(ModelViewSet):
         photo_count = instance.gallery.photos.count()
         if photo_count == 0:
             instance.gallery.delete()
-
-
-class UserViewSet(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
