@@ -1,0 +1,23 @@
+{% load static  i18n%}
+{% load premailer users_extras %}
+{% get_email_base_context %}
+<!DOCTYPE html>
+<html lang="en">
+  {% premailer  "http://127.0.0.1:8000/static/css/email.css" %}
+  <link rel="stylesheet" href="{% static 'css/email.css' %}">
+
+  <body>
+    <section>
+      {% autoescape off %}
+      <div class="header">
+        <p style="margin-bottom:30px;">{% blocktrans with site_name=current_site.name %}Hello from <b>{{ site_name }}<span>!{% endblocktrans %}</p>
+      </div>
+      {% block content %}{% endblock %}
+      <p style="color:#211f1f ;font-weight:600;margin-top:30px;">{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you for using {{ site_name }}!{% endblocktrans %}</p>
+      {% endautoescape %}
+    </section>
+  </body>
+  {% endpremailer %}
+  {% comment %} <script src="http://livejs.com/live.js"></script> {% endcomment %}
+
+</html>

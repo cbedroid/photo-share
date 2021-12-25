@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static core_extras widget_tweaks %}
+
+
+{% block content %}
+<section id="contact_section" class="mobile-scale-8 mb-12">
+  <form id="contact-us" action="{% url 'core:contact-us' %}" method="POST">
+    {% csrf_token %}
+    <div class="bg-white dark:bg-gray-800">
+      <div class="container mx-auto bg-white dark:bg-gray-800 rounded">
+        <div class="xl:w-full border-b border-gray-300 dark:border-gray-700 py-5 bg-white dark:bg-gray-800">
+          <div class="flex w-11/12 mx-auto xl:w-full xl:mx-0 items-center">
+            <h2 class="text-gray-800 dark:text-gray-100 font-bold">Contact Us</h2>
+          </div>
+        </div>
+        <div class="mx-auto">
+          <div class="xl:w-9/12 w-11/12 mx-auto xl:mx-0">
+            <div class="rounded relative mt-8 h-48">
+              <img src="{% static 'assets/images/contact_us.png' %}" alt="contact us" class="w-full h-full object-cover rounded absolute shadow" />
+              <div class="absolute bg-black opacity-50 top-0 right-0 bottom-0 left-0 rounded"></div>
+              <div class="flex items-center px-3 py-2 rounded absolute right-0 mr-4 mt-4 cursor-pointer">
+                <h4 class="text-gray-100 font-bold">Contact Us</h4>
+              </div>
+            </div>
+            <fieldset class="mt-8">
+              <div class="my-4 flex flex-col lg:w-1/2 md:w-1/2 w-full">
+                <label class="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100" for="{{form.name.auto_id}}">Name</label>
+                {% render_field form.name|add_class:"border border-gray-300 dark:border-gray-700 h-10 pl-3 py-12 shadow-sm rounded text-sm focus:outline-none focus:border-indigo-700 bg-transparent placeholder-gray-500 text-gray-600 dark:text-gray-400" %}
+              </div>
+              <div class="my-6 flex flex-col lg:w-1/2 md:w-1/2 w-full">
+                <label class="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100" for="{{form.email.auto_id}}">Email</label>
+                {% render_field form.email|add_class:"border border-gray-300 dark:border-gray-700 h-10 pl-3 py-12 shadow-sm rounded text-sm focus:outline-none focus:border-indigo-700 bg-transparent placeholder-gray-500 text-gray-600 dark:text-gray-400" %}
+              </div>
+              <div class="my-6 flex flex-col lg:w-1/2 md:w-1/2 w-full">
+                <label class="pb-2 text-sm font-bold text-gray-800 dark:text-gray-100" for="{{form.message.auto_id}}">Message</label>
+                {% render_field form.message|add_class:"border border-gray-300 dark:border-gray-700 pl-3 py-12 shadow-sm rounded text-sm focus:outline-none focus:border-indigo-700 bg-transparent placeholder-gray-500 text-gray-600 dark:text-gray-400" %}
+                <p class="w-full text-right text-xs pt-1 text-gray-600 dark:text-gray-400">Character Limit: 500</p>
+              </div>
+            </fieldset>
+            <div class="w-full py-2 sm:px-0 bg-white dark:bg-gray-800 flex space-x-2">
+
+              <button role="button" aria-label="Save form" class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 bg-indigo-700 focus:outline-none transition duration-150 ease-in-out hover:bg-indigo-600 rounded text-white px-8 py-2 text-sm"
+                type="submit">send</button>
+              <button role="button" aria-label="cancel form"
+                class="bg-gray-200 focus:outline-none transition duration-150 ease-in-out hover:bg-gray-300 dark:bg-gray-700 rounded text-indigo-600 dark:text-indigo-600 px-6 py-2 text-xs mr-4 focus:ring-2 focus:ring-offset-2 focus:ring-gray-700">Cancel</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </form>
+
+
+</section>
+{% endblock content %}

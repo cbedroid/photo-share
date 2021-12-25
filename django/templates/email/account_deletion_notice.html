@@ -1,0 +1,34 @@
+{% extends "email/base.html" %}
+{% load static i18n %}
+{% load  premailer core_extras users_extras %}
+
+{% block content %}
+{% autoescape off %}
+<div id="account-notice" class="email-content">
+  <div class="cardbox">
+    <div class="cardbox__header">
+      <h2 class="title" style="color:#fff">Account Notice</h2>
+    </div>
+    <div class="cardbox__body">
+      {% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+      <p>You're receiving this e-mail because you have not verified your account with us at <a href="{{site_domain}}">{{site_name}}</a>. </p>
+      <p>As of <b>{{notice_date}}</b> , we will be removing all <b>unverified accounts</b>.</p>
+      <p class="text-blue-600"> To keep you account active with us, Visit <a href="{{site_domain}}">{{site_domain}}</a> and click verify account.</p>
+
+      {% endblocktrans %}
+      <div class="cta-wrapper">
+        <a class="cta-btn cta-btn--base" href="{% url 'user:confirm-email' %}" target="_blank">{% trans 'Verify Account' %}</a>
+      </div>
+      <ul style="margin-top:3rem;">
+        <li>If you no longer need the account, You do not need to do anything as we will remove your account for you.</li>
+        <li>{% trans "If you have any questions, please visit our " %}<a href="{{site_domain}}{% url 'core:faqs' %}">{% trans "Frequently Asked Questions" %}</a> {% trans "or contact our support team" %}
+          {% tech_support_link %}.</li>
+      </ul>
+    </div>
+    <div class="cardbox__footer">
+      <small class="" style="color:#a1a1a1;font-weight:600;"> - myMadden Support Team</small>
+    </div>
+  </div>
+</div>
+{% endautoescape %}
+{% endblock content %}

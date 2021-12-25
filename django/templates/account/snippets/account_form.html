@@ -2,7 +2,7 @@
 {% load  i18n  static widget_tweaks %}
 
 {% block content %}
-<section class="h-screen bg-gray-100 bg-opacity-50 mt-4">
+<section class="h-screen bg-gray-100 bg-opacity-50 pt-12">
   <div class="container mx-auto">
     <div class="header flex  place-items-center border-b-2 mb-4">
       <h2 class="flex-1 text-gray-700 font-bold pb-2 ">
@@ -15,7 +15,7 @@
         <span>{% trans "Account Settings" %}</span>
       </h2>
       <div class="header__action flex">
-        <a class="font-semibold hover:text-site delay-200" href="{% url 'core:index' %}">
+        <a class="font-semibold hover:text-gray-500 delay-200" href="{% url 'core:index' %}">
           <svg class="inline mr-1 " viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -24,7 +24,7 @@
         </a>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 md:gap-5">
+    <div class="grid grid-cols-1 md:grid-cols-3 md:gap-5 mt-16">
       <div class="artboard artboard-demo bg-base-200 border-t-2 border-indigo-400 rounded-lg shadow w-full">
         <ul class="menu flex flex-row place-items-center place-content-center md:flex-col md:place-items-start md:place-content-start gap-y-8 h-full w-full rounded-lg pt-8 pb-6 shadow-lg bg-base-100">
           <li class=" md:border-t-2 flex content-around  md:w-full pt-2">

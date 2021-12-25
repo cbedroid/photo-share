@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block breadcrumb %}{% endblock breadcrumb %}
+{% block content %}
+<div class="content bg-clip bg-gradient-to-tr from-gray-700 to-black text-white">
+  <div class="container mx-auto">
+    <div class="w-full lg:w-1/2 text-center py-12 mx-auto">
+      <div class="w-full h-full">
+        <img class="block object-cover w-full  h-96" src="{% static 'assets/images/error_500.png' %}" alt="500" />
+      </div>
+      <div class="w-full">
+        <h1 class="py-4 text-5xl lg:text-6xl font-extrabold text-red-500"> 500 Server Error</h1>
+        <div class="content-text py-2">
+          <p class="py-2 text-base text-gray-200">
+            Sorry... Something went wrong on our side!
+            Our team is working hard to resolve this issue.
+            Please check back later while we resolve this issue!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock content %}

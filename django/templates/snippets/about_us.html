@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static  core_extras %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock extra_head %}
+
+{% block content %}
+<section id="about_us" class=" bg-white pb-32">
+
+  <div class="2xl:container 2xl:mx-auto lg:py-16 lg:px-20 md:py-12 md:px-6 py-9 px-4">
+    <div class="flex flex-col lg:flex-row justify-between gap-8 place-items-center">
+      <div class="w-full lg:w-5/12 flex flex-col justify-center">
+        <h1 class="text-3xl lg:text-4xl font-bold leading-9 text-gray-800 pb-4">About Us</h1>
+        <p class="font-normal text-base leading-6 text-gray-600">Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro soluta dolorum placeat, pariatur eveniet tempora aliquam, aperiam iusto delectus illo beatae
+          distinctio? Dolores aperiam
+          quod ut officiis, rerum magnam rem!</p>
+      </div>
+      <div class="w-full lg:w-8/12">
+        <img class="w-full h-1/2" src="{% static 'assets/images/instagram_viral.png' %}" alt="viral post" style="max-height:700px" />
+      </div>
+    </div>
+    <div class="flex lg:flex-row flex-col justify-between gap-8 pt-12">
+      <div class="w-full lg:w-5/12 flex flex-col justify-center">
+        <h1 class="text-3xl lg:text-4xl font-bold leading-9 text-gray-800 pb-4">Meet The Developer</h1>
+        <p class="font-normal text-base leading-6 text-gray-600">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima doloribus voluptatibus tempore quo tenetur totam, natus ipsum esse sunt praesentium
+          expedita a enim hic cupiditate velit
+          exercitationem porro. Sapiente, nemo?</p>
+
+      </div>
+      <div class="w-full lg:w-8/12 lg:pt-8">
+        <div class="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 lg:gap-4 shadow-lg rounded-md">
+          <div class="p-4 pb-6 flex justify-center flex-col items-center">
+            <a class="text-center w-full" href="http://github.com/cbedroid" target="_blank" rel="noopener noreferrer">
+              <img class="rounded-md" src="{% static 'assets/images/cbedroid.jpg' %}" alt="cedroid" style="height:185px;width:175px">
+              <i class="fa fa-github text-center w-full"> cbedroid</i>
+              <span class="inline-block text-xl text-gray-800 mt-4">Cornelius</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %} <div class="container mx-auto">
+    <div class="row">
+      <div class="aboutus ">
+        <div class="header text-center">
+          <h1 class="heading-title horizontal-outline font-bold pb-12"> Who We Are</h1>
+        </div>
+        <p class="px-sm-3">
+          We are a veteran owned and operated company, dedicated to improving training practices in the DOD, public and private sectors. Current legacy training methodology used to assess competency and perform workforce
+          development, especially
+          in a remote/hybrid work environment is either overly
+          cumbersome or non-existent. We utilize SMS-enabled technology to turn mobile devices into
+          micro-learning and assessment platforms, significantly improving your current business practices, training systems and personal professional growth.
+        </p>
+      </div>
+      <div class="contact-us p-2">
+        <h1 class="heading-title">Contact Us</h1>
+        <ul class="social-links social-links--outline hoverable">
+          <li class="social-items twitter">
+            <a rel="noopener" href="https://twitter.com/tedtextllc" target="_blank">
+              <i class="fa fa-twitter border-prime"></i></a>
+          </li>
+
+          <li class="social-items linkedin">
+            <a rel="noopener" href="https://www.linkedin.com/company/ted-text-llc" target="_blank">
+              <i class="fa fa-linkedin-square border-prime"></i></a>
+          </li>
+        </ul>
+        <table class="table m-sm-auto p-none my-sm-3">
+          <tbody>
+            <tr>
+              <th scope="row">Contact:</th>
+              <td>
+                <i class="fa fa-phone-alt d-none d-sm-inline me-2"></i>
+                {% contact_phone_number %}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Email:</th>
+              <td class="ms-5">
+                <i class="fas fa-envelope d-none d-sm-inline me-2"></i>
+                {% tech_support_link %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div> {% endcomment %}
+</section>
+{% endblock content %}

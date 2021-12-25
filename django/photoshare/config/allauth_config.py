@@ -41,7 +41,7 @@ ACCOUNT_USERNAME_BLACKLIST = [
 ]
 
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # "mandatory", "optional", or "none".
+ACCOUNT_EMAIL_VERIFICATION = "optional"  # "mandatory", "optional", or "none".
 ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 

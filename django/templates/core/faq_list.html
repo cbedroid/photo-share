@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+{% load static %}
+
+{% block content %}
+<section id="faq-section">
+  <div class="relative py-16 bg-gradient-to-b from-indigo-700 to-indigo-600 flex justify-center items-center">
+    <div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-10 text-white">How can we help you?</h1>
+      <div class="bg-indigo-800 rounded relative mt-6 lg:mt-14 py-4 pl-4 flex items-center w-full">
+        <i class="fa fa-search text-gray-200"></i>
+        <input type="text" placeholder="Search for answers" class=" ml-4 w-full bg-transparent text-base leading-none text-white placeholder-white border-none focus:outline-none ">
+      </div>
+    </div>
+  </div>
+  <div class="container mx-auto py-9 flex flex-col items-center justify-center">
+    <div role="list" class="w-11/12 md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for topic in faq_topics %}
+      <div role="listitem" class="focus:outline-none">
+        <div class="bg-white focus:outline-none shadow-md flex items-center p-4 lg:p-8 cursor-pointer">
+          <div class="flex">
+            <div class="ml-4">
+              <p class="text-base font-medium leading-none text-gray-800">{{topic.name}}</p>
+              <p class="text-xs lg:text-sm xl:text-base lg:leading-normal text-gray-600 mt-2 2xl:w-7/12">{{topic.description}}</p>
+              <a class="btn btn-primary mt-4 hover:text-gray-200" href="">Learn More </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="mt-9 md:mt-11 lg:mt-16">
+      <div class="text-center">
+        <h1 class="text-3xl font-medium leading-loose text-gray-800">Didn’t find an answer?</h1>
+        {% comment %} <p class="mx-4 md:mx-0 mb-4 text-base leading-none text-gray-600 mt-4">Our team is just an email away and ready to answer your questions</p> {% endcomment %}
+      </div>
+      {% comment %} <div role="list" aria-label="Our Team mates" class="flex flex-wrap items-center justify-around mt-2 ">
+        <div role="listitem" class="focus:outline-none" class="flex flex-col items-center justify-center m-6">
+          <img src="https://i.ibb.co/zS3y67Q/Unsplash-Avatars-0000s-0019-analise-benevides-88w-Kdd-JTwp8-unsplash-1.png" alt="Display avatar of julia john" role="img">
+          <p class="text-base font-semibold leading-none text-gray-800 mt-2">Julia John</p>
+          <p class="text-base leading-none text-gray-600 mt-2">Designer</p>
+        </div>
+        <div role="listitem" class="focus:outline-none" class="flex flex-col items-center justify-center m-6">
+          <img src="https://i.ibb.co/vJSM2Ch/Unsplash-Avatars-0004s-0005-laurence-cruz-P7yvmaj-Pvk-M-unsplash.png" alt="Display avatar of Tom Koch" role="img">
+          <p class="text-base font-semibold leading-none text-gray-800 mt-2">Tom Koch</p>
+          <p class="text-base leading-none text-gray-600 mt-2">Developer</p>
+        </div>
+        <div role="listitem" class="focus:outline-none" class="flex flex-col items-center justify-center m-6">
+          <img src="https://i.ibb.co/0tzwY54/Unsplash-Avatars-0004s-0012-tiffany-collins-Gsy-St-BSs-Yd0-unsplash.png" alt="Display avatar of Kera Ann" role="img">
+          <p class="text-base font-semibold leading-none text-gray-800 mt-2">Kera Ann</p>
+          <p class="text-base leading-none text-gray-600 mt-2">Designer</p>
+        </div>
+        <div role="listitem" class="focus:outline-none" class="flex flex-col items-center justify-center m-6">
+          <img src="https://i.ibb.co/DWMLC3n/Unsplash-Avatars-0004s-0013-sirio-w-Siku-Nio6-UY-unsplash.png" alt="Display Avatar of Glenn Jo" role="img">
+          <p class="text-base font-semibold leading-none text-gray-800 mt-2">Glenn Jo</p>
+          <p class="text-base leading-none text-gray-600 mt-2">Support</p>
+        </div>
+        <div role="listitem" class="focus:outline-none" class="flex flex-col items-center justify-center m-6">
+          <img src="https://i.ibb.co/vkHZYXY/Unsplash-Avatars-0004s-0029-azamat-zhanisov-4yh-Hhp-AMC3-U-unsplash.png" alt="Display avatar of Shing Co" role="img">
+          <p class="text-base font-semibold leading-none text-gray-800 mt-2">Xhing Co</p>
+          <p class="text-base leading-none text-gray-600 mt-2">Support</p>
+        </div>
+      </div> {% endcomment %}
+      <div class="flex justify-center items-center">
+        <a href="{% url 'core:contact-us' %}" class="mt-4 md:mt-6 py-3 px-6 bg-indigo-800 hover:bg-indigo-700 rounded text-white text-center font-medium text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-800">Contact
+          us</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
