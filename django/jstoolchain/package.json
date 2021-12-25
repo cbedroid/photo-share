@@ -7,7 +7,7 @@
     "jshint": "^2.13.1"
   },
   "scripts": {
-    "build": "TAILWIND_MODE=watch postcss ./css/tailwind.css -o ../static/css/tailwind.css -w --verbose"
+    "build": "TAILWIND_MODE=watch postcss ./css/tailwind.css -o ../static/photoshare/css/tailwind.css -w --verbose"
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.3.4",

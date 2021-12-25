@@ -12,7 +12,7 @@ User = get_user_model()
 
 class UserUpdateForm(userforms.UserChangeForm):
     password = None
-    image = forms.ImageField(widget=forms.FileInput())
+    image = forms.ImageField(widget=forms.FileInput(), required=False)
 
     class Meta:
         model = User

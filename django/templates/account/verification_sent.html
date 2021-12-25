@@ -1,12 +1,42 @@
 {% extends "base.html" %}
 
-{% load i18n %}
+{% load static i18n %}
 
 {% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
-
 {% block content %}
-    <h1>{% trans "Verify Your E-mail Address" %}</h1>
-
-    <p>{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.{% endblocktrans %}</p>
+<section id="email-verification" class="pt-30 min-h-80">
+  <div class="container mx-auto w-full lg:w-2/3">
+    {% if not request.user.is_anonymous %}
+    <div class="mt-12 p-4 w-full text-center bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+      <h3 class="mb-5 text-3xl font-bold text-gray-900 dark:text-white"> {% trans "Verify Your E-mail Address" %}</h3>
+      <p class="mb-5 text-base text-gray-700 sm:text-lg dark:text-gray-400">{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. {% endblocktrans %}</p>
+      <div>
+        <p class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">{% blocktrans %}Still haven't received your email?? Resend verification email.{% endblocktrans %}</p>
+        <a href="{% url 'user:confirm-email' %}"
+          class="w-full sm:w-auto bg-blue-700 hover:bg-blue-600 focus:ring-4 focus:ring-gray-300 text-white hover:text-gray-100 rounded-lg inline-flex items-center justify-center px-4 py-2.5 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
+          <div class="text-left">
+            <div class="spacer mb-1"></div>
+            <div class="-mt-1 font-sans text-sm font-semibold">Resend Verification</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    {% else %}
+    <div class="mt-12 p-4 w-full text-center bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+      <h3 class="mb-5 text-3xl font-bold text-gray-900 dark:text-white"> {% trans "Sign Up For An Account" %}</h3>
+      <div>
+        <p class="mb-5 text-base text-gray-700 sm:text-lg dark:text-gray-400">{% blocktrans %}Signup for an account and start sharing your maddenclips! {% endblocktrans %}</p>
+        <a href="{% url 'account_signup' %}"
+          class="w-full sm:w-auto bg-blue-700 hover:bg-blue-600 focus:ring-4 focus:ring-gray-300 text-white hover:text-gray-100 rounded-lg inline-flex items-center justify-center px-4 py-2.5 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
+          <div class="text-left">
+            <div class="spacer mb-1"></div>
+            <div class="-mt-1 font-sans text-sm text-center font-semibold w-32">Sign Up</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
 
 {% endblock %}

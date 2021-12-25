@@ -1,0 +1,374 @@
+{% extends 'base.html' %}
+{% load static core_extras %}
+
+{% block extra_head %}
+
+<style>
+  #privacy_policy {
+    font-family: "Arial", sans-serif;
+    color: #000;
+  }
+
+  .tab-btn.active {
+    background: #1D4ED8;
+    border-color: #1D4ED8;
+    color: #fff;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    line-height: 42px;
+  }
+
+  li,
+  p {
+    line-height: 24px;
+  }
+
+  p {
+    font-weight: 500
+  }
+
+  #privacy_policy ul {
+
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+  }
+
+  #privacy_policy ul li {
+    display: list-item;
+    list-style-type: disc;
+  }
+
+  #privacy_policy .heading {
+    font-weight: bold;
+  }
+
+  #privacy_policy .content {
+    padding: 0 0 0 28px;
+    margin: 28px 0 36px 0
+  }
+
+  #privacy_policy .content ul li {
+    margin: 10px 0;
+  }
+
+  #privacy_policy #pills-privacy-policy .content:first-child {
+    padding: 0 0 0 14px
+  }
+
+  #privacy_policy .highlight {
+    background: #ff0;
+    text-decoration: underline;
+    font-weight: 600
+  }
+
+  #policy_tabs ul li {
+    list-style-type: none;
+  }
+
+  .link_orange {
+    color: darkorange;
+    text-decoration: underline;
+  }
+
+  .link_orange:hover {
+    color: orange;
+  }
+</style>
+
+{% endblock extra_head %}
+
+{% block content  %}
+<section id="privacy_policy" class="relative ">
+  <div class="mx-auto">
+    <div class="row">
+      <div class="grid grid-none sm:grid-cols-8 gap-4">
+        <div class="sm:col-span-2 lg:col-span-1 col-end-2">
+          <!--order-sm-last"-->
+          <div id="policy-actions" class="w-full h-full">
+            <div class="fixed sm:sticky top-5 bg-white mx-auto px-2 w-full">
+              <h4 class="text-center font-bold underline pb-3">POLICIES</h4>
+              <div class="w-full text-sm  font-medium text-gray-900 bg-white rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <button type="button" data-bs-target="#pills-privacy-policy" role="tab"
+                  class="tab-btn active py-2 px-4 w-full text-left rounded-t-lg border-b border-gray-200 cursor-pointer focus:outline-none dark:bg-gray-800 dark:border-gray-600">
+                  Privacy Policy
+                </button>
+                <button type="button" data-bs-target="#pills-antispam-policy" role="tab"
+                  class="tab-btn py-2 px-4 w-full text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                  Anti-Spam Policy
+                </button>
+                <button type="button" data-bs-target="#pills-coppa-policy" role="tab"
+                  class="tab-btn py-2 px-4 w-full text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                  Children's Policy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end policy tab -->
+        <div class="sm:col-span-6 lg:col-span-6">
+          <div class="policy border-xs-up border-l px-4">
+            <div class="container">
+              <div id="nav-tabContent" class="tab-content">
+                <div class="loader relative hidden">
+                  <div class="fixed top-0 left-0 flex place-items-center place-content-center h-screen w-full  backdrop-blur-2xl bg-black/50">
+                    <i class="fa fa-circle-notch text-gray-300 text-9xl animate-spin"></i>
+                  </div>
+                </div>
+                <!-- Privacy Policy start -->
+                <div class="tab-pane fade show active" id="pills-privacy-policy" role="tabpanel" aria-labelledby="pills-home-tab">
+                  <div class="header w-full bg-gray-300 mb-4 py-4 ">
+                    <h1 class="heading display-3 fw-bold text-center py-3">Privacy Policy</h1>
+                  </div>
+                  <article>
+                    <div class="content">
+                      <p>PhotoShare reserves the right, in its sole discretion, to modify or change this Privacy Policy at any time with or without prior notice to you. You must review the current Privacy Policy on a
+                        regular basis. Your continued
+                        use
+                        of
+                        the PhotoShare service following any changes to the Privacy Policy constitutes your full acceptance of those changes. If you have any questions, concerns, or comments about this Privacy Policy,
+                        please email us at
+                        {% tech_support_link %}</p>
+                    </div>
+                    <div class="online">
+                      <h2 class="heading">Online Sign Up</h2>
+                      <div class="content">
+                        <p>PhotoShare will collect email addresses, mobile number, and other custom data when subscribers opt-in to join PhotoShare services via an Online Sign-up page provided and hosted by PhotoShare.
+                          When joining, we will ask
+                          subscribers for
+                          personal information such as their name, phone number, and email address. The information they provide and the information PhotoShare obtains about them may be used to:</p>
+                        <ul>
+                          <li>Provide subscribers with products and services they request.</li>
+                          <li>To anticipate and resolve problems and conflicts with our products and services.</li>
+                          <li>For verification and authentication purposes in regards to requests or changes of any personal information or data related.</li>
+                          <li>For other purposes communicated to them at the time they provide or authorize the use of their information.</li>
+                        </ul>
+                        <p>Users are giving implied consent to view and access their mobile numbers and also send them text messages. PhotoShare provides subscribers the opportunity to opt-in, and opt-out. All
+                          subscribers have the ability to
+                          unsubscribe.
+                          Msg &#38; data rates may apply.</p>
+                      </div>
+                    </div>
+
+                    <div class="Usage">
+                      <h2 class="heading">Sharing, Usage and Exporting</h2>
+                      <div class="content">
+                        <p>PhotoShare does not share, sell, or rent any contact information with any party. Implied consent is when a subscriber signs up for a PhotoShare service. <span class="fw-bold">NOTE: You are not
+                            allowed to share your
+                            subscribers’
+                            contact info with any third party for any reason.</span> &nbsp; Also, PhotoShare may use or disclose information, including your personal information and your subscribers’ contact information,
+                          under the following very
+                          limited
+                          circumstances:</p>
+                        <ul>
+                          <li>To provide you with products and services you request.</li>
+                          <li>To anticipate and resolve problems and conflicts with our products and services.</li>
+                          <li>For verification and authentication purposes in regard to requests or changes to any personal information or data related.</li>
+                          <li>For other purposes communicated to you at the time you provide or authorize the use of your information.</li>
+                          <li>To enforce our Terms of Use and Privacy Policy or other legal agreements.</li>
+                          <li>To outsource any of the tasks referenced in our Terms of Use and Privacy Policy, such as customer service.</li>
+                          <li>In response to a subpoena, court order, or other legal process.</li>
+                          <li>To establish or exercise our legal rights or defend against legal claims.</li>
+                          <li>To share with a company controlled by, or under common control with PhotoShare for any purpose permitted by our Terms of Use or Privacy Policy.</li>
+                          <li>When PhotoShare believes such use or disclosure is (a) necessary in order to investigate, prevent, or take action regarding suspected illegal activities, fraud, or situations involving
+                            potential threats to the
+                            physical
+                            safety
+                            of any person, or (b) required by law.</li>
+                          <li>In the event of a merger, acquisition, consolidation, divestiture, or bankruptcy of PhotoShare.</li>
+                        </ul>
+                        <p class="fw-bold">NOTE: The PhotoShare service is not intended for children under 13, and PhotoShare does not knowingly collect information from children under the age of 13.</p>
+                      </div>
+                    </div>
+                    <div class="data-security">
+                      <h2 class="heading">Data Security Policy</h2>
+                      <div class="content">
+                        <p> The importance of security for all personally-identifiable information associated with visitors to the Website as well as PhotoShare customer information, such as mobile numbers, texts,
+                          messages, credit card
+                          information,
+                          and
+                          addresses, and other account data is of utmost concern to PhotoShare, and we have implemented, and periodically review, certain physical, electronic, and managerial procedures to help prevent
+                          unauthorized access and
+                          maintain
+                          data
+                          security. Your payment and personal information are always safe. Our Secure Sockets Layer (SSL) software is the industry standard and among the best software available today for secure commerce
+                          transactions. It encrypts
+                          all
+                          of
+                          your personal information, including credit card number, name, and address. Unfortunately, due to the open nature of Internet communications, no data transmission over the Internet can be
+                          guaranteed to be secure, and thus
+                          we
+                          cannot guarantee that communications between you and PhotoShare will be free from unauthorized access by third parties. </p>
+                      </div>
+                    </div>
+                    <div class="personal_info">
+                      <h2 class="heading">Personal Information</h2>
+                      <div class="content">
+                        <p> The information we learn from users helps us continually improve and provide information about our product services, website usage, website popularity, and related content. We gather the
+                          following types of information.
+                        </p>
+                        <ul>
+                          <li>
+                            <h5 class="heading"> Information Provided by You </h5>
+                            <p> We receive and store any information you enter on our Web site or give us in any other way. For example, if you use to contact us form or sign-up for a Trial account. We use the
+                              information that you provide for such
+                              purposes as responding to your requests, customizing and improving our services, and communicating with you. </p>
+                          </li>
+                          <li>
+                            <h5 class="heading highlight">Automatic Information We Collect from Our Website:</h5>
+                            <p class="highlight"> We receive and store certain types of information whenever you interact with our website. For example, like many websites, we use “<span class="fw-bold">cookies</span>”,
+                              and we obtain certain types
+                              of
+                              information when your Web browser accesses PhotoShare.com. </p>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <!-- end Privacy Policy -->
+                <!-- Anti Spam Policy -->
+                <div class="tab-pane fade" id="pills-antispam-policy" role="tabpanel" aria-labelledby="pills-antispam-tab">
+
+                  <div class="header w-full bg-gray-300 mb-4 py-4 ">
+                    <h1 class="heading display-3 fw-bold text-center">Anti Spam Policy</h1>
+                  </div>
+                  <article class="mt-5">
+                    <div class="content">
+                      <h2 class="heading mb-3">Our Definition of Spam</h2>
+                      <p>
+                        We consider any UNSOLICITED TEXT MESSAGES; NOTIFICATIONS; ALERTS; OR ANY MESSAGES THAT YOU MAY RECEIVE FROM SOMEONE WHO SHOULD
+                        NOT HAVE YOUR MOBILE NUMBER, as SPAM. PhotoShare doesn’t tolerate text message SPAM, we only allow verified opt-in subscriptions. We
+                        do NOT allow the use of 3rd party lists, whether consent has been gathered or not.
+                      </p>
+                    </div>
+                    <div class="content">
+                      <h2 class="heading mb-3">Anti-Spam Policy Enforcement:</h2>
+                      <p>
+                        As per our Terms and conditions, our clients agree NOT to use PhotoShare to send unsolicited Text Messages or Spam. All Text Messages
+                        sent using PhotoShare’s clients is tracked. <span class="highlight"> We support OPT-OUT using text message and clients also have the ability to remove mobile
+                          numbers in case you contact them directly.</span> PhotoShare restricts our clients from adding a mobile number to their list that has been
+                        previously Opted-Out or is a Blocked number in our system. If we suspect a violation of our Anti-Spam policy, we will contact
+                        the Client and discuss the Client options, which may range from a warning to termination of service for that Client. To the best
+                        of our knowledge, our system adheres to ALL state and national laws regarding sending unsolicited mass text messages.
+                      </p>
+                    </div>
+                    <div class="content">
+                      <h2 class="heading mb-3">SPAM and ABUSE REPORT:</h2>
+                      <p>
+                        We ensure that all subscribers can opt-out quickly, easily, and permanently from unwanted text message communications. Please
+                        report unwanted messages or SPAM to <a href="mailto:abuse@PhotoShare.com" target="_blank">abuse@PhotoShare.com</a> with your mobile number, along with message sender number, and message date and
+                        time.
+                        <span class="highlight">You can also unsubscribe by sending a new text message “STOP” from your phone to the shortcode XXXX or just reply to the text message with the word “STOP”.</span>
+                        Your report will be registered and the Client will be investigated for violations of our Anti-Spam
+                        Policy. The identity of any individual reporting abuse will be kept confidential.
+                      </p>
+                    </div>
+                  </article>
+                </div>
+                <!-- end Anti Spam Policy -->
+                <!-- Children's Policy (Coppa Policy) -->
+                <div class="tab-pane fade" id="pills-coppa-policy" role="tabpanel" aria-labelledby="pills-coppa-tab">
+                  <div class="header w-full bg-gray-300 mb-4 py-4 ">
+                    <h1 class="heading display-3 fw-bold text-center">Children's Privacy</h1>
+                  </div>
+                  <article>
+                    <div class="content">
+                      <p>
+                        We do not knowingly allow anyone under the age of 13 to provide us with any personal information as defined by the U.S. Children's
+                        Privacy Protection Act ("COPPA"). In order to register and create a PhotoShare account you must be 18 years of age or older.
+                        Children should always get permission from their parents before sending any personal information about themselves (such as their
+                        names, email addresses, and phone numbers) over the Internet, to us or to anyone else. If you're under 13, please do not register
+                        for any of our Services or provide us with any personal information (such as your name, email address or phone number).
+                      </p>
+                      <p>
+                        PhotoShare Users may, at any time, direct PhotoShare to delete all personal information regarding you or your family that you have
+                        provided or that has been collected from your family. To do so, visit the self-service data access and deletion portal,
+                        <a class="link_orange" href="https://accounts.cozi.com/accounts/delete" target="_blank">here</a> .
+                        If you are a parent or guardian and believe PhotoShare has collected information in a manner not permitted by COPPA, please contact
+                        us as set forth in the section entitled "Contact Us" below, and we will remove such data to the extent required by
+                        COPPA.
+                      </p>
+                    </div>
+                    <div class="content">
+                      <h2 class="heading">Additional Privacy Information</h2>
+                      <ul>
+                        <li>
+                          <span class="fw-bold">Security, Retention and Storage of Information.</span>
+                          <p>
+                            We use commercially reasonable procedures to protect the information that we collect. However, we cannot guarantee the
+                            security of our databases, nor can we guarantee that information you supply won't be intercepted while being transmitted to
+                            us over the Internet. Please see our <a class="link_orange" href="{% url 'core:terms-conditions' %}">Terms of Use </a> for more information related to posting materials on our Services
+                            including our use
+                            of such materials.
+                          </p>
+                        </li>
+                        <li>
+                          <span class="fw-bold">Location of Your Data.</span>
+                          <p>Meredith is a U.S. company and your personal information will be transferred to, processed, stored and accessed by us, other Meredith Companies and Service Providers in the United States and
+                            in other jurisdictions where
+                            we
+                            or they operate, which may not provide you with the same level of privacy protection as you are entitled to in your jurisdiction.</p>
+                        </li>
+                        <li>
+                          <span class="fw-bold">EU-U.S. Privacy Shield.</span>
+                          <p>
+                            Meredith adheres to the principles of the EU-U.S. Privacy Shield Framework ("Privacy Shield Principles") as set forth by
+                            the U.S. Department of Commerce regarding the collection, use, and retention of personal information transferred from the
+                            European Union ("EU") to the United States, and it is in the process of certifying its compliance with the U.S. Department
+                            of Commerce. If there is any conflict between the terms in this Privacy Policy and the Privacy Shield Principles, the
+                            Privacy Shield Principles will govern. To learn more about the Privacy Shield program, please visit the Privacy
+                            Shield <a class="link_orange" href="https://www.privacyshield.gov/welcome" target="_blank">website</a>.
+                          </p>
+                          <p>
+                            Meredith is responsible for the processing of personal information it receives under the EU-U.S. Privacy Shield Framework,
+                            or subsequently transfers to a third party acting as an agent on its behalf. Meredith complies with the Privacy Shield
+                            Principles for all onward transfers from the EU and EEA, including onward transfer liability provisions.
+                          </p>
+                          <p>
+                            The U.S. Federal Trade Commission has jurisdiction over Meredith's compliance with its obligations under the EU-U.S.
+                            Privacy Shield. In certain situations, Meredith may be required to disclose personal information in response to a lawful
+                            request by public authorities, including to meet national security or law enforcement requirements.
+                          </p>
+                          <p>
+                            In compliance with the Privacy Shield Principles, Meredith commits to resolve complaints about our collection or use of
+                            your personal information. EU individuals with inquiries or complaints regarding our Privacy Shield policy should first
+                            contact us at <a class="link_orange" href="mailto:privacy@meredith.com" target="_blank">privacy@meredith.com</a> .
+                            If you do not receive timely acknowledgment of your complaint from us, or if we have not resolved your
+                            complaint, you may submit your complaint at no cost to you to JAMS, our independent recourse mechanism, at
+                            <a class="link_orange" href="https://www.jamsadr.com/eu-us-privacy-shield" target="_blank">https://www.jamsadr.com/eu-us-privacy-shield</a> . i
+                            In the event there are residual complaints that have not been resolved by JAMS, or any other means, you may seek a non-monetary remedy
+                            through binding arbitration to be provided to you in accordance with the Privacy Shield Principles.
+                          </p>
+                        </li>
+                        <li>
+                          <span class="fw-bold">Changes to Our Privacy Policy.</span>
+                          <p>
+                            Digital technology is rapidly evolving. If we decide to change our Privacy Policy in the future, we'll post the changes
+                            here and indicate at the top of the policy the last date on which it was updated. Unless otherwise noted, all changes will
+                            be effective when posted.
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+                  </article>
+                </div>
+                <!-- end Children's Policy (Coppa Policy) -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="{% static 'js/policy.js' %}"></script>
+{% endblock content  %}

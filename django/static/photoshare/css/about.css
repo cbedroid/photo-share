@@ -1,0 +1,66 @@
+/* About page */
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap");
+section#about_us .heading-title {
+  color: #1F2937; }
+section#about_us p {
+  font: normal 400 1.125rem/26px "Open Sans", sans-serif;
+  text-align: left;
+  color: #5c5c5c; }
+section#about_us .wrapper {
+  top: 20px;
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+  background: #fff;
+  border-radius: 10px; }
+section#about_us #picsart {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  margin-top: 60px;
+  padding: 20px 10px; }
+section#about_us #picsart svg {
+  top: 0;
+  left: 0;
+  display: block; }
+section#about_us #picsart svg path {
+  stroke: #100;
+  stroke-width: 1px;
+  stroke-linejoin: round; }
+section#about_us #picsart .img-wrapper {
+  z-index: 200; }
+section#about_us #picsart .img-wrapper img {
+  border: 2px solid #100;
+  border-radius: 10px; }
+section#about_us #picsart .img-wrapper:before, section#about_us #picsart .img-wrapper::after {
+  content: "";
+  top: 20px;
+  left: 20px;
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: #100;
+  border: 1px solid #1F2937;
+  border-radius: 10px;
+  z-index: -100; }
+section#about_us #picsart .img-wrapper:after {
+  top: 10px;
+  left: 10px;
+  background: #1F2937;
+  border: 1px solid #100; }
+section#about_us .contact-us table {
+  text-align: left; }
+section#about_us .contact-us .social-links {
+  padding: 0;
+  margin: 0; }
+section#about_us .contact-us .social-links li {
+  border-radius: 18px;
+  background: #00f;
+  height: 60px;
+  width: 60px;
+  display: grid;
+  place-items: center; }
+section#about_us .contact-us .social-links li i {
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); }
+
+/* End About */

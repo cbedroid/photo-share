@@ -23,9 +23,16 @@ class User(AbstractUser):
         return super().save(**kwargs)
 
     def get_profile_pic(self):
-        if self.image:
+        google_account = self.socialaccount_set.filter(provider="google")
+        default_image = static("assets/defaults/default_user.jpg")
+        if getattr(self, "image", None):
             return self.image.url
-        return static("assets/defaults/default_user.jpg")
+        elif google_account.exists():
+            google_account = google_account.first()
+            image = google_account.extra_data.get("picture", default_image)
+            return image
+
+        return default_image
 
     def get_update_url(self):
         return reverse("user:user-update", kwargs={"slug": self.slug})

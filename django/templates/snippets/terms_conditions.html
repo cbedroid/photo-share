@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+{% load static %}
+
+
+{% block extra_head %}
+<style>
+  #terms_conditions {
+    font-family: "Arial", sans-serif;
+    color: #000;
+  }
+
+  h1,
+  h2,
+  h3,
+  li,
+  p {
+    line-height: 24px;
+  }
+
+  p {
+    font-weight: 500
+  }
+
+  #terms_conditions ul,
+  ol {
+
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+  }
+
+  #terms_conditions ul li {
+    display: list-item;
+    list-style-type: none;
+  }
+
+  ol li {
+    display: list-item;
+    list-style-type: decimal;
+    margin: 8px 0;
+  }
+
+  ol.sublist {
+    counter-reset: list;
+  }
+
+  ol.sublist>li {
+    list-style: none;
+    position: relative;
+  }
+
+  ol.sublist>li:before {
+    counter-increment: list;
+    content: "("counter(list) ")  ";
+    position: absolute;
+    left: -1.4em;
+    padding-right: 30px;
+    font-weight: 600;
+  }
+
+  ol.sublist>li:not(:nth-child(-n + 9)):nth-child(-n + 100):before {
+    counter-increment: list;
+    content: "("counter(list) ")  ";
+    position: absolute;
+    left: -1.95em;
+    padding-right: 30px;
+    font-weight: 600;
+  }
+
+  #terms_conditions:first-child ul>li {
+    position: relative;
+    margin: 26px 0;
+    list-style: none;
+  }
+
+  #terms_conditions:first-child ul {
+    counter-reset: list;
+  }
+
+  #terms_conditions:first-child ul>li:before {
+    counter-increment: list;
+    content: counter(list) ".";
+    position: absolute;
+    top: 2px;
+    left: -1.25em;
+    padding-right: 30px;
+    font-weight: 600;
+    font-size: 1.3em;
+  }
+
+  #terms_conditions:first-child ul>li:before {
+    counter-increment: list;
+    content: counter(list) ".";
+    position: absolute;
+    top: 2px;
+    left: -1.25em;
+    padding-right: 30px;
+    font-weight: 600;
+    font-size: 1.3em;
+  }
+
+  #terms_conditions:first-child ul>li:not(:nth-child(-n + 9)):nth-child(-n + 100):before {
+    counter-increment: list;
+    content: counter(list) ".";
+    position: absolute;
+    top: 2px;
+    left: -1.55em;
+    padding-right: 30px;
+    font-weight: 600;
+    font-size: 1.3em;
+  }
+
+
+
+  .highlight {
+    background: #ff0;
+    text-decoration: underline;
+    font-weight: 600
+  }
+
+  .heading {
+    font-weight: bold;
+  }
+
+  .content {
+    padding: 0 0 0 28px;
+    margin: 28px 0 36px 0
+  }
+
+  .content ul li {
+    margin: 10px 0;
+  }
+
+  .content:first-child {
+    padding: 0 0 0 14px
+  }
+
+  .subcontent {
+    margin-top: 24px;
+  }
+</style>
+{% endblock extra_head %}
+
+{% block content  %}
+<section id="terms_conditions">
+  <div class="container mx-auto">
+    <div class="row">
+      <div class="policy py-12">
+        <h1 class="heading display-3 fw-bold text-center">Terms & Conditions</h1>
+        <article>
+          <div class="content">
+            <p>Welcome to PhotoShare a service offered by PhotoShare. Before you use this site,
+              please read these Terms of Service carefully as they govern your use of the services provided at PhotoShare (the “Services”). By using the
+              Services you agree to the Terms of Service set forth below as they may be updated from time to time by PhotoShare. PhotoShare may modify or
+              terminate the Services from time to time, for any reason, and without notice, without liability to you, any other user or any third party
+              provided that when PhotoShare does so, it will update these Terms of Service. You are advised to periodically check the website for changes
+              in the Terms of Service.
+            </p>
+          </div>
+          <ul>
+            <li>
+              <h4 class="heading">Purpose and Description of Services</h4>
+              <p>PhotoShare provides clients with a means of communicating with mobile phones and Internet users.
+                To use our Services, you select unique reminders.The use of such a reminder in the PhotoShare service does not grant you ownership of such
+                reminder. PhotoShare retains ownership of all reminders in its service and provides it to you for the period of time agreed upon,
+                and paid for when joining service. PhotoShare may determine, in its sole discretion, to limit the use of the Services,
+                add data storage limitations, change fees for the Services or otherwise modify the Services in the future.
+                You acknowledge and agree that these changes may take place and that PhotoShare shall have no liability stemming from such changes.
+                Any additions or modifications to the Services shall be in the sole discretion of PhotoShare and will be subject to these Terms of Service.
+                You are solely responsible for any fees, charges and expenses incurred by you in accessing and using the Services – including,
+                but not limited to, standard text messaging charges that will depend on the plan that you have with your wireless carrier.
+                PhotoShare uses reasonable efforts to ensure that the Services are available on a 24/7 basis. However, there will be occasions
+                when the Service will be interrupted for maintenance, upgrades and emergency repairs or due to a failure of telecommunications
+                links and equipment that are beyond the control of PhotoShare. By using the Services you agree that PhotoShare shall not be liable to
+                you for any modification, suspension or discontinuance of the Services. All materials displayed on the Site including, but not limited
+                to text, graphics, news articles, charts, presentations, User communications photographs, images and illustrations, shall be referred to
+                herein as “Content.” PhotoShare attempts to maintain a website that is absent of offensive, indecent or objectionable Content.
+                You understand that by using PhotoShare, you may be exposed to this Content. Under no circumstances will PhotoShare be liable in any way for any Content, including, but not limited to,
+                the subject matter of any Content, including purposeful or accidental personal health information, any errors or omissions in any Content,
+                or for any loss or damage of any kind incurred as a result of the use of any Content posted, emailed, transmitted or otherwise made available
+                via PhotoShare. PhotoShare is not liable for any loss incurred by the failure of a message to be delivered, and you acknowledge that damages for
+                financial or other loss resulting from delivery failure cannot be claimed from PhotoShare for any such non-deliveries.
+                Furthermore, you agree that message contents are deemed to have zero value.
+              </p>
+            </li>
+            <li>
+              <h4 class="heading">Restrictions on the use of the Services</h4>
+              <p>You must only use the Services – </p>
+              <ol class="sublist">
+                <li>in accordance with the with Your Agreement with PhotoShare.</li>
+                <li>for lawful purposes.</li>
+                <li>in accordance with the “<span class="fw-bold">U.S. Consumer Best Practices for Messaging</span>”,
+                  promulgated by the Mobile Marketing Association (“Best Practices”).
+                </li>
+                <li>in accordance with our Acceptable Use Policy.</li>
+                <li>in accordance with all applicable local, national and international laws and regulations, including but not limited to, the Telephone Consumer Protection Act, 47 U.S.C. § 277, and regulations or
+                  guidelines interpreting it
+                  (“TCPA”); and for the purposes for which they are designed.</li>
+              </ol>
+              <div class="subcontent">
+                <p>By using the Services you agree that you will not:</p>
+                <ol class=sublist>
+                  <li>Use the Services for any illegal purpose.</li>
+                  <li>Upload, email or otherwise transmit any User Content that is unlawful, obscene, harmful, threatening, defamatory or hateful or that contains objects or symbols of hate, invade the privacy of any
+                    third party, contain nudity or
+                    child erotica, or is otherwise objectionable.</li>
+                  <li>Upload, email or otherwise transmit any User Content that you do not have the lawful right to transmit (including any User Content that would violate any confidentiality or fiduciary obligations
+                    that you might have with
+                    respect to the content) or any User Content that infringes the intellectual or proprietary rights of any third party, including Personal Health Information (PHI).</li>
+                  <li>Interfere with or disrupt (or attempt to interfere with or disrupt) web pages available at the Site or servers or networks connected to the Site, or disobey any requirements, procedures, policies or
+                    regulations of networks
+                    connected to the Site.</li>
+                  <li>Do anything which violates any terms of Your Agreement with PhotoShare.</li>
+                  <li>Send SPAM SMS messages, commonly associated with unsolicited commercial messages (spam), including but not limited to online and direct pharmaceutical sales e.g. health and sexual well-being
+                    products, work-at-home businesses,
+                    credit or finance management (e.g., credit repair, debt relief, stock and trading tips), mortgage finance, claims of lost bank accounts or inheritances, and odds-making and gambling services (e.g.,
+                    poker, casino games, horse and
+                    dog racing, college and professional sporting events). Content and messages that violate anti-spamming laws and regulations, including but not limited to the CAN-SPAM Act, the Telephone Consumer
+                    Protection Act, and the
+                    Do-Not-Call Act. </li>
+                  <li>Using the services in connection with any unsolicited or unwanted transmissions (commercial or otherwise), including but not limited to a phone call, text message, and voicemail.</li>
+                  <li>Make any misrepresentation including, without limitation, those that may deceive, mislead, defraud or otherwise misrepresent any fact or circumstance to any person.</li>
+                  <li>Impersonate, attempt to impersonate, or otherwise misrepresent Your identity to any person for whatever purpose or create a false identity mobile phone address or header.</li>
+                  <li>Commit fraud or solicit or induce any person to participate in any commercial or non-commercial activities which are in the nature of a financial scam, “pyramid schemes” or multilevel-marketing
+                    (network marketing) businesses,
+                    including but not limited to “get rich quick,” “build your wealth,” and “financial independence” offerings We encourage the use and publicity of anti-spam policies. PhotoShare reserves the right at
+                    all times to terminate your
+                    account, and delete any and all Content at, in whole or in part, for any reason including, but not limited to, violations of these Terms of Service. If you do violate these Terms of Service,
+                    PhotoShare reserves the right to
+                    share any information with any third party. In addition, PhotoShare reserves the right at all times to disclose any User Content as necessary to satisfy any law, regulation, governmental request or
+                    partner request, in its sole
+                    discretion.</li>
+                </ol>
+              </div>
+            </li>
+            <li>
+              <h4 class="heading">Age Requirements and Limitations on Use of Services</h4>
+              <p>
+                Users of the Services must be at least 13 years of age. Children under the age of 13 are not permitted to use the Service and no
+                information of children under the age of 13 will be knowingly collected by PhotoShare. If PhotoShare determines that it has collected
+                personal information of children under the age of 13, PhotoShare will immediately delete such information.
+              </p>
+            </li>
+            <li>
+              <h4 class="heading">Service Availability</h4>
+              <p>PhotoShare Services may or may not be available in all countries or regions of the world. PhotoShare will transmit messages initiated by
+                you or sent to you by others through different routes, and the level of reliability and support for special features varies according
+                to the route. You are responsible for obtaining and maintaining all computer hardware, software, and communications equipment needed to
+                access the Services and for paying all access charges (e.g., Internet Service Provider, telecommunications) incurred while using the
+                Services. PhotoShare only provides that the Services are processed correctly and further transmitted by PhotoShare to the applicable network.
+                PhotoShare is not responsible for the final delivery of any communication initiated through PhotoShare’s Services, as this is out of our
+                control and is the responsibility of downstream communications carriers. PhotoShare transmits and receives text messages and voice
+                broadcasts via other major telecommunications companies and mobile network operators, and thus PhotoShare’s influence over the timing of
+                the transmission of your messages and broadcasts is only within the technical constraints imposed upon PhotoShare. While PhotoShare shall use
+                commercially reasonable efforts to transmit your messages and broadcasts to the applicable network for final delivery to your
+                designated recipients as fast as possible, we cannot commit to and do not guarantee, a specific maximum delivery time. Such times
+                depend on various network and system-related factors among the various entities involved in the transmission of your messages and
+                broadcasts across the public switched telephone network and/or the Internet. You should know that communications carriers assign text
+                messages and voice broadcasts with a default lifetime and any message or broadcast that cannot be delivered successfully within the
+                lifetime assigned to it will be discarded by the communications carrier without any notice. PhotoShare is not liable for any loss incurred
+                by the failure of a message or broadcast to be delivered, and you acknowledge that damages for financial or other loss resulting from
+                delivery failure cannot be claimed from PhotoShare for any such non-deliveries. Furthermore, you agree that message and broadcast contents
+                are deemed to have zero value.
+              </p>
+            </li>
+            <li>
+              <h4 class="heading">Trademarks and Copyrights</h4>
+              <p>
+                All trademarks, brands and service marks used in conjunction with the Services by PhotoShare shall be the property of PhotoShare. PhotoShare
+                shall be the owner of all copyright and database rights in the Services. You may not publish, distribute, extract or reproduce any such
+                content in any material form, except as it relates to the personal use of the Services. This license does not apply to any third party
+                content stored at PhotoShare. Permission for use of such content must be obtained from the copyright owner. PhotoShare claims no ownership
+                interest in the User Content. User Content means any Content created or contributed to the Site by any user of the Services. You
+                acknowledge and agree that if you contribute any User Content, including any widgets, you grant to PhotoShare a perpetual, non-exclusive
+                worldwide, royalty-free, transferable right and license to use in any way such User Content (including all related intellectual
+                property rights) to provide the Services.
+              </p>
+            </li>
+            <li>
+              <h4 class="heading">Copyright Infringement</h4>
+              <p>PhotoShare respects the intellectual property rights of others. However, you agree that PhotoShare is not responsible for any violations of any intellectual property rights in any User Content. If you
+                believe that your
+                intellectual
+                property rights have been infringed by another party please contact PhotoShare via the email address: {% tech_support_link %}</p>
+            </li>
+            <li id="refund-policy">
+              <h4 class="heading">Payment, Refund, Cancellation, and Termination</h4>
+              <p>A valid credit card is required for paying accounts. You will be billed monthly starting on the day after your account was initially
+                created. The Service is billed in advance on a monthly basis and is non-refundable. There will be no refunds or credits for partial
+                months of service, upgrade/downgrade refunds, or refunds for months unused with an open account. In order to treat everyone equally, no
+                exceptions will be made. All fees are exclusive of all taxes, levies, or duties imposed by taxing authorities, and you shall be
+                responsible for payment of all such taxes, levies, or duties, excluding only United States (federal or state) taxes. You are solely
+                responsible for properly canceling your account. <span class="highlight"> The cancellation must be done online through the dashboard</span>.
+                An email to support team to cancel your account is considered sufficient, as long as it has been acknowledged by PhotoShare. If you have a
+                multi-month contract in place, you will be responsible for submitting payment throughout the remainder of your contract term. All of
+                your Content will be immediately deleted from the Service upon cancellation. This information cannot be recovered once your account is
+                canceled. If you cancel the Service before the end of your current paid-up month, your cancellation will take effect immediately and
+                you will not be charged again. PhotoShare, in its sole discretion, has the right to suspend or terminate your account and refuse any and
+                all current or future use of the Service, or any other PhotoShare service, for any reason at any time. Such termination of the Service
+                will result in the deactivation or deletion of your Account or your access to your Account, and the forfeiture and relinquishment of
+                all contents in your Account. PhotoShare reserves the right to refuse service to anyone for any reason at any time.
+              </p>
+            </li>
+            <li>
+              <h4 class="heading">Disclaimer of Warranty and Limitations of Liability</h4>
+              <p>PhotoShare expressly disclaims any responsibility or liability for the use of the Services by you. THE SERVICES, CONTENT,
+                SITE AND ANY SOFTWARE ARE PROVIDED ON AN “AS IS” BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING,
+                WITHOUT LIMITATION, IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT. SOME STATES DO NOT ALLOW
+                LIMITATIONS ON HOW LONG AN IMPLIED WARRANTY LASTS, SO THE ABOVE LIMITATIONS MAY NOT APPLY TO YOU.</p>
+              <p>PhotoShare reserves the right to modify,
+                suspend, or discontinue the offering of any of its Services at any time for any reason without prior notice. Further, while PhotoShare
+                utilizes electronic and physical security to reduce the risk of improper access to or manipulation of data during transmission and
+                storage, it cannot guarantee the security or integrity of the data and shall have no liability for breaches of security or integrity or
+                third-party interception in transit, nor for any damage which may result to your computer or other property by your use of the PhotoShare
+                Services. You acknowledge that your messages are transmitted unencrypted and that eavesdropping of communications by third parties is
+                possible. PhotoShare recommends that you ensure sensitive and valuable information is communicated by a protected and/or encrypted method.
+                PhotoShare shall use commercially reasonable efforts to make access to the Services available through the required access protocols, but
+                makes no warranty or guarantee that (i) the Services will be available at any particular time; or (ii) you will be able to access the
+                Services at any particular time or from any particular location. PhotoShare will not be liable for any act or omission of any other
+                company or companies furnishing a portion of the Services (including, without limitation communications carriers or ISPs), or from any
+                act or omission of a third party, including those vendors participating in PhotoShare offerings made to you, or for equipment that it does
+                not furnish, or for damages that result from the operation of customer-provided systems, equipment, facilities or services that are
+                interconnected with the Service.
+              </P>
+              <p>NOTWITHSTANDING ANYTHING CONTAINED HEREIN TO THE CONTRARY, THE PhotoShare SERVICES ARE PROVIDED “AS IS”
+                AND “AS AVAILABLE,” WITHOUT ANY WARRANTIES OR CONDITIONS WHATSOEVER, EXPRESSED OR IMPLIED. NOTWITHSTANDING THE FOREGOING OR ANY
+                STATEMENT TO THE CONTRARY CONTAINED IN THESE TERMS, PhotoShare DOES NOT WARRANT THAT THE USE OF THE PhotoShare SERVICES WILL BE UNINTERRUPTED
+                OR ERROR-FREE, INCLUDING, BUT NOT LIMITED TO ANY INTERRUPTIONS TO THE SERVICES CAUSED BY THE INTENTIONAL AND/OR MALICIOUS ACTS OF THIRD
+                PARTIES (E.G., “HACKING”) NOR SHALL PhotoShare BE RESPONSIBLE FOR ANY DATA LOSS OR LOSS OF ANY INFORMATION IN YOUR ACCOUNT, REGARDLESS OF
+                THE CAUSE. Furthermore, PhotoShare MAKES NO REPRESENTATIONS OR WARRANTIES AS TO THE RESULTS THAT MAY BE OBTAINED FROM USE OF THE SERVICES
+                OR THAT THE PhotoShare SITES OR SERVICES WILL MEET ANY OF YOUR SPECIFIC REQUIREMENTS OTHER THAN AS MAY BE EXPRESSLY SET FORTH IN THESE
+                TERMS. PhotoShare MAKES NO REPRESENTATIONS OR WARRANTIES AND HEREBY DISCLAIMS ALL OTHER REPRESENTATIONS AND WARRANTIES OF ANY KIND,
+                WHETHER EXPRESS, STATUTORY OR IMPLIED, ORAL OR WRITTEN, WITH RESPECT TO THE SERVICES, INCLUDING WITHOUT LIMITATION ALL IMPLIED
+                WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, ACCURACY, RELIABILITY, COMPLETENESS, OR TIMELINESS OF THE MATERIAL,
+                SERVICE, SOFTWARE, TEXT, GRAPHICS OR LINKS, AND ALL WARRANTIES IMPLIED FROM ANY COURSE OF DEALING, COURSE OF PERFORMANCE OR USAGE OF
+                TRADE. PhotoShare SHALL NOT BE LIABLE TO YOU OR TO ANY THIRD PARTY FOR ANY INDIRECT, INCIDENTAL, SPECIAL OR CONSEQUENTIAL DAMAGES (
+                INCLUDING, WITHOUT LIMITATION, ANY DAMAGES ARISING FROM LOSS OF USE OR LOST BUSINESS, LOSS
+                OF OPPORTUNITY, LOSS OF REVENUE, LOSS OF ACTUAL OR ANTICIPATED PROFITS, LOSS OF DAMAGE TO OR CORRUPTION OF DATA OR LOSS OF GOODWILL),
+                OR FOR ANY COST OF PROCUREMENT OF SUBSTITUTE SERVICES ARISING IN CONNECTION WITH THESE TERMS, WHETHER IN AN ACTION IN CONTRACT, TORT,
+                STRICT LIABILITY OR NEGLIGENCE, OR OTHER ACTIONS, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. IF YOUR USE OF THE PhotoShare SITES
+                OR SERVICES RESULTS IN THE NEED FOR SERVICING OR REPLACING EQUIPMENT, SOFTWARE, OR DATA, PhotoShare IS NOT RESPONSIBLE FOR THOSE COSTS.
+                PhotoShare’S TOTAL LIABILITY ARISING OUT OF YOUR USE OF THE PhotoShare SITES OR SERVICES FOR DIRECT DAMAGES SHALL NOT, IN THE AGGREGATE,
+                EXCEED AN AMOUNT EQUAL TO THE MONTHLY TRANSACTION FEE PAID BY YOU TO PhotoShare HEREUNDER.
+              </p>
+            </li>
+            <li>
+              <h4 class="heading">Indemnification</h4>
+              <p>
+                You agree to defend, indemnify, and hold harmless PhotoShare and its subsidiaries and other affiliated companies, and their employees,
+                officers, directors, contractors, agents, licensors, and suppliers, from all liabilities, losses, damages, claims, costs and expenses,
+                including reasonable attorney’s fees, that arise from (i) use or misuse of the Services or any person to whom you have granted access
+                to the Services, (ii) your violation of any of these Terms of Service, or (iii) any other activity related to your account (including
+                negligent or wrongful conduct). PhotoShare reserves the right, at its own expense, to assume the exclusive defense and control of any
+                matter otherwise subject to defense by you, in which event you will cooperate with PhotoShare and its counsel in the conduct of such defense.
+              </p>
+            </li>
+            <li>
+              <h4 class="heading">Forum and Choice of Law</h4>
+              <p>
+                These Terms of Service shall be governed by and construed in accordance with the laws of the State of Virginia, without regard to its
+                conflicts of law rules. You expressly agree that the exclusive jurisdiction for any claim or action arising out of or relating to these
+                Terms of Service or your use of the Service shall be filed only in the federal courts located in the State of Virginia, or state courts
+                located in the city of Virginia Beach and you further agree and submit to the exercise of personal jurisdiction of such courts for the
+                purpose of litigating any such claim or action. You agree that regardless of any statute or law to the contrary, any claim or cause of
+                action arising out of or related to use of the Services or these Terms of Service must be filed within one (1) year after such claim or
+                cause of action arose or be forever barred.
+              </p>
+            </li>
+            <li>
+              <h4 class="heading">Entire Agreement</h4>
+              <p>
+                These Terms of Service constitute the entire agreement between you, the user, and PhotoShare with respect to the subject matter contained
+                herein and supersedes any other agreement, proposals and communications, written or oral, between PhotoShare and you with respect to the
+                subject matter hereof. If a court should find that one or more rights or provisions contained in these Terms of Service are invalid,
+                you agree that the remainder of the Terms of Service shall be enforceable.
+              </p>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+  {% endblock content  %}
+</section>

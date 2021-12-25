@@ -1,0 +1,88 @@
+/* About page */
+@import 'fonts'
+@import "variables"
+@import 'mixins'
+
+$color-primary: #100
+$color-secondary: #1F2937
+$color-yelllow: #ff0
+section#about_us
+  .heading-title
+    color: $color-secondary
+  p
+    font: normal 400 1.125rem/26px "Open Sans", sans-serif
+    text-align: left
+    color: #5c5c5c
+
+
+  .wrapper
+    +cross-browser(position, relative)
+    top: 20px
+    font-family: "Roboto",sans-serif
+    text-align: center
+    background: #fff
+    +cross-browser(box-shadow, 2px 2px 30px rgba(0,0,0,.4))
+    border-radius: 10px
+
+  #picsart
+    +cross-browser(position, relative)
+    display: grid
+    place-items: center
+    height: 100%
+    margin-top: 60px
+    padding: 20px 10px
+    svg
+        +cross-browser(position, absolute)
+        top: 0
+        left: 0
+        display: block
+        path
+          stroke: $color-primary
+          stroke-width: 1px
+          stroke-linejoin: round
+
+    .img-wrapper
+      +cross-browser(position, relative)
+      z-index: 200
+      img
+        border: 2px solid $color-primary
+        border-radius: 10px
+      &:before, &::after
+        content: ""
+        +cross-browser(position, absolute)
+        top: 20px
+        left: 20px
+        display: block
+        height: 100%
+        width: 100%
+        background: $color-primary
+        border: 1px solid $color-secondary
+        border-radius: 10px
+        z-index: -100
+      &:before
+        +cross-browser(box-shadow, 2px 2px 30px rgba(0,0,0,.4))
+      &:after
+        top: 10px
+        left: 10px
+        background: $color-secondary
+        border: 1px solid $color-primary
+
+  .contact-us
+    table
+      text-align: left
+    .social-links
+      padding: 0
+      margin: 0
+      li
+        border-radius: 18px
+        background: #00f
+        height: 60px
+        width: 60px
+        display: grid
+        +cross-browser(box-shadow, 2px 2px 8px rgba(0,0,0,.4))
+        place-items: center
+        i
+          color: #fff
+          text-shadow: 2px 2px 5px rgba(0,0,0,.4)
+
+/* End About */

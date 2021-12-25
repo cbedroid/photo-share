@@ -24,6 +24,9 @@ ALLAUTH_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    # "allauth.socialaccount.providers.instagram",
+    # "allauth.socialaccount.providers.facebook",
 ]
 INSTALLED_APPS = [
     "jazzmin",
@@ -34,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
+    "simple_history",
     "django_social_share",
     "debug_toolbar",
     "rest_framework",
@@ -44,6 +48,7 @@ INSTALLED_APPS = [
     "users",
     "core",
     "gallery",
+    "django_premailer",
     "django_cleanup",
 ] + ALLAUTH_APPS
 
@@ -60,6 +65,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = "photoshare.urls"
@@ -175,9 +181,9 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
-STATIC_ROOT = str(BASE_DIR / "staticfiles")
+STATIC_ROOT = str(BASE_DIR / "static")
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static/photoshare"),)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
@@ -200,6 +206,7 @@ JAZZMIN_SETTINGS = {
     "order_with_respect_to": [
         "users",
         "account",
+        "socialaccount",
         "gallery",
         "auth",
     ],
@@ -262,8 +269,42 @@ REST_FRAMEWORK = {
 
 
 # ********************* #
+# ***    Support    *** #
+# ********************* #
+TECH_SUPPORT_EMAIL = os.getenv("TECH_SUPPORT_EMAIL")
+
+# ********************* #
 # *** Email Service *** #
-# # ********************* #
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = os.getenv("SUPPORT_EMAIL_HOST", "DebuggingServer")
-# EMAIL_PORT = os.getenv("SUPPORT_EMAIL_PORT", 587)
+# ********************* #
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("SUPPORT_EMAIL_HOST", "DebuggingServer")
+EMAIL_PORT = os.getenv("SUPPORT_EMAIL_PORT", 587)
+EMAIL_HOST_USER = os.getenv("SUPPORT_EMAIL_ADDRESS")
+EMAIL_HOST_PASSWORD = os.getenv("SUPPORT_EMAIL_PASSWORD")
+DEFAULT_FROM_EMAIL = "no-reply@myMadden.com"
+EMAIL_USE_TLS = True
+EMAIL_TIMEOUT = 5
+
+SOCIALACCOUNT_PROVIDERS = {
+    "facebook": {
+        "METHOD": "oauth2",
+        "SDK_URL": "//connect.facebook.net/{locale}/sdk.js",
+        "SCOPE": ["email", "public_profile"],
+        "AUTH_PARAMS": {"auth_type": "reauthenticate"},
+        "INIT_PARAMS": {"cookie": True},
+        "FIELDS": ["id", "first_name", "last_name", "middle_name", "name", "name_format", "picture", "short_name"],
+        "EXCHANGE_TOKEN": True,
+        "LOCALE_FUNC": "path.to.callable",
+        "VERIFIED_EMAIL": False,
+        "VERSION": "v7.0",
+    },
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    },
+}
