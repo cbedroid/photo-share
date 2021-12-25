@@ -1,3 +1,5 @@
+from allauth.account.models import EmailAddress
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from gallery.models import Gallery, Photo
@@ -19,6 +21,13 @@ class UserViewSet(ModelViewSet):
         if self.request.method == "POST":
             self.permission_classes = (AllowAny,)
         return super(UserViewSet, self).get_permissions()
+
+    def perform_create(self, serializer):
+        user = serializer.save()
+        if settings.ACCOUNT_EMAIL_VERIFICATION.lower() != "none":
+            email = EmailAddress.objects.create(user=user, email=user.email)
+            email.send_confirmation()
+        return user
 
 
 class GalleryViewSet(ModelViewSet):
