@@ -6,36 +6,39 @@
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block content %}
-<section id="login" class="border-gray-300 border-t  pt-4">
+<section id="login" class="border-gray-300 border-t pt-4 pb-14">
 
   <div class="container mx-auto">
     {% get_providers as socialaccount_providers %}
-
-    {% if socialaccount_providers %}
-    <p>{% blocktrans with site.name as site_name %}Please sign in with one
-      of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-      for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
-
-
-    <div class="socialaccount_ballot">
-      <ul class="socialaccount_providers">
-        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-      </ul>
-      <div class="login-or">{% trans 'or' %}</div>
-    </div>
-    {% include "socialaccount/snippets/login_extra.html" %}
-    {% endif %}
-
     <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-md w-full space-y-8">
         <div>
-          <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow">
+          <img class="ring-offset-2 ring-black border-2 border-[#ff6e0a] drop-shadow-lg rounded-full mx-auto h-16 w-16" src="{% static 'assets/images/site-logo.png' %}" alt="site logo">
           {% blocktrans %}
           <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Log in to your account
           </h2>
           {% endblocktrans %}
-          {% if not socialaccount_providers %}
+
+          {% if socialaccount_providers %}
+          <div class="text-gray-800 mt-5 text-center font-semibold">
+            <p class="text-sm">{% blocktrans %}Login with {% endblocktrans %}</p>
+            <div class="socialaccount_ballot">
+              <ul class="socialaccount_providers flex flex-wrap place-content-center space-x-5 py-2">
+                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+              </ul>
+              <h4 class="my-1">- OR -</h4>
+              <p class="login-or">
+                {% blocktrans with site.name as site_name %} <a class="font-bold text-blue-600 hover:text-blue-700" href="{{ signup_url }}">sign up</a>
+                for an account and login in below:{% endblocktrans %}
+              </p>
+            </div>
+          </div>
+
+
+
+          {% include "socialaccount/snippets/login_extra.html" %}
+          {% else %}
           <p class="mt-2 text-center text-sm text-gray-600">
             Or
             <a href="{{ signup_url }}" class="font-medium text-indigo-600 hover:text-indigo-500">

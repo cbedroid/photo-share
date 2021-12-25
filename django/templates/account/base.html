@@ -1,40 +1,63 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
+
   <head>
+    <!-- TailWind  CSS -->
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <title>{% block head_title %}{% endblock %}</title>
-    {% block extra_head %}
-    {% endblock %}
+    {% block extra_head %}{% endblock  %}
+    <style>
+      #social-menu a {
+        transition: .3s ease-in-out;
+      }
+    </style>
   </head>
+
   <body>
-    {% block content %}
+    <div class="container mx-auto">
+      {% if messages %}
+      <div>
+        <strong>Messages:</strong>
+        <ul>
+          {% for message in messages %}
+          <li>{{message}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
 
-    {% if messages %}
-    <div>
-      <strong>Messages:</strong>
-      <ul>
-        {% for message in messages %}
-        <li>{{message}}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
+      <div class="mt-3 mb-12 rounded-md  bg-blue-900 text-white shadow-lg p-3">
+        <strong>Menu:</strong>
+        <div class="flex place-content-between align-items-start p-2">
 
-    <div>
-      <strong>Menu:</strong>
-      <ul>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'account_email' %}">Change E-mail</a></li>
-        <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
-        {% else %}
-        <li><a href="{% url 'account_login' %}">Sign In</a></li>
-        <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
-        {% endif %}
-      </ul>
+          <ul id="social-menu" class="flex space-x-3">
+            {% if user.is_authenticated %}
+            <li class="hover:text-gray-300"><a href="{% url 'account_email' %}">Change E-mail</a></li>
+            <li class="hover:text-gray-300"><a href="{% url 'account_logout' %}">Sign Out</a></li>
+            {% else %}
+            <li class="hover:text-gray-300"><a href="{% url 'account_login' %}">Sign In</a></li>
+            <li class="hover:text-gray-300"><a href="{% url 'account_signup' %}">Sign Up</a></li>
+            {% endif %}
+          </ul>
+          <div class="self-center">
+            <a class="m-auto" href="{% url 'core:index' %}">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              Home
+            </a>
+
+          </div>
+        </div>
+      </div>
+      {% block content %}
+      {% endblock %}
+      {% block extra_body %}
+      {% endblock %}
     </div>
-    {% block content %}
-    {% endblock %}
-    {% endblock %}
-    {% block extra_body %}
-    {% endblock %}
   </body>
+
 </html>

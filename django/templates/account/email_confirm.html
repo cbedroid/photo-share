@@ -5,27 +5,24 @@
 
 {% block head_title %}{% trans "Confirm E-mail Address" %}{% endblock %}
 
-
 {% block content %}
-<h1>{% trans "Confirm E-mail Address" %}</h1>
-
-{% if confirmation %}
-
-{% user_display confirmation.email_address.user as user_display %}
-
-<p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}</p>
-
-<form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
-{% csrf_token %}
-    <button type="submit">{% trans 'Confirm' %}</button>
-</form>
-
-{% else %}
-
-{% url 'account_email' as email_url %}
-
-<p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans %}</p>
-
-{% endif %}
-
+<section id="confirm-email" class="min-h-50 pt-12">
+  <div class="row pb-40">
+    <div class="container mx-auto">
+      <h1 class="font-bold mb-4">{% trans "Confirm E-mail Address" %}</h1>
+      {% if confirmation %}
+      {% user_display confirmation.email_address.user as user_display %}
+      <p class="text-gray-600 text-lg">{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a class="text-blue-500 hover:text-blue-600" href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user
+        {{ user_display }}.{% endblocktrans %}</p>
+      <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+        {% csrf_token %}
+        <button class="btn btn-primary bg-blue-500 hover:bg-blue-600 border-blue-500 hover:border-blue-600 my-4 w-48 " type="submit">{% trans 'Confirm' %}</button>
+      </form>
+      {% else %}
+      {% url 'account_email' as email_url %}
+      <p class="text-gray-600 text-lg">{% blocktrans %}This e-mail confirmation link expired or is invalid. Please <a class="text-blue-500 hover:text-blue-600" href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans %}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
 {% endblock %}

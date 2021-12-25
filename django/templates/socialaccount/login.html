@@ -1,0 +1,32 @@
+{% extends "socialaccount/base.html" %}
+{% load static i18n %}
+
+{% block content %}
+<section class="min-h-50">
+  <div class="grid lg:grid-cols-2 shadow-lg">
+    <div id="social-login" class="content--left  bg-gray-100  rounded-sm p-3">
+      {% if process == "connect" %}
+      <div class="login-connect mb-3">
+        <h1 class="font-bold mb-3">{% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}</h1>
+        <p class="text-gray-500">{% blocktrans with provider.name as provider %}You are about to connect a new third party account from {{ provider }}.{% endblocktrans %}</p>
+      </div>
+      {% else %}
+      <div class="social-signup mb-3">
+        <h1 class="font-bold mb-3">{% blocktrans with provider.name as provider %}Sign In Via {{ provider }}{% endblocktrans %}</h1>
+        <p class="text-gray-500">{% blocktrans with provider.name as provider %}You are about to sign in using a third party account from {{ provider }}.{% endblocktrans %}</p>
+      </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-primary" type="submit">{% trans "Continue" %}</button>
+      </form>
+    </div>
+
+    <!-- right -->
+    <div class="content--right">
+      <img class="w-full" src="https://neilpatel.com/wp-content/uploads/2021/08/social-media-metrics.jpg" alt="social apps">
+    </div>
+  </div>
+</section>
+{% endblock %}

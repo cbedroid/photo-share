@@ -1,0 +1,27 @@
+{% extends "email/base.html" %}
+{% load static i18n %}
+{% load  premailer core_extras users_extras %}
+
+{% block content %}
+{% autoescape off %}
+<div id="account-notice" class="email-content">
+  <div class="cardbox">
+    <div class="cardbox__header" style="background:red;">
+      <h2 class="title" style="color:#fff;">Account Deleted</h2>
+    </div>
+    <div class="cardbox__body">
+      {% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+      <p>You're receiving this e-mail because your account was <b>permantly deleted</b> due to unverified email at <a href="{{site_domain}}" target="_blank">{{site_name}}</a>. </p>
+      <p>We sent a notice to you on <b>{{notice_date}}</b> asking you to verify your account email.</p>
+      <p style="margin-top:4px;"><b>Note:</b> All data associated with your account such as <em>"username"</em>, <em>"email</em>, and <em>"gameclips"</em> was also deleted</p>
+      {% endblocktrans %}
+      <p style="margin-top:8px;">You can create another account anytime by visiting <a href="{% url 'account_signup' %}" target="_blank">{{site_domain}}{% url 'account_signup' %}</a></p>
+
+    </div>
+    <div class="cardbox__footer">
+      <small class="" style="color:#a1a1a1;font-weight:600;"> - The MaddenClip Support Team</small>
+    </div>
+  </div>
+</div>
+{% endautoescape %}
+{% endblock content %}

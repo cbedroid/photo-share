@@ -21,8 +21,8 @@
       <h4><b>Trending Category</b></h4>
       <ul class="category category--slider">
         {% for category in top_category %}
-        <li class="category__badge badge  {{category.label}} rounded-full py-4">
-          <a class="whitespace-nowrap text-sm sm:text-lg mx-1" href="{{ category.get_absolute_url }}#gallery-collection">{{category}}</a>
+        <li class="category__badge badge  {{category.label}} rounded-full h-8 overflow-hidden">
+          <a class="whitespace-nowrap text-sm sm:text-lg p-3 mx-1 text-center w-full" href="{{ category.get_absolute_url }}#gallery-collection">{{category}}</a>
         </li>
         {% endfor %}
       </ul>
@@ -37,7 +37,8 @@
           <div class="px-4 py-3 sm:px-6">
             <div class="flex-1 flex justify-between sm:hidden">
               {% if  page_obj.has_previous %}
-              <a href="{{current_url}}?page={{page_obj.previous_page_number}}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+              <a href="{{current_url}}?page={{page_obj.previous_page_number}}"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 Previous
               </a>
               {% else %}
@@ -47,7 +48,8 @@
               {% endif %}
 
               {% if  page_obj.has_next %}
-              <a href="{{current_url}}?page={{page_obj.next_page_number}}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+              <a href="{{current_url}}?page={{page_obj.next_page_number}}"
+                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 Next
               </a>
               {% else %}
@@ -126,8 +128,8 @@
           <!---->
           <form action="{{current_url}}" method='GET'>
             <div class="mt-1 flex rounded-md shadow-sm">
-              <input class="search_bar focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" type="text" name="q" placeholder="search category or gallery" aria-label="search bar"
-                style="padding: 6px;">
+              <input class="search_bar focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" type="text" name="q" placeholder="search category or gallery"
+                aria-label="search bar" style="padding: 6px;">
               <button type="submit" class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                 <i class="search-icon fa fa-search"></i>
               </button>
@@ -144,7 +146,8 @@
         <div class="px-4 py-3 sm:px-6">
           <div class="flex-1 flex justify-between sm:hidden">
             {% if  page_obj.has_previous %}
-            <a href="{{current_url}}?page={{page_obj.previous_page_number}}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <a href="{{current_url}}?page={{page_obj.previous_page_number}}"
+              class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
               Previous
             </a>
             {% else %}
@@ -154,7 +157,8 @@
             {% endif %}
 
             {% if  page_obj.has_next %}
-            <a href="{{current_url}}?page={{page_obj.next_page_number}}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <a href="{{current_url}}?page={{page_obj.next_page_number}}"
+              class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
               Next
             </a>
             {% else %}
