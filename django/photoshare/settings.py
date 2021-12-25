@@ -271,7 +271,7 @@ REST_FRAMEWORK = {
 # ********************* #
 # ***    Support    *** #
 # ********************* #
-TECH_SUPPORT_EMAIL = os.getenv("TECH_SUPPORT_EMAIL", "techsupport@myMadden.com")
+TECH_SUPPORT_EMAIL = os.getenv("TECH_SUPPORT_EMAIL")
 
 # ********************* #
 # *** Email Service *** #
