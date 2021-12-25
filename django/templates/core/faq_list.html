@@ -2,8 +2,10 @@
 {% load core_extras %}
 {% load static %}
 
+{% block breadcrumb %}{% endblock breadcrumb %}
 {% block content %}
-<section id="faq-section">
+<section id="faq-section" class="min-h-80">
+
   <div class="relative py-16 bg-gradient-to-b from-indigo-700 to-indigo-600 flex justify-center items-center">
     <div>
       <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-10 text-white">How can we help you?</h1>
@@ -62,7 +64,8 @@
         </div>
       </div> {% endcomment %}
       <div class="flex justify-center items-center">
-        <a href="{% url 'core:contact-us' %}" class="mt-4 md:mt-6 py-3 px-6 bg-indigo-800 hover:bg-indigo-700 rounded text-white text-center font-medium text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-800">Contact
+        <a href="{% url 'core:contact-us' %}"
+          class="mt-4 md:mt-6 py-3 px-6 bg-indigo-800 hover:bg-indigo-700 rounded text-white text-center font-medium text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-800">Contact
           us</a>
       </div>
     </div>

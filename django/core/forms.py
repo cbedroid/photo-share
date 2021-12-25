@@ -25,7 +25,9 @@ class ContactUsForm(forms.Form):
     message = forms.CharField(
         required=True,
         max_length=500,
-        widget=forms.Textarea(attrs={"class": "cf-message", "placeholder": MESSAGE_PLACEHOLDER}),
+        widget=forms.Textarea(
+            attrs={"rows": "6", "cols": "40", "class": "cf-message", "placeholder": MESSAGE_PLACEHOLDER}
+        ),
     )
 
     def __init__(self, *args, **kwargs):
