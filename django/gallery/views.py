@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count, Q, Sum
 from django.http.response import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -86,9 +87,6 @@ class GalleryCreateView(GalleryFormMixin, CreateView):
     template_name = "gallery/gallery_form.html"
     object = None
 
-    def get_success_url(self, *args, **kwargs):
-        return self.object.get_absolute_url()
-
 
 class GalleryUpdateView(GalleryFormMixin, UserPassesTestMixin, UpdateView):
     model = Gallery
@@ -99,9 +97,6 @@ class GalleryUpdateView(GalleryFormMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         """Test whether the Gallery belongs to the current user"""
         return self.request.user == self.get_object().user
-
-    def get_success_url(self, *args, **kwargs):
-        return self.get_object().get_absolute_url()
 
 
 class GalleryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -134,6 +129,7 @@ class PhotoDetailView(UserAccessPermissionMixin, DetailView):
         context = super().get_context_data(**kwargs)
         obj = self.get_object()
         context["is_user"] = obj.gallery.user == self.request.user
+        context["galleries"] = Gallery.objects.filter(user=obj.gallery.user).exclude(pk=obj.gallery.pk)
         return context
 
     def get(self, *args, **kwargs):
@@ -195,6 +191,31 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             response["status"] = True
             return JsonResponse(response)
         super().post(*args, **kwargs)
+
+
+def photo_cover_update(request, pk=None):
+    obj = get_object_or_404(Photo, pk=pk)
+    owner = obj.gallery.user
+
+    if request.user == owner and request.method == "POST":
+        if request.is_ajax():
+            response = {"status": False}
+            data = json.loads(request.body)
+            obj.is_cover = data.get("cover")
+            obj.save()
+            response["status"] = True
+            return JsonResponse(response)
+    return redirect(".")
+
+
+def photo_transfer(request, pk=None):
+    data = dict(request.POST)
+
+    obj = Photo.objects.get(pk=pk)
+    gallery = Gallery.objects.get(pk=data["gallery"][0])
+    obj.gallery = gallery
+    obj.save()
+    return redirect(obj.gallery.get_absolute_url())  # core:index")
 
 
 class CategoryDetailView(DetailView):

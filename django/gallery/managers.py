@@ -9,5 +9,5 @@ class GalleryManager(models.Manager):
             gallery_lookups = (
                 Q(name__icontains=query) | Q(user__username__icontains=query) | Q(category__slug__icontains=query)
             )
-            qs = qs.filter(gallery_lookups).distinct()
+            return qs.filter(gallery_lookups).distinct()
         return qs

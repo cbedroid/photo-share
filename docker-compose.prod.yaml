@@ -1,0 +1,71 @@
+# Docker compose for Digital Ocean Production Server (DEMO)
+version: "3.3"
+
+services:
+  django:
+    image: "${DJANGO_IMAGE}"
+    container_name: django
+    command: gunicorn photoshare.wsgi:application --worker-tmp-dir /dev/shm --workers=2 --threads=4 --worker-class=gthread --log-file=- --bind 0.0.0.0:8000
+    expose:
+      - 8000
+    env_file:
+      - .env.prod_do
+    volumes:
+      - static:/srv/app/static
+      - media:/srv/app/media
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:9.6.22-buster
+    container_name: db
+    ports:
+      - 5432:5432
+    env_file:
+      - .env.prod_do
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - 6379:6379
+
+  nginx-proxy:
+    image: "${NGINX_IMAGE}"
+    container_name: nginx-proxy
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - static:/srv/app/static
+      - media:/srv/app/media
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - django
+
+  nginx-proxy-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-proxy-letsencrypt
+    env_file:
+      - .env.prod_do
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+    depends_on:
+      - nginx-proxy
+
+volumes:
+  postgres_data:
+  certs:
+  html:
+  vhost:
+  static:
+  media:

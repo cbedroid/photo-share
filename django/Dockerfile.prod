@@ -1,4 +1,4 @@
-# Local Development Dockerfile
+# Note: Production Dockerfile  Digitial Ocean
 # Pull official base image
 FROM python:3.9.3-slim-buster
 
@@ -51,4 +51,4 @@ RUN chown -R app:app .
 USER app
 
 # run entrypoint.sh
-ENTRYPOINT ["sh","/srv/app/entrypoint.sh"]
+ENTRYPOINT ["sh","/srv/app/entrypoint.do.sh"]

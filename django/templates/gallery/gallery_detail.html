@@ -112,22 +112,23 @@
           <span class="divider font-bold mx-1 my-auto" style="height:35px;">&#8211;</span>
           <h5><span class="badge badge-lg rounded-md {{object.category.label}} py-4 px-6">{{object.category.get_name_display|title}}</span></h5>
         </div>
-        <div class="status pl-2">
-          <h5 class="text-gray-500">
+        {% if is_user %}
+        <div class="status p-1">
+          <h5 class="text-gray-500 font-semibold">
             <span class="mr-2">
-
               Status:
             </span>
             {% if object.public %}
-            <span class="font-semibold text-green-500">Public</span>
+            <span class="text-green-500">Public</span>
             {% else %}
-            <span class="font-semibold text-red-500">Private</span>
+            <span class="text-red-500">Private</span>
             {% endif %}
-            <div class="tooltip tooltip-top cursor-pointer" data-tip="Whether this gallery can be viewed by the public.">
+            <div class="tooltip tooltip-top cursor-pointer" data-tip="Whether a gallery can be viewed by the public.">
               <i class="fa fa-info-circle"></i>
             </div>
           </h5>
         </div>
+        {% endif %}
       </div>
     </div>
     <!-- end header -->
@@ -179,7 +180,7 @@
                       <div class="relative inline-block w-10 ml-2 align-middle select-none">
                         <input type="checkbox" name="cover-switch" id="cover_toggler_{{forloop.counter}}"
                           class="checked:bg-green-500 outline-none focus:outline-none right-4 checked:right-0 duration-200 ease-in absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer">
-                        <input type="hidden" name="photo" data-photo="{{photo.get_update_url}}">
+                        <input type="hidden" name="photo" data-photo="{% url 'gallery:photo-cover-update' pk=photo.pk %}">
                         <label for="cover_toggler_{{forloop.counter}}" class="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer">
                         </label>
                       </div>
