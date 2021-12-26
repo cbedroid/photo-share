@@ -26,7 +26,7 @@ class HomeView(TemplateView):
         return super().get(*args, **kwargs)
 
 
-class FAQListView(ListView):
+class FAQView(ListView):
     model = FAQ
     template_name = "core/faq_list.html"
 
@@ -44,7 +44,7 @@ class PrivacyPolicyView(TemplateView):
     template_name = "snippets/privacy_policy.html"
 
 
-class TermsConditionView(TemplateView):
+class TermsConditionsView(TemplateView):
     template_name = "snippets/terms_conditions.html"
 
 
