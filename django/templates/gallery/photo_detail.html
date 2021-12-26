@@ -19,7 +19,6 @@
 {# Social Share Modal #}
 {% include 'gallery/snippets/social-share.html' with photo=object %}
 {#  #}
-
 <div id="gallery-section" class="theme-ws clear top mx-2 pb-40 ">
   <div class="container mx-auto p-3 sm:p-6">
     <div class="row">
@@ -55,7 +54,10 @@
         <!-- header gallery info -->
         {% with object.gallery as gallery  %}
         <div class="header__title">
-          <h3 class="pb-1 my-2 font-bold"><i class="fas fa-user-circle mr-1"></i>{{gallery.user}}</h3>
+          <div class="user-tray flex place-items-center space-x-2">
+            <img class="inline rounded-full h-8 w-8" src="{{object.gallery.user.get_profile_pic}}" alt="photo owner">
+            <h3 class="pb-1 my-2 font-bold">{{gallery.user}}</h3>
+          </div>
           <div class="gallery-title flex items-center text-lg md:text-2xl">
             <h4 class="pb-1 "><b>{{gallery}}</b></h4>
             <span class="divider font-bold mx-1 my-auto" style="height:35px;">&#8211;</span>
@@ -120,17 +122,6 @@
                       </svg>
                     </a>
                   </li>
-                  <!-- trash button-->
-                  <li class="group h-10 w-12">
-                    <a class="flex place-content-center  bg-gray-50  border rounded-md hover:bg-white hover:border-gray-200 h-full w-full" href="#" data-target="photo-delete-modal">
-                      <svg class="place-self-center" viewBox="0 0 24 24" width="24" height="24" stroke="#767676" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        <line x1="10" y1="11" x2="10" y2="17"></line>
-                        <line x1="14" y1="11" x2="14" y2="17"></line>
-                      </svg>
-                    </a>
-                  </li>
                   {% else %}
                   <!-- heart  button-->
                   <li class="group h-10 w-12">
@@ -164,6 +155,19 @@
                         </svg>
                       </a>
                   </li>
+                  {% if is_user %}
+                  <!-- trash button-->
+                  <li class="group h-10 w-12">
+                    <a class="flex place-content-center  bg-gray-50  border rounded-md hover:bg-white hover:border-gray-200 h-full w-full" href="#" data-target="photo-delete-modal">
+                      <svg class="place-self-center" viewBox="0 0 24 24" width="24" height="24" stroke="#767676" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    </a>
+                  </li>
+                  {% endif %}
                 </ul>
               </div>
               <!-- -->
@@ -238,6 +242,12 @@
                   </dd>
                 </div>
               </dl>
+            </div>
+            <div class="spec-bottom p-4">
+              <h3 class=" text-center font-bold my-8">Hash Tags</h3>
+              <ul id="hash-tags" class="flex flex-wrap space-3">
+                <li class="text-blue-500">#Hash tags</li>
+              </ul>
             </div>
           </div>
         </div>
