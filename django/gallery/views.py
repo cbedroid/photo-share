@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count, Q, Sum
 from django.http.response import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -87,9 +87,6 @@ class GalleryCreateView(GalleryFormMixin, CreateView):
     template_name = "gallery/gallery_form.html"
     object = None
 
-    def get_success_url(self, *args, **kwargs):
-        return self.object.get_absolute_url()
-
 
 class GalleryUpdateView(GalleryFormMixin, UserPassesTestMixin, UpdateView):
     model = Gallery
@@ -100,9 +97,6 @@ class GalleryUpdateView(GalleryFormMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         """Test whether the Gallery belongs to the current user"""
         return self.request.user == self.get_object().user
-
-    def get_success_url(self, *args, **kwargs):
-        return self.get_object().get_absolute_url()
 
 
 class GalleryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -197,6 +191,21 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             response["status"] = True
             return JsonResponse(response)
         super().post(*args, **kwargs)
+
+
+def photo_cover_update(request, pk=None):
+    obj = get_object_or_404(Photo, pk=pk)
+    owner = obj.gallery.user
+
+    if request.user == owner and request.method == "POST":
+        if request.is_ajax():
+            response = {"status": False}
+            data = json.loads(request.body)
+            obj.is_cover = data.get("cover")
+            obj.save()
+            response["status"] = True
+            return JsonResponse(response)
+    return redirect(".")
 
 
 def photo_transfer(request, pk=None):

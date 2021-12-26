@@ -92,7 +92,7 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Categories"
 
-    def save(self, commit=True, *args, **kwargs):
+    def save(self, *args, **kwargs):
         self.slug = slugify(self.get_name_display())
         super().save(*args, **kwargs)
 
@@ -125,11 +125,9 @@ class Tag(models.Model):
 
 class Gallery(models.Model):
     objects = GalleryManager()
-
     name = models.CharField(max_length=75, validators=[MinLengthValidator(3)])
     user = models.ForeignKey(User, related_name="gallery", on_delete=models.CASCADE)
     public = models.BooleanField(default=True)
-    slug = models.SlugField(editable=False, db_index=True)
     category = models.ForeignKey(
         Category,
         related_name="gallery",
@@ -137,6 +135,7 @@ class Gallery(models.Model):
         on_delete=models.SET_NULL,
         db_index=True,
     )
+    slug = models.SlugField(editable=False, db_index=True)
     created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
@@ -159,13 +158,13 @@ class Gallery(models.Model):
         return static("assets/defaults/default_image.jpg")
 
     def get_absolute_url(self):
-        return reverse("gallery:gallery-detail", kwargs={"pk": self.pk})
+        return reverse("gallery:gallery-detail", kwargs={"slug": self.slug})
 
     def get_update_url(self):
-        return reverse("gallery:gallery-update", kwargs={"pk": self.pk})
+        return reverse("gallery:gallery-update", kwargs={"slug": self.slug})
 
     def get_delete_url(self):
-        return reverse("gallery:gallery-delete", kwargs={"pk": self.pk})
+        return reverse("gallery:gallery-delete", kwargs={"slug": self.slug})
 
     def get_api_url(self, request=None):
         return api_reverse("api:gallery-detail", kwargs={"pk": self.pk}, request=request)
@@ -200,13 +199,13 @@ class Photo(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("gallery:photo-detail", kwargs={"pk": self.pk})
+        return reverse("gallery:photo-detail", kwargs={"slug": self.slug})
 
     def get_update_url(self):
-        return reverse("gallery:photo-update", kwargs={"pk": self.pk})
+        return reverse("gallery:photo-update", kwargs={"slug": self.slug})
 
     def get_delete_url(self):
-        return reverse("gallery:photo-delete", kwargs={"pk": self.pk})
+        return reverse("gallery:photo-delete", kwargs={"slug": self.slug})
 
     def get_download_title(self):
         """Creates filename for download from photo title"""
