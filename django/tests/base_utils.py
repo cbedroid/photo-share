@@ -80,9 +80,9 @@ class BaseObjectUtils(object):
 
     # Gallery urls
     gallery_create_url = reverse("gallery:gallery-create")
-    gallery_detail_url = reverse("gallery:gallery-detail", kwargs={"pk": "1"})
-    gallery_update_url = reverse("gallery:gallery-update", kwargs={"pk": "1"})
-    gallery_delete_url = reverse("gallery:gallery-delete", kwargs={"pk": "1"})
+    gallery_detail_url = reverse("gallery:gallery-detail", kwargs={"slug": "test_gallery"})
+    gallery_update_url = reverse("gallery:gallery-update", kwargs={"slug": "test_gallery"})
+    gallery_delete_url = reverse("gallery:gallery-delete", kwargs={"slug": "test_gallery"})
 
     def setUp(self, *args, **kwargs):
         # Initialize test objects making them available throughout all tests.

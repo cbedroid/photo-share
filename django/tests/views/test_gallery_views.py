@@ -65,6 +65,86 @@ class TestGalleryViews(BaseObjectUtils, TestCase):
         response = client.get(url)
         self.assertEqual(response.status_code, 404)
 
+    def test_GalleryCreateView_renders_properly(self):
+        url = self.gallery_create_url
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def test_GalleryCreateView_redirect_no_authenticated_user_to_login(self):
+        url = self.gallery_create_url
+        client = Client()
+        response = client.get(url, follow=True)
+        expected_url = self.login_url + "?next=" + url
+        self.assertRedirects(response, expected_url)
+        self.assertEquals(response.status_code, 200)
+
+    def test_GalleryCreateView_creates_gallery(self):
+        url = self.gallery_create_url
+
+        # test gallery was updated with new image new
+        formset = self.default_formset.copy()
+        formset["name"] = "new gallery"
+        formset["photo-0-title"] = "new image"
+        formset["photo-0-image"] = self.create_fake_image("name_image")
+
+        response = self.client.post(url, data=formset)
+        self.assertEqual(response.status_code, 302)
+
+        gallery = Gallery.objects.filter(name="new gallery")
+        self.assertTrue(gallery.exists())
+
+    def test_GalleryCreateView_fails_without_gallery_name(self):
+        url = self.gallery_create_url
+        formset = self.default_formset.copy()
+
+        # TEST--> test form does not update when gallery name is not provided
+        formset["name"] = ""
+        total_galleries = Gallery.objects.count()
+        response = self.client.post(url, data=formset)
+        # test gallery was not created
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(total_galleries, Gallery.objects.count())
+
+    def test_GalleryCreateView_fails_without_photo(self):
+        # # TEST--> test gallery fails without image
+        url = self.gallery_create_url
+        formset = self.default_formset.copy()
+        formset["name"] = "New Gallery"
+        formset["photo-0-title"] = "new image"
+        response = self.client.post(url, formset, follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertFormsetError(
+            response,
+            formset="formset",
+            form_index=0,
+            field="image",
+            errors="This field is required.",
+        )
+
+    def test_GalleryCreateView_fails_without_photo_title(self):
+        # test gallery and photo was not added
+        url = self.gallery_create_url
+        gallery = Gallery.objects.filter(name="New Gallery")
+        self.assertFalse(gallery.exists())
+
+        # TEST--> Test gallery fails without title
+        total_photos = Photo.objects.count()
+        formset = self.default_formset.copy()
+        formset["photo-0-title"] = ""
+        formset["photo-0-image"] = self.create_fake_image("fake_image")
+        response = self.client.post(url, formset, follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertFormsetError(
+            response,
+            formset="formset",
+            form_index=0,
+            field="title",
+            errors="This field is required.",
+        )
+
+        # TEST--> test gallery photo was not added
+        self.assertEqual(total_photos, Photo.objects.count())
+
     def test_private_GalleryUpdateView_permissions(self):
         # gallery owner test_user_1
         gallery = Gallery.objects.get(pk=1)
@@ -103,6 +183,8 @@ class TestGalleryViews(BaseObjectUtils, TestCase):
         # test non owner is denied permission to updated another user gallery
         client = Client()
         client.login(**self.user_2_cred)
+        gallery.refresh_from_db()
+        url = gallery.get_update_url()
         response = client.post(url, data=data, follow=True)
         self.assertEqual(response.status_code, 403)
 
@@ -207,86 +289,6 @@ class TestGalleryViews(BaseObjectUtils, TestCase):
         self.assertTrue(Photo.objects.filter(title="Lakers Nation").exists())
         self.assertTrue(Photo.objects.filter(title="The Mamba").exists())
 
-    def test_GalleryCreateView_renders_properly(self):
-        url = self.gallery_create_url
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-
-    def test_GalleryCreateView_redirect_no_authenticated_user_to_login(self):
-        url = self.gallery_create_url
-        client = Client()
-        response = client.get(url, follow=True)
-        expected_url = self.login_url + "?next=" + url
-        self.assertRedirects(response, expected_url)
-        self.assertEquals(response.status_code, 200)
-
-    def test_GalleryCreateView_creates_gallery(self):
-        url = self.gallery_create_url
-
-        # test gallery was updated with new image new
-        formset = self.default_formset.copy()
-        formset["name"] = "new gallery"
-        formset["photo-0-title"] = "new image"
-        formset["photo-0-image"] = self.create_fake_image("name_image")
-
-        response = self.client.post(url, data=formset)
-        self.assertEqual(response.status_code, 302)
-
-        gallery = Gallery.objects.filter(name="new gallery")
-        self.assertTrue(gallery.exists())
-
-    def test_GalleryCreateView_fails_without_gallery_name(self):
-        url = self.gallery_create_url
-        formset = self.default_formset.copy()
-
-        # TEST--> test form does not update when gallery name is not provided
-        formset["name"] = ""
-        total_galleries = Gallery.objects.count()
-        response = self.client.post(url, data=formset)
-        # test gallery was not created
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(total_galleries, Gallery.objects.count())
-
-    def test_GalleryCreateView_fails_without_photo(self):
-        # # TEST--> test gallery fails without image
-        url = self.gallery_create_url
-        formset = self.default_formset.copy()
-        formset["name"] = "New Gallery"
-        formset["photo-0-title"] = "new image"
-        response = self.client.post(url, formset, follow=True)
-        self.assertEquals(response.status_code, 200)
-        self.assertFormsetError(
-            response,
-            formset="formset",
-            form_index=0,
-            field="image",
-            errors="This field is required.",
-        )
-
-    def test_GalleryCreateView_fails_without_photo_title(self):
-        # test gallery and photo was not added
-        url = self.gallery_create_url
-        gallery = Gallery.objects.filter(name="New Gallery")
-        self.assertFalse(gallery.exists())
-
-        # TEST--> Test gallery fails without title
-        total_photos = Photo.objects.count()
-        formset = self.default_formset.copy()
-        formset["photo-0-title"] = ""
-        formset["photo-0-image"] = self.create_fake_image("fake_image")
-        response = self.client.post(url, formset, follow=True)
-        self.assertEquals(response.status_code, 200)
-        self.assertFormsetError(
-            response,
-            formset="formset",
-            form_index=0,
-            field="title",
-            errors="This field is required.",
-        )
-
-        # TEST--> test gallery photo was not added
-        self.assertEqual(total_photos, Photo.objects.count())
-
     def test_GalleryDeleteView_delete_gallery(self):
         gallery = Gallery.objects.get(pk=1)
         url = gallery.get_delete_url()
@@ -317,3 +319,22 @@ class TestGalleryViews(BaseObjectUtils, TestCase):
         # test photo and gallery was deleted
         self.assertFalse(Photo.objects.filter(title=photo.title).exists())
         self.assertFalse(Gallery.objects.filter(name=gallery.name).exists())
+
+    def test_Photo_transfer_photo_to_another_gallery_properly(self):
+        NBA_gallery = baker.make("gallery.gallery", name="NBA", user=self.test_user)
+        NFL_gallery = baker.make("gallery.gallery", name="NFL", user=self.test_user)
+        photo = baker.make(
+            "gallery.photo",
+            gallery=NBA_gallery,
+            title="Tom Brady the NFL Goat",
+            image=self.create_fake_image("Tom_Brady"),
+        )
+
+        url = reverse("gallery:photo-transfer", kwargs={"pk": photo.pk})
+        data = {"gallery": NFL_gallery.pk}
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 302)
+
+        # test photo was transferred to NFL Gallery
+        photo.refresh_from_db()
+        self.assertEqual(photo.gallery, NFL_gallery)
