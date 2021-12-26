@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import redirect
 
 from .forms import GalleryForm, GalleryFormSet
 from .models import Gallery, Photo
@@ -25,6 +26,7 @@ class GalleryFormMixin(LoginRequiredMixin):
     model = Gallery
     form_class = GalleryForm
     formset_class = GalleryFormSet
+    slug_url_kwarg = "slug"
 
     def get_object(self, **kwargs):
         try:
@@ -83,4 +85,9 @@ class GalleryFormMixin(LoginRequiredMixin):
                     form.save()
                     subform.instance.gallery = self.object
                     subform.save()
-        return super().form_valid(form)
+        self.object = form.save()
+        # return super().form_valid(form)
+        return redirect(self.get_success_url())
+
+    def get_success_url(self, *args, **kwargs):
+        return self.object.get_absolute_url()

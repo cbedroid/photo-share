@@ -85,7 +85,7 @@
     "fields": {
       "title": "test_image",
       "image": "gallery/test_image.png",
-      "slug": "test-image",
+      "slug": "test_image",
       "gallery": 1,
       "views": 10,
       "is_cover": true,
