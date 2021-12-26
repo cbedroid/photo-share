@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count, Q, Sum
 from django.http.response import JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -134,6 +135,7 @@ class PhotoDetailView(UserAccessPermissionMixin, DetailView):
         context = super().get_context_data(**kwargs)
         obj = self.get_object()
         context["is_user"] = obj.gallery.user == self.request.user
+        context["galleries"] = Gallery.objects.filter(user=obj.gallery.user).exclude(pk=obj.gallery.pk)
         return context
 
     def get(self, *args, **kwargs):
@@ -195,6 +197,16 @@ class PhotoUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             response["status"] = True
             return JsonResponse(response)
         super().post(*args, **kwargs)
+
+
+def photo_transfer(request, pk=None):
+    data = dict(request.POST)
+
+    obj = Photo.objects.get(pk=pk)
+    gallery = Gallery.objects.get(pk=data["gallery"][0])
+    obj.gallery = gallery
+    obj.save()
+    return redirect(obj.gallery.get_absolute_url())  # core:index")
 
 
 class CategoryDetailView(DetailView):

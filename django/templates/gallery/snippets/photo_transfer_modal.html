@@ -1,0 +1,68 @@
+<div id="photo_transfer_modal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <form id="photo_modal_form" action="{% url 'gallery:photo-transfer' pk=object.pk %}" method="POST">
+    {% csrf_token %}
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+              <!-- Heroicon name: outline/exclamation -->
+              <svg class="h-6 w-6 text-blue-600" x viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </div>
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <h3 class="text-lg leading-6 font-bold text-gray-900" id="modal-title">
+                Transfer Photo
+              </h3>
+              <div class="mt-2">
+                <p class="text-lg text-gray-500">
+                  <span>Transfer <b>{{object}}</b> photo to another gallery?</span>
+                </p>
+                <div class="wrapper text-gray-500 mt-6">
+                  <label class="block text-gray-800 font-semibold mb-1" for="gallery-select">select a gallery</label>
+                  <select name="gallery" id="gallery-select">
+                    {% for gallery in galleries  %}
+                    <option value="{{gallery.pk}}">{{gallery}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex">
+          <input id="form_submit" type="submit"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+            value="transfer">
+          <input id="form_cancel" type="button"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-3 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            value="Cancel">
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  $(document).ready(() => {
+    const modal = $('#photo_transfer_modal');
+    const form = $(modal).find('form');
+    const modal_trigger = $('[data-target="photo-transfer-modal"]');
+
+    // Bind modal actions events
+    $(form).find('#form_cancel').bind('click', (e) => {
+      e.preventDefault();
+      $(modal).addClass('hidden');
+    })
+    // Bind modal trigger events
+    $(modal_trigger).bind('click', function (e) {
+      e.preventDefault();
+      $(modal).removeClass('hidden');
+    });
+
+  })
+</script>
