@@ -112,18 +112,17 @@
           <span class="divider font-bold mx-1 my-auto" style="height:35px;">&#8211;</span>
           <h5><span class="badge badge-lg rounded-md {{object.category.label}} py-4 px-6">{{object.category.get_name_display|title}}</span></h5>
         </div>
-        <div class="status pl-2">
-          <h5 class="text-gray-500">
+        <div class="status p-1">
+          <h5 class="text-gray-500 font-semibold">
             <span class="mr-2">
-
               Status:
             </span>
             {% if object.public %}
-            <span class="font-semibold text-green-500">Public</span>
+            <span class="text-green-500">Public</span>
             {% else %}
-            <span class="font-semibold text-red-500">Private</span>
+            <span class="text-red-500">Private</span>
             {% endif %}
-            <div class="tooltip tooltip-top cursor-pointer" data-tip="Whether this gallery can be viewed by the public.">
+            <div class="tooltip tooltip-top cursor-pointer" data-tip="Whether a gallery can be viewed by the public.">
               <i class="fa fa-info-circle"></i>
             </div>
           </h5>
