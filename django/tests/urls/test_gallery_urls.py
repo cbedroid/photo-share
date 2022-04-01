@@ -42,7 +42,7 @@ class TestUrls(SimpleTestCase):
 
     def test_photo_cover_update_url_is_resolved(self):
         url = reverse("gallery:photo-cover-update", kwargs={"pk": 1})
-        self.assertEqual(resolve(url).func, update_photo_cover)
+        self.assertEqual(resolve(url).func, photo_cover_update)
 
     def test_category_detail_url_is_resolved(self):
         url = reverse("gallery:category-detail", kwargs={"slug": "some-category"})
