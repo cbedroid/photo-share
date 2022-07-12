@@ -82,7 +82,7 @@ jobs:
           
 
       - name: Linting and Format Code
-        run: pre-commit run --all-files
+        run: pre-commit run --all-files --show-diff-on-failure
 
       - name: Running Django Test
         run: ./django/manage.py test
