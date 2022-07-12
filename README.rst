@@ -33,22 +33,22 @@ PhotoShare Web App ScreenShots
 
 |PhotoShareSharing|
 
-.. |homePage| image:: ./.github/assets/photoshare_homepage.png
+.. |homePage| image:: ./.github/docs/assets/photoshare_homepage.png
     :alt: Home Page
     :width: 100%
 
-.. |PhotoShareCollections| image:: ./.github/assets/photoshare_collections.png
+.. |PhotoShareCollections| image:: ./.github/docs/assets/photoshare_collections.png
     :alt: Collections Page
     :width: 100%
 
 
 
-.. |PhotoShareAlbumPage| image:: ./.github/assets/photoshare_album_page.png
+.. |PhotoShareAlbumPage| image:: ./.github/docs/assets/photoshare_album_page.png
     :alt: Album Page
     :width: 100%
 
 
 
-.. |PhotoShareSharing| image:: ./.github/assets/photoshare_sharing.png
+.. |PhotoShareSharing| image:: ./.github/docs/assets/photoshare_sharing.png
     :alt: Sharing Photos
     :width: 100%
