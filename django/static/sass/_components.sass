@@ -1,0 +1,72 @@
+.cardbox
+  position: relative
+  display: block
+  border: 1px solid #ece8e875
+  box-shadow: 0px 0px 8px rgba(175, 175, 175, 0.733)
+  margin-bottom: 10px
+  height: 100%
+  overflow-x: hidden
+  &--noshadow
+    border: none
+  &__header
+    color: #000
+    padding: 18px 12px
+
+  &__body
+    display: block
+    padding: 12px
+    height: 100%
+  &__footer
+    width: 100%
+    background: whitesmoke
+    position: relative
+    bottom: 0
+    left: 0
+    padding: 8px 12px
+
+
+.socialaccount_providers
+
+  li
+    color: #000
+  a.socialaccount_provider
+    display: inline-flex
+    align-items: center
+    min-width: 150px
+    height: 40px
+    border: 1px solid lightgrey
+    border-radius: 4px
+    padding: 6px
+    font-weight: 600
+    &.microsoft
+      border-color: #00f
+      background: #00f
+      color: #fff
+
+    &.google
+      position: relative
+      text-decoration: none
+      background: #4082ED
+      border-color: #4082ED
+      color: #fff
+      background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ4Pe_gBHcoU8Gbpuwhsp6t7TeyYzc-gR70dmy9nulH5lKzfJmvCcKcb3kA_FY5n8T6Cg&usqp=CAU")
+      background-size: contain
+      background-repeat: no-repeat
+      padding-left: 70px
+      text-align: right
+
+      &::before
+        position: relative
+        content: ""
+        top: 0
+        left: 0
+        z-index: 50
+        display: inline-block
+        height: 40px
+
+    &.facebook
+      text-decoration: none
+      background: #4082ED
+      border-color: #4082ED
+      color: #fff
+      text-align: center
