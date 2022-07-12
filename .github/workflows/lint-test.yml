@@ -1,0 +1,88 @@
+name: Linter and Test
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  pull_request:
+  push:
+    branches:
+      - master
+      - dev
+      - stage
+
+env:
+  DJANGO_IMAGE: ghcr.io/cbedroid/photo-share/django
+  NGINX_IMAGE: ghcr.io/cbedroid/photo-share/nginx-proxy
+  DJANGO_TAG: master
+
+jobs:
+  qa:
+    name: Linting, Format and Django test
+    runs-on: ubuntu-18.04
+
+    env:
+      DEBUG: 1
+      SECRET_KEY: supersecrettestkey
+      DJANGO_ALLOWED_HOSTS: localhost 127.0.0.1 *
+      SQL_ENGINE: django.db.backends.postgresql
+      SQL_DATABASE: github_actions
+      SQL_USER: github
+      SQL_PASSWORD: github
+      SQL_HOST: 127.0.0.1
+      SQL_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:9.6.22-buster
+        env:
+          POSTGRES_USER: github
+          POSTGRES_PASSWORD: github
+          POSTGRES_DB: github_actions
+          POSTGRES_PORT: 5432
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:alpine3.13
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install apt prerequisites
+        run: sudo apt-get install python-dev libpq-dev
+
+      - name: Install testing dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          pip install --no-cache -r ./django/requirements.txt
+
+      - name: Running Django migrations
+        run: | 
+          export DJANGO_SETTINGS_MODULE=photoshare.settings
+          django/manage.py makemigrations
+          django/manage.py migrate
+          
+
+      - name: Linting and Format Code
+        run: pre-commit run --all-files --show-diff-on-failure
+
+      - name: Running Django Test
+        run: ./django/manage.py test
