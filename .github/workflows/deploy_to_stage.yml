@@ -76,7 +76,7 @@ jobs:
           echo DJANGO_IMAGE=${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} >> ${{ env.ENV_FILE }}
           echo NGINX_IMAGE=${{ env.NGINX_IMAGE }}:master >> ${{ env.ENV_FILE}}
       
-        - name: Login to Heroku Container registry
+      - name: Login to Heroku Container registry
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_TOKEN }}
         run: heroku container:login
@@ -120,7 +120,7 @@ jobs:
           heroku_api_key: ${{ env.HEROKU_TOKEN }}
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
           dockerfile_directory: ./django
-          dockerfile_name: Dockerfile.do
+          dockerfile_name: Dockerfile.stage
           docker_options: "--no-cache"
           process_type: web
 
