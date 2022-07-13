@@ -10,7 +10,7 @@ on:
 env:
   DJANGO_IMAGE: ghcr.io/cbedroid/photo-share/django
   NGINX_IMAGE: ghcr.io/cbedroid/photo-share/nginx-proxy
-  HEROKU_APP_NAME: ${{ HEROKU_STAGE_APP_NAME }}
+  HEROKU_APP_NAME: ${{ secrets.HEROKU_STAGE_APP_NAME }}
   DJANGO_TAG: master
   ENV_FILE: .env.stage
 
