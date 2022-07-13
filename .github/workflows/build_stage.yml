@@ -33,7 +33,7 @@ jobs:
           docker push ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }}
 
       - name: Build/Push NGINX Image to master
-        if: ${{ contains(${{env.SITE_HOST}}), 'heroku' }} == 0
+        if: ${{ contains(env.SITE_HOST), 'heroku' }} == 0
         run: |
           echo "Builing Nginx Virtual Host
           echo "VIRTUAL_HOST=${{ env.SITE_HOST }}" >> $GITHUB_ENV
