@@ -1,0 +1,46 @@
+name: Build Prod Docker Image 
+
+on:
+  workflow_call:
+
+env:
+  DJANGO_IMAGE: ghcr.io/cbedroid/photo-share/django
+  NGINX_IMAGE: ghcr.io/cbedroid/photo-share/nginx-proxy
+  ENVIRONMENT_TAG: prod
+  SITE_HOST: ${{ secrets.PROD_SITE_HOST}}
+  DJANGO_TAG: master
+
+jobs:
+  build:
+    name: Build Django and Nginx Image For Container Registry
+    runs-on: ubuntu-20.04
+    needs: tests
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+
+      - name: Log in to GitHub Container Registry
+        run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: Setting Django Image Tag
+        run: echo "DJANGO_TAG=${{env.ENVIRONMENT_TAG}}" >> $GITHUB_ENV
+
+      - name: Building Nginx and Django Image
+        run: |
+          docker build -f ./django/Dockerfile.${ env.ENVIRONMENT_TAG }} \
+            --tag ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} \
+            ./django
+          docker push ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }}
+          
+      - name: Build/Push NGINX Image to master
+        if: ${{ contains(${{env.SITE_HOST}}), 'heroku' }} == 0
+        run: |
+          echo "Builing Nginx Virtual Host
+          echo "VIRTUAL_HOST=${{ env.SITE_HOST }}" >> $GITHUB_ENV
+          echo "VIRTUAL_PORT=8000" >> $GITHUB_ENV
+          echo "LETSENCRYPT_HOST=${{ env.SITE_HOST }}" >> $GITHUB_ENV
+          docker build \
+            --tag ${{ env.NGINX_IMAGE }}:master \
+            ./nginx/do-proxy
+          docker push ${{ env.NGINX_IMAGE }}:master
+  # END BUILD
