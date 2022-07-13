@@ -13,19 +13,19 @@ env:
   HEROKU_APP_NAME: ${{ HEROKU_PROD_APP_NAME }}
   DJANGO_TAG: master
   ENV_FILE: .env.prod
-  
+
 
 jobs:
   tests:
     uses: ./.github/workflows/lint-test.yml # Needed to perform testing from testing workflow.
-  
+
   build:
     uses: ./.github/workflows/build_prod.yml # Build workflow - Builds and push image to docker
     needs: tests
 
   # Deploy to Stage Instance
   deploy:
-    name: Deploy to Prod 
+    name: Deploy to Prod
     runs-on: ubuntu-20.04
     needs: build
     steps:
@@ -51,7 +51,7 @@ jobs:
           echo SQL_PASSWORD=${{ secrets.DO_SQL_PASSWORD }} >> ${{env.ENV_FILE}}
           echo SQL_HOST=${{ secrets.DO_SQL_HOST }} >> ${{env.ENV_FILE}}
           echo SQL_PORT=${{ secrets.DO_SQL_PORT }} >> ${{env.ENV_FILE}}
-          
+
       # Digital Ocean Test Instance Docker Database variables
       - name: Add Postgres env vars to file
         run: |
@@ -64,11 +64,11 @@ jobs:
           echo SUPPORT_EMAIL_PORT=${{ secrets.EMAIL_SUPPORT_PORT }} >> ${{env.ENV_FILE}}
           echo SUPPORT_EMAIL_ADDRESS=${{ secrets.EMAIL_SUPPORT_ADDRESS }} >> ${{env.ENV_FILE}}
           echo SUPPORT_EMAIL_PASSWORD=${{ secrets.EMAIL_SUPPORT_PASSWORD }} >> ${{env.ENV_FILE}}
-        
+
           # Docker Recaptcha Support
           #echo RECAPTCHA_PUBLIC_KEY=${{ secrets.RECAPTCHA_PUBLIC_KEY }} >> ${{env.ENV_FILE}}
           #echo RECAPTCHA_PRIVATE_KEY=${{ secrets.RECAPTCHA_PRIVATE_KEY }} >> ${{env.ENV_FILE}}
-          
+
       # NGINX
       #- name: Added NGINX Proxy and Lets Encrypt env variables
       #  run: |
@@ -78,12 +78,12 @@ jobs:
       #    echo NGINX_PROXY_CONTAINER=nginx-proxy >> ${{env.ENV_FILE}}
       #    echo ACME_CA_URI=https://acme-v02.api.letsencrypt.org/directory >> ${{env.ENV_FILE}}
       #    echo DEFAULT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }} >> ${{env.ENV_FILE}}
-          
+
       - name: Add image names to env file for docker-compose
         run: |
           echo DJANGO_IMAGE=${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} >> .env
           echo NGINX_IMAGE=${{ env.NGINX_IMAGE }}:master >> .env
-      
+
       - name: Login to Heroku Container registry
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_TOKEN }}
@@ -105,19 +105,19 @@ jobs:
           heroku config:set SQL_PASSWORD=${{ secrets.PROD_SQL_PASSWORD }} -a ${{ env.HEROKU_APP_NAME }}
           heroku config:set SQL_HOST=${{ secrets.PROD_SQL_HOST }} -a ${{ env.HEROKU_APP_NAME }}
           heroku config:set SQL_PORT=${{ secrets.PROD_SQL_PORT }} -a ${{ env.HEROKU_APP_NAME }}
-          
+
           # Django Email Support
           heroku config:set SUPPORT_EMAIL_HOST=${{ secrets.SUPPORT_EMAIL_HOST }} -a ${{ env.HEROKU_APP_NAME }}
           heroku config:set SUPPORT_EMAIL_PORT=${{ secrets.SUPPORT_EMAIL_PORT }} -a ${{ env.HEROKU_APP_NAME }}
           heroku config:set SUPPORT_EMAIL_ADDRESS=${{ secrets.SUPPORT_EMAIL_ADDRESS }} -a ${{ env.HEROKU_APP_NAME }}
           heroku config:set SUPPORT_EMAIL_PASSWORD=${{ secrets.SUPPORT_EMAIL_PASSWORD }} -a ${{ env.HEROKU_APP_NAME }}
-          
+
           # Recaptcha Support
           # heroku config:set RECAPTCHA_PUBLIC_KEY=${{ secrets.RECAPTCHA_PUBLIC_KEY }} -a ${{ env.HEROKU_APP_NAME }}
           # heroku config:set RECAPTCHA_PRIVATE_KEY=${{ secrets.RECAPTCHA_PRIVATE_KEY }} -a ${{ env.HEROKU_APP_NAME }}
           # Redis Support
           heroku config:set DOCKER_IMAGES=${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} -a ${{ env.HEROKU_APP_NAME }}
-          
+
       - name: Add image names to env file for docker-compose
         run: echo DJANGO_IMAGE=${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} >> .env
 
@@ -131,4 +131,3 @@ jobs:
           dockerfile_name: Dockerfile.prod
           docker_options: "--no-cache"
           process_type: web
-
