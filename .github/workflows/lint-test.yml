@@ -75,11 +75,11 @@ jobs:
           pip install --no-cache -r ./django/requirements.txt
 
       - name: Running Django migrations
-        run: | 
+        run: |
           export DJANGO_SETTINGS_MODULE=photoshare.settings
           django/manage.py makemigrations
           django/manage.py migrate
-          
+
 
       - name: Linting and Format Code
         run: pre-commit run --all-files --show-diff-on-failure

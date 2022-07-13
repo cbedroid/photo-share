@@ -18,7 +18,7 @@ A clear and consise description of how this enhancement will be implemented.
 
 **e.g.**
  A clear example of the problem and solution to the problem
- 
+
 **Screenshots**
 If applicable, add screenshots or logs to help explain your problem.
 

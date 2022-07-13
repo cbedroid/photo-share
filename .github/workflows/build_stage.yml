@@ -1,4 +1,4 @@
-name: Build Stage Docker Image 
+name: Build Stage Docker Image
 
 on:
   workflow_call:
@@ -31,7 +31,7 @@ jobs:
             --tag ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} \
             ./django
           docker push ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }}
-          
+
       - name: Build/Push NGINX Image to master
         if: ${{ contains(${{env.SITE_HOST}}), 'heroku' }} == 0
         run: |
