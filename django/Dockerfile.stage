@@ -1,4 +1,4 @@
-# Note: Prod Dockerfile  Digitial Ocean or Heroku
+# Note: Stage Dockerfile  Digitial Ocean or Heroku
 # Pull official base image
 FROM python:3.9.3-slim-buster
 

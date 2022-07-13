@@ -14,6 +14,8 @@ django-simple-history==3.0.0
 django-social-share==2.2.1
 django-widget-tweaks==1.4.8
 djangorestframework==3.12.4
+gunicorn==20.1.0
+ipython==8.0.1
 mock==4.0.3
 model-bakery==1.2.1
 pillow==9.2.0
