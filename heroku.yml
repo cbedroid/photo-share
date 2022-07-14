@@ -7,7 +7,7 @@ setup:
 
 build:
   docker:
-    web: Dockerfile.stage
+    web: /app/Dockerfile.stage
 
 run:
   web: gunicorn photoshare.wsgi:application --bind 0.0.0.0:$PORT
@@ -15,4 +15,4 @@ run:
 release:
   image: web
   command:
-    - ./django/entrypoint.do.sh
+    - /app/entrypoint.do.sh
