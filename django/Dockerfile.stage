@@ -3,7 +3,7 @@
 FROM python:3.9.3-slim-buster
 
 # create linux user
-RUN addgroup --system app && adduser --system --group app
+# RUN addgroup --system app && adduser --system --group app
 
 # Create Directory
 ENV APP_HOME=/srv/webapp
@@ -33,7 +33,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   postgresql-client \
   libpq-dev \
   gcc \
-  redis-server \
   libjpeg-dev \
   && pip install -r requirements.txt --no-cache-dir\
   && apt-get autoremove -y gcc
@@ -46,10 +45,10 @@ COPY ./entrypoint.do.sh .
 COPY . .
 
 # chown all the files to the app user
-RUN chown -R app:app .
+# RUN chown -R app:app .
 
 # Change to linux user account
-USER app
+# USER app
 
 # run entrypoint.sh
 ENTRYPOINT ["sh","/srv/app/entrypoint.do.sh"]
