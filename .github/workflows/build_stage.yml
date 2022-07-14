@@ -1,4 +1,4 @@
-name: Build Stage Docker Image
+name: Build Stage
 
 on:
   workflow_dispatch:
