@@ -1,4 +1,4 @@
-name: Build Stage
+name: Stage Build
 
 on:
   workflow_dispatch:
