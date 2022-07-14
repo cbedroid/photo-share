@@ -7,7 +7,7 @@ setup:
 
 build:
   docker:
-    web: Dockerfile
+    web: /app/Dockerfile
 
 run:
   web: gunicorn photoshare.wsgi:application --bind 0.0.0.0:$PORT
