@@ -1,6 +1,7 @@
-name: Build Stage Docker Image
+name: Stage Build
 
 on:
+  workflow_dispatch:
   workflow_call:
 
 env:
@@ -14,7 +15,6 @@ jobs:
   build:
     name: Build Django and Nginx Image For Container Registry
     runs-on: ubuntu-20.04
-    needs: tests
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
           docker push ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }}
 
       - name: Build/Push NGINX Image to master
-        if: ${{ contains(${{env.SITE_HOST}}), 'heroku' }} == 0
+        if: ${{ contains(env.SITE_HOST, 'heroku') }} == 0
         run: |
           echo "Builing Nginx Virtual Host
           echo "VIRTUAL_HOST=${{ env.SITE_HOST }}" >> $GITHUB_ENV
