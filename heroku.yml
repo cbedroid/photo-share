@@ -1,0 +1,18 @@
+setup:
+  addons:
+    - plan: heroku-redis
+      as: REDIS
+
+build:
+  config:
+    - ./.env.stage
+  docker:
+    web: Dockerfile.stage
+
+run:
+  web: gunicorn photoshare.wsgi:application --bind 0.0.0.0:$PORT
+
+release:
+  image: web
+  command:
+    - ./entrypoint.do.sh
