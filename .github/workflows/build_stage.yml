@@ -44,8 +44,8 @@ jobs:
             --tag ${{ env.NGINX_IMAGE }}:master \
             ./nginx/do-proxy
           docker push ${{ env.NGINX_IMAGE }}:master
-        
+
         if: ${{ contains(env.SITE_HOST, 'heroku') }}
-      - name: Inorging Nginx Build
+      - name: Ignoring Nginx Build
         run: echo "Ignoring Nginx Build  ...Deployment Site is Heroku"
   # END BUILD
