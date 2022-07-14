@@ -7,7 +7,6 @@ on:
 env:
   DJANGO_IMAGE: ghcr.io/cbedroid/photo-share/django
   NGINX_IMAGE: ghcr.io/cbedroid/photo-share/nginx-proxy
-  ENVIRONMENT_TAG: stage
   SITE_HOST: ${{ secrets.STAGE_SITE_HOST}}
   DJANGO_TAG: master
 
@@ -23,11 +22,11 @@ jobs:
         run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
       - name: Setting Django Image Tag
-        run: echo "DJANGO_TAG=${{env.ENVIRONMENT_TAG}}" >> $GITHUB_ENV
+        run: echo "DJANGO_TAG=stage" >> $GITHUB_ENV
 
       - name: Building Nginx and Django Image
         run: |
-          docker build -f ./django/Dockerfile.${ env.ENVIRONMENT_TAG }} \
+          docker build -f ./django/Dockerfile.stage \
             --tag ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} \
             ./django
           docker push ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }}
