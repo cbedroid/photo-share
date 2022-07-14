@@ -32,8 +32,9 @@ jobs:
           docker push ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }}
 
       - name: Checking Deployment Site ...
+        uses: actions/checkout@v2
         if: ${{ !contains(env.SITE_HOST, 'heroku') }}
-      - name: Building Nginx Image 
+      - name: Building Nginx Image
         run: |
           echo "Builing Nginx Virtual Host"
           echo "VIRTUAL_HOST=${{ env.SITE_HOST }}" >> $GITHUB_ENV
