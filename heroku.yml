@@ -8,7 +8,7 @@ setup:
 build:
   docker:
     web: ./django/Dockerfile.stage
-    worker: worker/django/Dockerfile.stage
+    worker: worker/Dockerfile.stage
 run:
   web: gunicorn photoshare.wsgi:application --bind 0.0.0.0:$PORT
 
