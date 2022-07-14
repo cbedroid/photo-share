@@ -1,6 +1,7 @@
 name: Build Prod Docker Image
 
 on:
+  workflow_dispatch:
   workflow_call:
 
 env:
@@ -14,7 +15,6 @@ jobs:
   build:
     name: Build Django and Nginx Image For Container Registry
     runs-on: ubuntu-20.04
-    needs: tests
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
