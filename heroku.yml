@@ -7,8 +7,8 @@ setup:
 
 build:
   docker:
-    web: /app/Dockerfile.stage
-    worker: /app/Dockerfile.stage
+    web: app/Dockerfile.stage
+    worker: workerDockerfile.stage
 
 run:
   web: gunicorn photoshare.wsgi:application --bind 0.0.0.0:$PORT
