@@ -2,11 +2,15 @@
 # Pull official base image
 FROM python:3.9.3-slim-buster
 
-# create linux user
+# create linux user - Digial Ocean
 # RUN addgroup --system app && adduser --system --group app
 
 # Create Directory
-ENV APP_HOME=/srv/webapp
+# Heroku
+ENV APP_HOME=/app
+
+# Digital Ocean
+# ENV APP_HOME=/srv/webapp
 
 RUN mkdir -p $APP_HOME
 RUN mkdir -p $APP_HOME/static
@@ -51,4 +55,7 @@ COPY . .
 # USER app
 
 # run entrypoint.sh
-ENTRYPOINT ["sh","/srv/app/entrypoint.do.sh"]
+# Heroku
+ENTRYPOINT ["sh","/app/entrypoint.do.sh"]
+# Digital Ocean
+#ENTRYPOINT ["sh","/srv/app/entrypoint.do.sh"]
