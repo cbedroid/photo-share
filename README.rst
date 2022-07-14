@@ -1,13 +1,13 @@
-|Stage Build|  
+|Stage Build|
 |Prod Build|
 |Stage Deploy|
 |Prod Deploy|
 
 
-.. |Stage Build| image:: https://github.com/cbedroid/photo-share/actions/workflows/build_stage.yml/badge.svg   
+.. |Stage Build| image:: https://github.com/cbedroid/photo-share/actions/workflows/build_stage.yml/badge.svg
     :alt: Stage Build
-    
-.. |Prod Build| image:: https://github.com/cbedroid/photo-share/actions/workflows/build_prod.yml/badge.svg  
+
+.. |Prod Build| image:: https://github.com/cbedroid/photo-share/actions/workflows/build_prod.yml/badge.svg
     :alt: Production Build
 
 .. |Stage Deploy| image:: https://github.com/cbedroid/photo-share/actions/workflows/deploy_to_stage.yml/badge.svg

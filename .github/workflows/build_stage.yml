@@ -7,7 +7,6 @@ on:
 env:
   DJANGO_IMAGE: ghcr.io/cbedroid/photo-share/django
   NGINX_IMAGE: ghcr.io/cbedroid/photo-share/nginx-proxy
-  ENVIRONMENT_TAG: stage
   SITE_HOST: ${{ secrets.STAGE_SITE_HOST}}
   DJANGO_TAG: master
 
@@ -23,19 +22,21 @@ jobs:
         run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
       - name: Setting Django Image Tag
-        run: echo "DJANGO_TAG=${{env.ENVIRONMENT_TAG}}" >> $GITHUB_ENV
+        run: echo "DJANGO_TAG=stage" >> $GITHUB_ENV
 
       - name: Building Nginx and Django Image
         run: |
-          docker build -f ./django/Dockerfile.${ env.ENVIRONMENT_TAG }} \
+          docker build -f ./django/Dockerfile.stage \
             --tag ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} \
             ./django
           docker push ${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }}
 
-      - name: Build/Push NGINX Image to master
-        if: ${{ contains(env.SITE_HOST, 'heroku') }} == 0
+      - name: Checking Deployment Site ...
+        uses: actions/checkout@v2
+        if: ${{ !contains(env.SITE_HOST, 'heroku') }}
+      - name: Building Nginx Image
         run: |
-          echo "Builing Nginx Virtual Host
+          echo "Builing Nginx Virtual Host"
           echo "VIRTUAL_HOST=${{ env.SITE_HOST }}" >> $GITHUB_ENV
           echo "VIRTUAL_PORT=8000" >> $GITHUB_ENV
           echo "LETSENCRYPT_HOST=${{ env.SITE_HOST }}" >> $GITHUB_ENV
@@ -43,4 +44,8 @@ jobs:
             --tag ${{ env.NGINX_IMAGE }}:master \
             ./nginx/do-proxy
           docker push ${{ env.NGINX_IMAGE }}:master
+
+        if: ${{ contains(env.SITE_HOST, 'heroku') }}
+      - name: Ignoring Nginx Build
+        run: echo "Ignoring Nginx Build  ...Deployment Site is Heroku"
   # END BUILD
