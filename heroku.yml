@@ -6,8 +6,6 @@ build:
   docker:
     web: django/Dockerfile.stage
     worker: worker/Dockerfile
-  config:
-    - ./.env.stage
 release:
   image: worker
   command:
