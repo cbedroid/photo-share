@@ -27,9 +27,9 @@ then
   python manage.py loaddata galleries
   python manage.py loaddata photos
   python manage.py collectstatic --noinput
+
   # Disable run fixture command
   export run_fixtures=false
-  heroku config:add run_fixtures=false
-
+  #heroku config:add run_fixtures=false
 fi;
 exec "$@"
