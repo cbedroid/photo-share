@@ -5,7 +5,6 @@ setup:
 build:
   docker:
     web: django/Dockerfile.stage
-    worker: worker/Dockerfile.stage
 release:
   command:
     - django/entrypoint.do.sh
