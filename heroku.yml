@@ -4,8 +4,8 @@ setup:
       as: DATABASE
 build:
   docker:
-    web: django/Dockerfile.stage
-    worker: worker/django/Dockerfile.stage
+    web: django/Dockerfile
+    worker: worker/Dockerfile
 release:
   command:
     - django/entrypoint.do.sh
