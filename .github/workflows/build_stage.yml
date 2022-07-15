@@ -36,7 +36,7 @@ jobs:
         if: ${{ !contains(env.SITE_HOST, 'heroku') }}
       - name: Building Nginx Image
         run: |
-          echo "Builing Nginx Virtual Host"
+          echo "Building Nginx Virtual Host"
           echo "VIRTUAL_HOST=${{ env.SITE_HOST }}" >> $GITHUB_ENV
           echo "VIRTUAL_PORT=8000" >> $GITHUB_ENV
           echo "LETSENCRYPT_HOST=${{ env.SITE_HOST }}" >> $GITHUB_ENV

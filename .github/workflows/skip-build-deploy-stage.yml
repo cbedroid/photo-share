@@ -14,7 +14,6 @@ env:
   DJANGO_TAG: master
   ENV_FILE: .env.stage
 
-
 jobs:
   # Deploy to Stage Instance
   deploy:
@@ -41,7 +40,7 @@ jobs:
           echo SQL_DATABASE=${{ secrets.STAGE_SQL_DATABASE }} >> ${{env.ENV_FILE}}
           echo SQL_USER=${{ secrets.STAGE_SQL_USER }} >> ${{env.ENV_FILE}}
           echo SQL_PASSWORD=${{ secrets.STAGE_SQL_PASSWORD }} >> ${{env.ENV_FILE}}
-          echo SQL_HOST=${{ secrets.STAGE_SQL_HOST }} >> ${{env.ENV_FILE}}
+          echo SQL_HOST=db >> ${{env.ENV_FILE}}
           echo SQL_PORT=${{ secrets.STAGE_SQL_PORT }} >> ${{env.ENV_FILE}}
           echo REDIS_RUL=${{ secrets.REDIS_URL }} >> ${{env.ENV_FILE }}
 

@@ -1,8 +1,8 @@
-# Note: Stage Dockerfile  Digitial Ocean or Heroku
+# Note: Stage Dockerfile  Digital Ocean or Heroku
 # Pull official base image
 FROM python:3.9.3-slim-buster
 
-# create linux user - Digial Ocean
+# create linux user - Digital Ocean
 # RUN addgroup --system app && adduser --system --group app
 
 # Create Directory
