@@ -4,11 +4,11 @@ setup:
       as: DATABASE
 build:
   docker:
-    web: django/Dockerfile.stage
-    worker: worker/Dockerfile
+    web: Dockerfile.stage
+    worker: worker/Dockerfile.stage
 release:
   command:
-    - ./entrypoint.do.sh
+    - entrypoint.do.sh
   image: worker
 run:
-  web: gunicorn photoshare.wsgi.application -bind 0.0.0.0:$PORT
+  web: gunicorn photostare.wsgi.application -bind 0.0.0.0:$PORT
