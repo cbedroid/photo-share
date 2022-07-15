@@ -6,6 +6,7 @@ build:
   docker:
     web: Dockerfile.stage
     worker: worker/Dockerfile.stage
+
 release:
   command:
     - entrypoint.do.sh
