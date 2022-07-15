@@ -1,0 +1,18 @@
+setup:
+  addons:
+    - plan: heroku-redis
+      as: REDIS
+
+build:
+  docker:
+    web: django/Dockerfile.stage
+    worker: worker/Dockerfile
+  config:
+    - ./.env.stage
+
+release:
+  image: worker
+  command:
+    - django/entrypoint.do.sh
+run:
+  web: gunicorn photoshare.wsgi:application --bind 0.0.0.0:$PORT

@@ -20,7 +20,7 @@ fi;
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser --noinput
-if ["$run_fixtures" = true ];
+if [ "$run_fixtures" = true ];
 then
   echo "\n Running Django Fixture \n"
   python manage.py loaddata categories
