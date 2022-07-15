@@ -1,11 +1,10 @@
 # Docker compose for Local Development
 version: "3.3"
-
 services:
   django:
     build:
       context: ./django
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     container_name: dev-django
     command: python manage.py runserver 0.0.0.0:8000
     environment:
@@ -23,11 +22,13 @@ services:
       - redis
 
   db:
-    image: postgres:9.6.22-buster
+    image: postgres:12.0-alpine
     container_name: dev-db
+    restart: always
     ports:
-      - 5432:5432
-    env_file: ./.env.dev
+      - "5432:5432"
+    env_file:
+      - ./.env.dev
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

@@ -1,12 +1,16 @@
-# Note: Stage Dockerfile  Digitial Ocean or Heroku
+# Note: Stage Dockerfile  Digital Ocean or Heroku
 # Pull official base image
 FROM python:3.9.3-slim-buster
 
-# create linux user
-RUN addgroup --system app && adduser --system --group app
+# create linux user - Digital Ocean
+# RUN addgroup --system app && adduser --system --group app
 
 # Create Directory
-ENV APP_HOME=/srv/webapp
+# Heroku
+ENV APP_HOME=/app
+
+# Digital Ocean
+# ENV APP_HOME=/srv/webapp
 
 RUN mkdir -p $APP_HOME
 RUN mkdir -p $APP_HOME/static
@@ -33,7 +37,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   postgresql-client \
   libpq-dev \
   gcc \
-  redis-server \
   libjpeg-dev \
   && pip install -r requirements.txt --no-cache-dir\
   && apt-get autoremove -y gcc
@@ -46,10 +49,13 @@ COPY ./entrypoint.do.sh .
 COPY . .
 
 # chown all the files to the app user
-RUN chown -R app:app .
+# RUN chown -R app:app .
 
 # Change to linux user account
-USER app
+# USER app
 
 # run entrypoint.sh
-ENTRYPOINT ["sh","/srv/app/entrypoint.do.sh"]
+# Heroku
+ENTRYPOINT ["sh","/app/entrypoint.do.sh"]
+# Digital Ocean
+#ENTRYPOINT ["sh","/srv/app/entrypoint.do.sh"]
