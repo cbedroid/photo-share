@@ -4,7 +4,7 @@ setup:
       as: DATABASE
 build:
   docker:
-    web: django/Dockerfile
+    web: Dockerfile
     worker: worker/Dockerfile
 release:
   command:
