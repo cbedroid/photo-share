@@ -4,11 +4,11 @@ setup:
       as: DATABASE
 build:
   docker:
-    web: Dockerfile.stage
-    worker: worker/Dockerfile.stage
+    web: /app/Dockerfile.stage
+    worker: worker/app/Dockerfile.stage
 release:
   command:
     - entrypoint.do.sh
   image: worker
 run:
-  web: gunicorn photostare.wsgi.application -bind 0.0.0.0:$PORT
+  web: gunicorn photoshare.wsgi.application -bind 0.0.0.0:$PORT
