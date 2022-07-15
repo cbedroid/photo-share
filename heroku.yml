@@ -2,11 +2,10 @@ setup:
   addons:
     - plan: heroku-redis
       as: REDIS
-
 build:
   docker:
-    web: django/Dockerfile.stage
-    worker: worker/Dockerfile
+    - web: django/Dockerfile.stage
+    - worker: worker/Dockerfile
   config:
     - ./.env.stage
 
