@@ -7,7 +7,7 @@ build:
     web: django/Dockerfile.stage
 release:
   command:
-    - /app/entrypoint.do.sh
+    - ./entrypoint.do.sh
   image: worker
 run:
   web: gunicorn photostare.wsgi.application -bind 0.0.0.0:$PORT
