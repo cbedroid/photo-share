@@ -3,6 +3,7 @@ version: "3.3"
 
 services:
   django:
+    restart: always
     image: "${DJANGO_IMAGE}"
     container_name: django
     command: gunicorn photoshare.wsgi:application --worker-tmp-dir /dev/shm --workers=2 --threads=4 --worker-class=gthread --log-file=- --bind 0.0.0.0:8000
@@ -18,6 +19,7 @@ services:
       - redis
 
   db:
+    restart: always
     image: postgres:9.6.22-buster
     container_name: db
     ports:

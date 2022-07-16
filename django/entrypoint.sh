@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#Entrypoint for Local Development
+# Local Development Environment
 
 if [ "$DATABASE" = "postgres" ]
 then
@@ -20,9 +20,26 @@ fi;
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser --noinput
-python manage.py loaddata categories
-python manage.py loaddata galleries
-python manage.py loaddata photos
-python manage.py collectstatic --noinput
+if [ "$run_fixtures" = true ];
+then
+  cat << EOF
 
+  |-------------------------------------|
+  |      Running Django Fixtures....    |
+  |-------------------------------------|
+
+EOF
+  python manage.py loaddata categories
+  python manage.py loaddata galleries
+  python manage.py loaddata photos
+  python manage.py collectstatic --noinput
+else
+  cat << EOF
+
+  |-------------------------------------|
+  |      Ignoring Django Fixtures...    |
+  |-------------------------------------|
+
+EOF
+fi;
 exec "$@"

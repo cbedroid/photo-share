@@ -3,10 +3,10 @@
 FROM python:3.9.3-slim-buster
 
 # create linux user
-RUN addgroup --system app && adduser --system --group app
+#RUN addgroup --system app && adduser --system --group app
 
 # Create Directory
-ENV APP_HOME=/srv/webapp
+ENV APP_HOME=/srv/app
 
 RUN mkdir -p $APP_HOME
 RUN mkdir -p $APP_HOME/static
@@ -45,10 +45,10 @@ COPY ./entrypoint.sh .
 COPY . .
 
 # chown all the files to the app user
-RUN chown -R app:app .
+#RUN chown -R app:app .
 
 # Change to linux user account
-USER app
+#USER app
 
 # run entrypoint.sh
 ENTRYPOINT ["sh","/srv/app/entrypoint.sh"]

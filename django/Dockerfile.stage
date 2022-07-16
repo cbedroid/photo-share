@@ -6,7 +6,7 @@ FROM python:3.9.3-slim-buster
 RUN addgroup --system app && adduser --system --group app
 
 # Create Directory
-ENV APP_HOME=/srv/webapp
+ENV APP_HOME=/srv/app
 
 RUN mkdir -p $APP_HOME
 RUN mkdir -p $APP_HOME/static
