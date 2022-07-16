@@ -1,6 +1,5 @@
 # Docker compose for Local Development
 version: "3.3"
-
 services:
   django:
     restart: always
@@ -26,9 +25,11 @@ services:
     restart: always
     image: postgres:9.6.22-buster
     container_name: dev-db
+    restart: always
     ports:
-      - 5432:5432
-    env_file: ./.env.dev
+      - "5432:5432"
+    env_file:
+      - ./.env.dev
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

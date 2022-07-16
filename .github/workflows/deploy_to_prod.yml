@@ -36,53 +36,44 @@ jobs:
         if: github.ref != 'refs/heads/master'
         run: echo "DJANGO_TAG=dev" >> $GITHUB_ENV
 
+
       - name: Add Django env vars to file
         run: |
+          echo DJANGO_SUPERUSER_EMAIL=${{ secrets.DJANGO_SUPERUSER_EMAIL }} >> ${{env.ENV_FILE}}
           echo DJANGO_SUPERUSER_USERNAME=${{ secrets.DJANGO_SUPERUSER_USERNAME }} >> ${{env.ENV_FILE}}
           echo DJANGO_SUPERUSER_PASSWORD=${{ secrets.DJANGO_SUPERUSER_PASSWORD }} >> ${{env.ENV_FILE}}
-          echo DJANGO_SUPERUSER_EMAIL=${{ secrets.DJANGO_SUPERUSER_EMAIL }} >> ${{env.ENV_FILE}}
           echo DEBUG=0 >> ${{env.ENV_FILE}}
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> ${{env.ENV_FILE}}
-          echo DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }} >> ${{env.ENV_FILE}}
+          echo DJANGO_ALLOWED_HOSTS=${{ secrets.PROD_ALLOWED_HOSTS }} >> ${{env.ENV_FILE}}
           echo SQL_ENGINE=django.db.backends.postgresql >> ${{env.ENV_FILE}}
           echo DATABASE=postgres >> ${{env.ENV_FILE}}
-          echo SQL_DATABASE=${{ secrets.DO_SQL_DATABASE }} >> ${{env.ENV_FILE}}
-          echo SQL_USER=${{ secrets.DO_SQL_USER }} >> ${{env.ENV_FILE}}
-          echo SQL_PASSWORD=${{ secrets.DO_SQL_PASSWORD }} >> ${{env.ENV_FILE}}
-          echo SQL_HOST=${{ secrets.DO_SQL_HOST }} >> ${{env.ENV_FILE}}
-          echo SQL_PORT=${{ secrets.DO_SQL_PORT }} >> ${{env.ENV_FILE}}
+          echo SQL_DATABASE=${{ secrets.PROD_SQL_DATABASE }} >> ${{env.ENV_FILE}}
+          echo SQL_USER=${{ secrets.PROD_SQL_USER }} >> ${{env.ENV_FILE}}
+          echo SQL_PASSWORD=${{ secrets.PROD_SQL_PASSWORD }} >> ${{env.ENV_FILE}}
+          echo SQL_HOST=${{ secrets.PROD_SQL_HOST }} >> ${{env.ENV_FILE}}
+          echo SQL_PORT=${{ secrets.PROD_SQL_PORT }} >> ${{env.ENV_FILE}}
+          echo REDIS_RUL=${{ secrets.REDIS_URL }} >> ${{env.ENV_FILE }}
 
       # Digital Ocean Test Instance Docker Database variables
       - name: Add Postgres env vars to file
         run: |
-          echo POSTGRES_DB=${{ secrets.DO_SQL_DATABASE }} >> ${{env.ENV_FILE}}
-          echo POSTGRES_USER=${{ secrets.DO_SQL_USER }} >> ${{env.ENV_FILE}}
-          echo POSTGRES_PASSWORD=${{ secrets.DO_SQL_PASSWORD }} >> ${{env.ENV_FILE}}
-          echo POSTGRES_PORT=${{ secrets.DO_SQL_PORT }} >> ${{env.ENV_FILE}}
-          # Docker Email Support
+          echo POSTGRES_DB=${{ secrets.PROD_SQL_DATABASE }} >> ${{env.ENV_FILE}}
+          echo POSTGRES_USER=${{ secrets.PROD_SQL_USER }} >> ${{env.ENV_FILE}}
+          echo POSTGRES_PASSWORD=${{ secrets.PROD_SQL_PASSWORD }} >> ${{env.ENV_FILE}}
+          echo POSTGRES_PORT=${{ secrets.PROD_SQL_PORT }} >> ${{env.ENV_FILE}}
           echo SUPPORT_EMAIL_HOST=${{ secrets.EMAIL_SUPPORT_HOST }} >> ${{env.ENV_FILE}}
           echo SUPPORT_EMAIL_PORT=${{ secrets.EMAIL_SUPPORT_PORT }} >> ${{env.ENV_FILE}}
           echo SUPPORT_EMAIL_ADDRESS=${{ secrets.EMAIL_SUPPORT_ADDRESS }} >> ${{env.ENV_FILE}}
           echo SUPPORT_EMAIL_PASSWORD=${{ secrets.EMAIL_SUPPORT_PASSWORD }} >> ${{env.ENV_FILE}}
+          # echo RECAPTCHA_PUBLIC_KEY=${{ secrets.RECAPTCHA_PUBLIC_KEY }} >> ${{env.ENV_FILE}}
+          # echo RECAPTCHA_PRIVATE_KEY=${{ secrets.RECAPTCHA_PRIVATE_KEY }} >> ${{env.ENV_FILE}}
 
-          # Docker Recaptcha Support
-          #echo RECAPTCHA_PUBLIC_KEY=${{ secrets.RECAPTCHA_PUBLIC_KEY }} >> ${{env.ENV_FILE}}
-          #echo RECAPTCHA_PRIVATE_KEY=${{ secrets.RECAPTCHA_PRIVATE_KEY }} >> ${{env.ENV_FILE}}
-
-      # NGINX
-      #- name: Added NGINX Proxy and Lets Encrypt env variables
-      #  run: |
-      #    echo VIRTUAL_HOST=${{ secrets.DO_TEST_HOST }} >> ${{env.ENV_FILE}}
-      #    echo VIRTUAL_PORT=8000 >> ${{env.ENV_FILE}}
-      #    echo LETSENCRYPT_HOST=${{ secrets.DO_TEST_HOST }} >> ${{env.ENV_FILE}}
-      #    echo NGINX_PROXY_CONTAINER=nginx-proxy >> ${{env.ENV_FILE}}
-      #    echo ACME_CA_URI=https://acme-v02.api.letsencrypt.org/directory >> ${{env.ENV_FILE}}
-      #    echo DEFAULT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }} >> ${{env.ENV_FILE}}
+      # NGINX -->  No Nginx on Heroku -- Add configuration if you are not deploying to heroku
 
       - name: Add image names to env file for docker-compose
         run: |
-          echo DJANGO_IMAGE=${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} >> .env
-          echo NGINX_IMAGE=${{ env.NGINX_IMAGE }}:master >> .env
+          echo DJANGO_IMAGE=${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} >> ${{ env.ENV_FILE }}
+          echo NGINX_IMAGE=${{ env.NGINX_IMAGE }}:master >> ${{ env.ENV_FILE}}
 
       - name: Login to Heroku Container registry
         env:
@@ -93,6 +84,7 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_TOKEN }}
         run: |
+          heroku config:set DOCKER_IMAGES=${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} -a ${{ env.HEROKU_APP_NAME }}
           heroku config:set DJANGO_SUPERUSER_USERNAME=${{ secrets.DJANGO_SUPERUSER_USERNAME }} -a ${{ env.HEROKU_APP_NAME }}
           heroku config:set DJANGO_SUPERUSER_PASSWORD=${{ secrets.DJANGO_SUPERUSER_PASSWORD }} -a ${{ env.HEROKU_APP_NAME }}
           heroku config:set DJANGO_SUPERUSER_EMAIL=${{ secrets.DJANGO_SUPERUSER_EMAIL }} -a ${{ env.HEROKU_APP_NAME }}
@@ -107,16 +99,15 @@ jobs:
           heroku config:set SQL_PORT=${{ secrets.PROD_SQL_PORT }} -a ${{ env.HEROKU_APP_NAME }}
 
           # Django Email Support
-          heroku config:set SUPPORT_EMAIL_HOST=${{ secrets.SUPPORT_EMAIL_HOST }} -a ${{ env.HEROKU_APP_NAME }}
-          heroku config:set SUPPORT_EMAIL_PORT=${{ secrets.SUPPORT_EMAIL_PORT }} -a ${{ env.HEROKU_APP_NAME }}
-          heroku config:set SUPPORT_EMAIL_ADDRESS=${{ secrets.SUPPORT_EMAIL_ADDRESS }} -a ${{ env.HEROKU_APP_NAME }}
-          heroku config:set SUPPORT_EMAIL_PASSWORD=${{ secrets.SUPPORT_EMAIL_PASSWORD }} -a ${{ env.HEROKU_APP_NAME }}
+          heroku config:set SUPPORT_EMAIL_HOST=${{ secrets.EMAIL_SUPPORT_HOST }} -a ${{ env.HEROKU_APP_NAME }}
+          heroku config:set SUPPORT_EMAIL_PORT=${{ secrets.EMAIL_SUPPORT_PORT }} -a ${{ env.HEROKU_APP_NAME }}
+          heroku config:set SUPPORT_EMAIL_ADDRESS=${{ secrets.EMAIL_SUPPORT_ADDRESS }} -a ${{ env.HEROKU_APP_NAME }}
+          heroku config:set SUPPORT_EMAIL_PASSWORD=${{ secrets.EMAIL_SUPPORT_PASSWORD }} -a ${{ env.HEROKU_APP_NAME }}
 
           # Recaptcha Support
           # heroku config:set RECAPTCHA_PUBLIC_KEY=${{ secrets.RECAPTCHA_PUBLIC_KEY }} -a ${{ env.HEROKU_APP_NAME }}
           # heroku config:set RECAPTCHA_PRIVATE_KEY=${{ secrets.RECAPTCHA_PRIVATE_KEY }} -a ${{ env.HEROKU_APP_NAME }}
           # Redis Support
-          heroku config:set DOCKER_IMAGES=${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} -a ${{ env.HEROKU_APP_NAME }}
 
       - name: Add image names to env file for docker-compose
         run: echo DJANGO_IMAGE=${{ env.DJANGO_IMAGE }}:${{ env.DJANGO_TAG }} >> .env
@@ -128,6 +119,6 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_TOKEN }}
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
           dockerfile_directory: ./django
-          dockerfile_name: Dockerfile.prod
+          dockerfile_name: Dockerfile.stage
           docker_options: "--no-cache"
           process_type: web

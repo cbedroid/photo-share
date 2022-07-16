@@ -21,12 +21,11 @@ services:
     restart: always
     image: postgres:9.6.22-buster
     container_name: db
+    restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     env_file:
       - .env.stage
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis:alpine
@@ -50,23 +49,6 @@ services:
     depends_on:
       - django
 
-  nginx-proxy-letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: nginx-proxy-letsencrypt
-    env_file:
-      - .env.stage
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - certs:/etc/nginx/certs
-      - html:/usr/share/nginx/html
-      - vhost:/etc/nginx/vhost.d
-    depends_on:
-      - nginx-proxy
-
 volumes:
-  postgres_data:
-  certs:
-  html:
-  vhost:
   static:
   media:
