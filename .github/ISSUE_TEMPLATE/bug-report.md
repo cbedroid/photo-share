@@ -21,7 +21,6 @@ If applicable, add screenshots or logs to help explain your problem.
 
 **Environment**:
  - Device/OS: [e.g. IOS,Android,Linux,Windows... ]
-- Pydatpiff version:
 - Python version:
 - Shell (if applicable):
 - Others:
