@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#Production EntryPoint
+# Production EntryPoint
 
 if [ "$DATABASE" = "postgres" ]
 then
@@ -20,16 +20,27 @@ fi;
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser --noinput
+
 if [ "$run_fixtures" = true ];
 then
-  echo "\n Running Django Fixture \n"
+  cat << EOF
+
+  |-------------------------------------|
+  |      Running Django Fixtures....    |
+  |-------------------------------------|
+
+EOF
   python manage.py loaddata categories
   python manage.py loaddata galleries
   python manage.py loaddata photos
   python manage.py collectstatic --noinput
+else
+  cat << EOF
 
-  # Disable run fixture command
-  export run_fixtures=false
-  #heroku config:add run_fixtures=false
+  |-------------------------------------|
+  |      Ignoring Django Fixtures...    |
+  |-------------------------------------|
+
+EOF
 fi;
 exec "$@"
