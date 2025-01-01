@@ -127,13 +127,22 @@
 
         // Style the inline fieldset button
         $('.inline-related fieldset.module .add-row a').addClass('btn btn-sm btn-default float-right');
+        $('div.add-row>a').addClass('btn btn-sm btn-default float-right');
 
         // Ensure we preserve the tab the user was on using the url hash, even on page reload
         if ($tabs.length) { handleTabs($tabs); }
         else if ($carousel.length) { handleCarousel($carousel); }
         else if ($collapsible.length) { handleCollapsible($collapsible); }
 
-        applySelect2()
+        applySelect2();
+
+        $('body').on('change', '.related-widget-wrapper select', function(e) {
+            const event = $.Event('django:update-related');
+            $(this).trigger(event);
+            if (!event.isDefaultPrevented() && typeof(window.updateRelatedObjectLinks) !== 'undefined') {
+                updateRelatedObjectLinks(this);
+            }
+        });
     });
 
     // Apply select2 to all select boxes when new inline row is created
