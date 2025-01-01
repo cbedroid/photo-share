@@ -14,7 +14,7 @@ class PhotoShareBaseModel(models.Model):
         abstract = True
 
 
-class FAQTopic(models.Model):
+class FAQTopic(PhotoShareBaseModel):
     name = models.CharField(max_length=40)
     description = models.TextField(max_length=200)
 
@@ -22,7 +22,7 @@ class FAQTopic(models.Model):
         return self.name
 
 
-class FAQ(models.Model):
+class FAQ(PhotoShareBaseModel):
     """Frequently Asked Question"""
 
     topic = models.ForeignKey(FAQTopic, null=True, on_delete=DO_NOTHING)
