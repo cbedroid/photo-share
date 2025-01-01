@@ -2,8 +2,10 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.templatetags.static import static
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+from users.manager import UserManager
 
 
 class User(AbstractUser):
@@ -18,17 +20,20 @@ class User(AbstractUser):
     )
     slug = models.SlugField(editable=False)
 
+    objects = UserManager()
+
     def save(self, **kwargs):
         self.slug = slugify(self.username)
         return super().save(**kwargs)
 
-    def get_profile_pic(self):
-        google_account = self.socialaccount_set.filter(provider="google")
+    @cached_property
+    def profile_pic(self):
+        google_account = self.socialaccount_set.filter(provider="google").first()
         default_image = static("assets/defaults/default_user.jpg")
+
         if getattr(self, "image", None):
             return self.image.url
-        elif google_account.exists():
-            google_account = google_account.first()
+        elif google_account is not None:
             image = google_account.extra_data.get("picture", default_image)
             return image
 
