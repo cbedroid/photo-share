@@ -1,96 +1,35 @@
 import re
 
+from core.models import PhotoShareBaseModel
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 from django.db import models
-from django.db.models import Q
 from django.templatetags.static import static
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 from PIL import Image
 from rest_framework.reverse import reverse as api_reverse
 
-from .managers import GalleryManager
+from .enums import GalleryCategory, GalleryCategoryColor
+from .managers import GalleryManager, PhotoManager
 
 User = get_user_model()
 
 
-class Category(models.Model):
-
-    CATEGORY_LIST = (
-        (0, "general"),
-        (1, "abstract"),
-        (2, "adventure"),
-        (3, "architectural"),
-        (4, "art"),
-        (5, "black and white"),
-        (6, "business"),
-        (7, "candid"),
-        (8, "cityscape"),
-        (9, "commercial"),
-        (10, "composite"),
-        (11, "creative"),
-        (12, "documentary"),
-        (13, "drone"),
-        (14, "double-exposure"),
-        (15, "editorial"),
-        (16, "event"),
-        (17, "family"),
-        (18, "fashion"),
-        (19, "film"),
-        (20, "fine art"),
-        (21, "food"),
-        (22, "golden hour"),
-        (23, "holiday"),
-        (24, "indoor"),
-        (25, "infrared"),
-        (26, "landscape"),
-        (27, "lifestyle"),
-        (28, "long exposure"),
-        (29, "musical"),
-        (30, "milky way"),
-        (31, "minimalist"),
-        (32, "newborn"),
-        (33, "night"),
-        (34, "pet"),
-        (35, "portrait"),
-        (36, "product"),
-        (37, "real estate"),
-        (38, "seascape"),
-        (39, "social media"),
-        (40, "sports"),
-        (41, "still-life"),
-        (42, "surreal"),
-        (43, "street"),
-        (44, "time-lapse"),
-        (45, "travel"),
-        (46, "underwater"),
-        (47, "urban exploration"),
-        (48, "war"),
-        (49, "wedding"),
-        (50, "wildlife"),
+class Category(PhotoShareBaseModel):
+    name = models.CharField(choices=GalleryCategory.choices, default=GalleryCategory.GENERAL, max_length=50)
+    label = models.CharField(
+        max_length=80,
+        choices=GalleryCategoryColor.choices,
+        default=GalleryCategoryColor.BLACK_WHITE,
     )
-    CATEGORY_LABEL = (
-        ("bgc-blue text-white", "blue & white"),
-        ("bgc-black text-white", "black & white"),
-        ("bgc-grey text-white", "grey & white"),
-        ("bgc-green text-dark", "green & black"),
-        ("bgc-yellow text-dark", "yellow & black"),
-        ("bgc-red text-white", "red & white"),
-        ("bgc-cyan text-white", "light blue & white"),
-        ("bgc-orange text-white", "orange & white"),
-        ("bgc-brown text-white", "brown & white"),
-        ("bgc-lt-brown text-white", "white brown & white"),
-        ("bgc-pink text-white", "pink & white"),
-        ("bgc-purple text-white", "purple & white"),
-    )
-    name = models.IntegerField(choices=CATEGORY_LIST, default=0, unique=True, db_index=True)
-    label = models.CharField(max_length=80, choices=CATEGORY_LABEL, default="bgc-black text-white")
     slug = models.SlugField(blank=False, editable=False, db_index=True)
 
     class Meta:
         verbose_name_plural = "Categories"
+        ordering = ("name",)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.get_name_display())
@@ -98,17 +37,6 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse("gallery:gallery-list") + f"?q={self.slug}"
-
-    @classmethod
-    def choicefield_filter(cls, lookup):
-        """Perform lookup on Category by either it's label or display label"""
-        lookup = str(lookup)
-        # reverse category label to its display label
-        display_labels = dict(map(reversed, Category.CATEGORY_LIST))
-        label = display_labels.get(lookup)
-        if not lookup.isnumeric():
-            lookup = None
-        return cls.objects.filter(Q(name=label) | Q(name=lookup))
 
     def __str__(self):
         return self.get_name_display()
@@ -123,38 +51,38 @@ class Tag(models.Model):
         return self.name or "Tags"
 
 
-class Gallery(models.Model):
+class Gallery(PhotoShareBaseModel):
     objects = GalleryManager()
-    name = models.CharField(max_length=75, validators=[MinLengthValidator(3)])
-    user = models.ForeignKey(User, related_name="gallery", on_delete=models.CASCADE)
+    name = models.CharField(max_length=75, validators=[MinLengthValidator(3)], blank=False, null=False)
+    user = models.ForeignKey(User, related_name="galleries", on_delete=models.CASCADE)
     public = models.BooleanField(default=True)
     category = models.ForeignKey(
         Category,
-        related_name="gallery",
+        related_name="galleries",
         null=True,
         on_delete=models.SET_NULL,
         db_index=True,
     )
     slug = models.SlugField(editable=False, db_index=True)
-    created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
-    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
-
-    REQUIRED_FIELDS = ["name"]
 
     class Meta:
-        ordering = ["-created"]
-        unique_together = ["name", "user"]
+        ordering = ("-created",)
+        unique_together = (
+            "name",
+            "user",
+        )
+        verbose_name = "Gallery"
         verbose_name_plural = "Galleries"
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    @cached_property
     def cover_photo(self):
-        if self.photos:
-            cover = self.photos.filter(is_cover=True)
-            if cover.exists():
-                return cover.first().image.url
+        cover_photo = self.photos.filter(is_cover=True).first()
+        if cover_photo is not None:
+            return cover_photo.image.url
         return static("assets/defaults/default_image.jpg")
 
     def get_absolute_url(self):
@@ -173,7 +101,7 @@ class Gallery(models.Model):
         return self.name
 
 
-class Photo(models.Model):
+class Photo(PhotoShareBaseModel):
     title = models.CharField(max_length=80, validators=[MinLengthValidator(3)])
     image = models.ImageField(upload_to="gallery")
     gallery = models.ForeignKey(
@@ -187,9 +115,9 @@ class Photo(models.Model):
     views = models.PositiveIntegerField(default=0)
     downloads = models.PositiveIntegerField(default=0)
     tags = models.ManyToManyField(Tag, blank=True)
-    created = models.DateTimeField(auto_now=False, auto_now_add=True, db_index=True)
-    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     slug = models.SlugField(blank=False, editable=False, db_index=True)
+
+    objects = PhotoManager()
 
     def __str__(self):
         return self.title
@@ -228,7 +156,7 @@ class Photo(models.Model):
         return self.rate_set.like.filter(star=True).count()
 
 
-class Rate(models.Model):
+class Rate(PhotoShareBaseModel):
     like = models.BooleanField(default=False)
     star = models.BooleanField(default=False)
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
