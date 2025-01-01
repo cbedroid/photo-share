@@ -1,3 +1,6 @@
+# Mac OS X
+.DS_Store
+
 # "Swap File"
 *.sw*
 
@@ -267,3 +270,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+# pyenv
+.python-version
+
+# Ignore all node_modules
+node_modules/
+**/node_modules
+**/node_modules/*
+django/jstoolchain/node_modules
