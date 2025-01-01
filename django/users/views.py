@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import QuerySet
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
 from django.views.generic.edit import DeleteView
@@ -38,23 +40,26 @@ class UserAccountDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView)
     template_name = "users/user_confirm_delete.html"
     success_url = reverse_lazy("core:index")
 
-    def test_func(self):
+    def test_func(self) -> bool:
         return self.request.user == self.get_object()
 
-    def get_context_data(self, **kwargs):
+    def get_queryset(self) -> QuerySet[User]:
+        qs = super().get_queryset()
+        return qs.prefetch_related("socialaccount_set")
+
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        obj = self.get_object()
-        self.object = self.get_object()
+        obj = self.object
         if self.request.method == "GET":
             context["form"] = self.form_class(instance=obj)
         else:
             context["form"] = self.form_class(instance=obj, data=self.request.POST)
         return context
 
-    def form_valid(self, form):
+    def form_valid(self, form: AccountDeleteForm) -> HttpResponseRedirect:
         context = self.get_context_data()
         if form.has_changed and form.is_valid():
-            # send an email to user
+            # send email to user
             # delete user account
             form.save(commit=True)
             return super().form_valid(form)
