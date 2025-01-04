@@ -1,7 +1,7 @@
 from PIL import Image
 
 
-def resizeScale(image, width=400, height=300):
+def resize_scale(image, width=400, height=300):
     """Resize large uploaded image
 
      Scaling images will help reduce load time on the server and client.
@@ -11,8 +11,8 @@ def resizeScale(image, width=400, height=300):
         - Improve overall UI Deign, making images uniformed throughout the entire website.
     Cons:
         - Slight tradeoff in load time, being that all image will be rescaled on every upload.
-          This would add an additional load on the server, but the end results will highly
-          outweights this small computation time.
+          This would add a load on the server, but the end results will highly
+          outweigh this small computation time.
     """
     try:
         image = Image.open(image.path)
