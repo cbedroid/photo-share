@@ -1,3 +1,5 @@
+import os
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -23,8 +25,12 @@ DEBUG_TOOLBAR_PANELS = [
 
 def show_toolbar(request):
     # False to disable toolbar
-    # return os.getenv("DEBUG")
-    return False
+
+    from django.conf import settings
+
+    DEBUG = settings.DEBUG
+    DEBUG_TOOL_BAR_ENABLED = int(os.getenv("DEBUG_TOOLBAR_ENABLED", 0))
+    return DEBUG and DEBUG_TOOL_BAR_ENABLED
 
 
 DEBUG_TOOLBAR_CONFIG = {
