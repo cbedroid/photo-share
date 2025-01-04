@@ -6,70 +6,31 @@
   }
 </style>
 {% endblock extra_head %}
-<section id="footer_section" class="bg-gray-800 text-white w-sreen">
-  <div class="container py-12">
-    <div class="pt-12 xl:pt-14 px-6">
+<section id="footer_section" class="bg-gray-800 text-white w-screen">
+  <div class="container py-8 mx-auto">
+    <div class="pt-8 xl:pt-10 px-6">
       <div tabindex="0" aria-label="footer" class="focus:outline-none border-gray-300 border-t lg:w-11/12 md:w-11/12 lg:mx-auto md:mx-auto">
-        <div class="grid grid-cols-2 sm:grid-cols-3">
-          <div class="footer-content content--left col-span-3 sm:col-span-3 lg:col-span-2">
+            <div class="xl:flex flex-wrap justify-between pt-4 lg:pt-0 pb-6 lg:pl-3 sm:pl-0">
+          <div class="footer-content content--left">
             <div class="text-left md:text-center xl:flex lg:flex sm:flex space-y-12  sm:space-y-0 pt-6">
-              {% comment %} <div class="flex-1">
-                <h2 tabindex="0" class="focus:outline-none text-gray-200 font-bold text-xl mb-6">Community</h2>
-                <ul>
-                  <li class=" text-gray-200 hover:text-gray-400 mb-5">
-                    <a tabindex="0" class="focus:underline focus:outline-none" href="javascript:void(0)">About Us</a>
-                  </li>
-                  <li class="text-gray-200 hover:text-gray-400 mb-5">
-                    <a tabindex="0" class="focus:underline focus:outline-none" href="javascript:void(0)">Guidelines and how to</a>
-                  </li>
-                  <li class="text-gray-200 hover:text-gray-400 mb-5">
-                    <a tabindex="0" class="focus:underline focus:outline-none" href="javascript:void(0)">Quote from the best</a>
-                  </li>
-                  <li class="text-gray-200 hover:text-gray-400 mb-5">
-                    <a tabindex="0" class="focus:underline focus:outline-none" href="javascript:void(0)">How to start a blog</a>
-                  </li>
-                </ul>
-              </div> {% endcomment %}
-              <div class="flex-1">
+              <div>
                 <h2 tabindex="0" class="focus:outline-none text-gray-200 font-bold text-xl mb-6">Getting Started</h2>
-                <ul>
+                <ul class="text-left lg:text-center">
                   <li class="text-gray-200 hover:text-gray-400 mb-5">
                     <a tabindex="0" class="focus:underline focus:outline-none" href="{% url 'core:faqs' %}">Frequently Asked Questions</a>
                   </li>
                   <li class="text-gray-200 hover:text-gray-400 mb-5">
-
                     <a tabindex="0" class="focus:underline focus:outline-none" href="{% url  'core:about-us' %}">About Us</a>
                   </li>
                   <li class="text-gray-200 hover:text-gray-400 mb-5">
                     <a tabindex="0" class="focus:underline focus:outline-none" href="{% url 'core:contact-us' %}">Contact Us</a>
                   </li>
-
                 </ul>
               </div>
-              {% comment %} <div class="flex-1">
-                <h2 tabindex="0" class="focus:outline-none text-gray-200 font-bold text-xl mb-6">Resources</h2>
-                <ul>
-                  <li class="text-gray-200 hover:text-gray-400 mb-5">
-                    <a tabindex="0" class="focus:underline focus:outline-none" href="javascript:void(0)">Accessibility</a>
-                  </li>
-                  <li class="text-gray-200 hover:text-gray-400 mb-5">
-                    <a tabindex="0" class="focus:underline focus:outline-none" href="javascript:void(0)">Usability</a>
-                  </li>
-                  <li class="text-gray-200 hover:text-gray-400 mb-5">
-                    <a tabindex="0" class="focus:underline focus:outline-none" href="javascript:void(0)">Marketplace</a>
-                  </li>
-                  <li class="text-gray-200 hover:text-gray-400 mb-5">
-                    <a tabindex="0" class="focus:underline focus:outline-none" href="javascript:void(0)">Design & Dev</a>
-                  </li>
-                  <li class="text-gray-200 hover:text-gray-400 mb-5">
-                    <a tabindex="0" class="focus:underline focus:outline-none" href="javascript:void(0)">Marketplace</a>
-                  </li>
-                </ul>
-              </div> {% endcomment %}
             </div>
           </div>
-          <div class="hidden lg:block mt-6">
-            <h2 tabindex="0" class=" flex focus:outline-none text-gray-200 font-bold text-xl mb-6 w-full xl:justify-end">Stay Connected</h2>
+          <div class="block mt-6 lg:mr-48">
+            <h2 tabindex="0" class="flex focus:outline-none text-gray-200 font-bold text-xl sm:mt-16 lg:mt-0 mb-6 w-full xl:justify-end">Stay Connected</h2>
             <div class="flex justify-start sm:justify-start xl:justify-end space-x-6 pr-2 xl:pr-0 lg:pr-0 md:pr-0 sm:pr-0">
               <div class="hover:bg-gray-100 hover:bg-opacity-10 p-1 rounded-md">
                 <a aria-label="Twitter" role="link" href="https://twitter.com/cbedroid" rel="noopener noreferrer" target="_blank">
@@ -114,9 +75,9 @@
             </div>
           </div>
         </div>
-        <div class="xl:flex flex-wrap justify-between xl:mt-24 mt-16 pb-6 pl-3 sm:pl-0">
-          <div class="w-11/12 xl:w-2/6 mx-auto lg:mx-0 xl:mx-0 mb-6 lg:mb-0 xl:mb-0  pb-4 md:pb-1 md:order-2">
-            <ul class="xl:flex lg:flex md:flex sm:flex space-x-5">
+        <div class="flex flex-wrap justify-between sm:mt-8 xl:mt-16 pt-4 lg:pl-3 sm:pl-0">
+          <div class="w-11/12 xl:w-2/6 mx-0  pb-4 md:pb-1">
+            <ul class="flex lg:space-x-5">
               <li class="text-gray-200 hover:text-gray-300 text-base mb-4 sm:mb-0">
                 <a class="focus:outline-none focus:underline" href="{% url 'core:terms-conditions' %}">Terms of service</a>
               </li>
@@ -125,8 +86,8 @@
               </li>
             </ul>
           </div>
-          <div class="w-11/12 xl:w-2/6 mx-auto lg:mx-0 xl:mx-0 mb-6 xl:mb-0">
-            <p tabindex="0" class="focus:outline-none text-gray-200 text-base md:order-1 text-center">2022 CMB Technologies and Consulting LLC. All Rights Reserved</p>
+          <div class="sm:w-full lg:w-11/12 xl:w-2/6  mb-6 xl:mb-0">
+            <p tabindex="0" class="focus:outline-none text-gray-200 text-base xl:text-center">2022 CMB Technologies and Consulting LLC. All Rights Reserved</p>
           </div>
         </div>
       </div>
