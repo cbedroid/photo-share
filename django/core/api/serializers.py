@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model, password_validation
 from django.db.models import Q
-from gallery.models import Category, Gallery, Photo
+from gallery.models import Gallery, Photo
 from rest_framework import serializers
 
 User = get_user_model()
@@ -59,48 +59,24 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class GallerySerializer(serializers.ModelSerializer):
-    title = serializers.CharField(write_only=True)
+    title = serializers.CharField(write_only=True, required=False)
     image = serializers.ImageField(max_length=None, allow_empty_file=False, write_only=True)
     is_cover = serializers.BooleanField(default=False, initial=False)
-    category = serializers.ChoiceField(choices=Category.CATEGORY_LIST)
-    photos = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Gallery
         fields = "__all__"
-        read_only_fields = ["user"]
+        read_only_fields = (
+            "user",
+            "image",
+            "title",
+        )
 
     def get_uri(self, obj):
         """Get object reversed slug url"""
         request = self.context.get("request")
         # see galley models for implementation
         return obj.get_api_url(request)
-
-    def get_fields(self, *args, **kwargs):
-        # Override get_fields making related fields: `image` and `title` not required
-        # on create and update methods
-        fields = super(GallerySerializer, self).get_fields(*args, **kwargs)
-        request = self.context.get("request")
-        if request and getattr(request, "method", None) in ["PUT", "PATCH"]:
-            fields["image"].required = False
-            fields["title"].required = False
-        return fields
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        photos = list(dict(id=photo.id, title=photo.title) for photo in instance.photos.all())
-
-        representation["uri"] = self.get_uri(instance)
-        representation["category"] = instance.category.get_name_display()
-        representation["photos"] = photos
-        representation["uploader"] = dict(id=instance.user.pk, username=instance.user.username)
-        return representation
-
-    def validate_category(self, value):
-        category = Category.choicefield_filter(value)
-        if not category.exists():
-            raise serializers.ValidationError("Sorry, that category does not exist!")
-        return category.first()
 
     def validate_title(self, value):
         user = self.context.get("user")
@@ -145,12 +121,12 @@ class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
         exclude = ("slug",)
-        read_only_fields = ("views", "created", "pk", "updated", "downloads")
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation["gallery"] = {"id": instance.gallery.id, "name": instance.gallery.name}
-        return representation
+        read_only_fields = (
+            "views",
+            "created",
+            "updated",
+            "downloads",
+        )
 
     def validate_title(self, value):
         # Validate Photo titles are not the same
