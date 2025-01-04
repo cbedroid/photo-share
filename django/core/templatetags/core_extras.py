@@ -12,9 +12,6 @@ def tech_support_link(link_text=None, className="support-link", *args, **kwargs)
     """Helper tag to create consistent tech_support email links"""
 
     tech_support_email = getattr(settings, "TECH_SUPPORT_EMAIL", "photoshare.tech@gmail.com")
-    if link_text is None:
-        link_text = re.sub("nowornever", "NoworNever", tech_support_email.lower())
-
     anchor_link = f'<a class="{className}" href="mailto:{tech_support_email}" rel="noopener noreferrer" target="_blank">{link_text}</a>'
     return mark_safe(anchor_link)
 
