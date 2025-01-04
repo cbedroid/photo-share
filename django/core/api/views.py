@@ -42,13 +42,12 @@ class GalleryViewSet(ModelViewSet):
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
             return Gallery.objects.filter(Q(public=True) | Q(user=user))
-        return Gallery.objects.filter(public=True)
+        return Gallery.objects.with_public_images()
 
     def get_object(self):
         # NOTE: Added get_object permission to here to alter HTTP response.
         #      Changed status 403 to 404 to hide that the gallery even exists.
-        #      This can help protect against hackers by disgusing that gallery is not found.
-        #
+        #      This can help protect against hackers by disguising that gallery is not found.
         obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
         self.check_object_permissions(self.request, obj)
         return obj
@@ -76,8 +75,10 @@ class PhotoViewSet(ModelViewSet):
             # Query Gallery album based on its public status.
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
-            return Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=user))
-        return Photo.objects.filter(gallery__public=True)
+            qs = Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=user))
+        else:
+            qs = Photo.objects.with_public_photos()
+        return qs.prefetch_related("tags")
 
     def perform_destroy(self, instance):
         instance.delete()
