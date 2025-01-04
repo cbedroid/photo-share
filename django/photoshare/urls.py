@@ -15,6 +15,10 @@ urlpatterns += [
     re_path(r"", include("core.urls")),
 ]
 
+handler403 = "core.views.handle_403_view"
+handler404 = "core.views.handle_404_view"
+handler429 = "core.views.handle_429_view"
+handler500 = "core.views.handle_500_view"
 
 # DEBUG TOOLBAR
 if settings.DEBUG:
