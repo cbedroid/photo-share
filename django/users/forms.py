@@ -1,4 +1,4 @@
-from allauth.account.forms import LoginForm
+from allauth.account.forms import LoginForm, SignupForm
 from django import forms
 from django.conf import settings
 from django.contrib.auth import forms as userforms
@@ -53,7 +53,7 @@ class UserUpdateForm(userforms.UserChangeForm):
         return instance
 
 
-class UserSignUpForm(userforms.UserCreationForm):
+class UserSignUpForm(userforms.UserCreationForm, SignupForm):
     def __init__(self, *args, **kwargs):
         super(UserSignUpForm, self).__init__(*args, **kwargs)
         # self.fields["captcha"].label = ""
