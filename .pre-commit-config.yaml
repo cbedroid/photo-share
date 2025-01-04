@@ -34,13 +34,12 @@ repos:
     hooks:
       - id: isort
 
-  # Custom hook - Comment out html livejs script - (uses "django comment" to comment out script tag)
   # https://stackoverflow.com/questions/59499061/how-to-run-custom-shell-script-file-before-pre-commit-hook
   - repo: local
     hooks:
       - id: livejs-comment
         name: livejs-comment
-        entry: bash -c "find . -path '*base.html' | xargs sudo sed -ri 's/^(\s*)(<script.*livejs.*script>)/\1\{\# \2 \#\}/' "
+        entry: "bash django/.livejs_precommit.sh"
         language: system
         types: [html]
         pass_filenames: false
