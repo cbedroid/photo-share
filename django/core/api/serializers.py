@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model, password_validation
 from django.db.models import Q
-from gallery.models import Gallery, Photo
+from gallery.models import Category, Gallery, Photo
 from rest_framework import serializers
 
 User = get_user_model()
@@ -58,63 +58,26 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ("name", "label", "slug")
+        read_only_fields = fields
+
+
 class GallerySerializer(serializers.ModelSerializer):
-    title = serializers.CharField(write_only=True, required=False)
-    image = serializers.ImageField(max_length=None, allow_empty_file=False, write_only=True)
-    is_cover = serializers.BooleanField(default=False, initial=False)
+    category = CategorySerializer(read_only=True)
 
     class Meta:
         model = Gallery
-        fields = "__all__"
-        read_only_fields = (
+        fields = (
+            "name",
+            "public",
+            "slug",
             "user",
-            "image",
-            "title",
+            "category",
         )
-
-    def get_uri(self, obj):
-        """Get object reversed slug url"""
-        request = self.context.get("request")
-        # see galley models for implementation
-        return obj.get_api_url(request)
-
-    def validate_title(self, value):
-        user = self.context.get("user")
-        title = Photo.objects.filter(gallery__user=user, title=value)
-        if title.exists():
-            raise serializers.ValidationError("Sorry, that image title is already taken!")
-
-    def validate_name(self, value):
-        qs = Gallery.objects.filter(name__iexact=value)
-        if self.instance:
-            qs = qs.exclude(name__iexact=self.instance.name)
-        if qs.exists():
-            raise serializers.ValidationError("Sorry, that gallery name is already taken")
-        return value
-
-    def create(self, validated_data):
-        image = validated_data.pop("image", None)
-        title = validated_data.pop("title", None)
-        is_cover = validated_data.pop("is_cover", None)
-        gallery = Gallery.objects.create(**validated_data)
-        if image and title:
-            Photo.objects.create(title=title, image=image, is_cover=is_cover, gallery=gallery)
-        return gallery
-
-    def partial_update(self, instance, validated_data):
-        # Collect photo validated_data if available
-
-        image = validated_data.pop("image", None)
-        title = validated_data.pop("title", None)
-
-        instance.name = validated_data.pop("name", instance.name)
-        instance.category = validated_data.pop("category", instance.category)
-        instance.public = validated_data.pop("public", instance.public)
-        instance.save()
-
-        if image and title:
-            Photo.objects.create(title=title, image=image, gallery=instance)
-        return instance
+        read_only_fields = fields
 
 
 class PhotoSerializer(serializers.ModelSerializer):
