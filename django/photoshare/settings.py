@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "simple_history",
     "django_social_share",
     "debug_toolbar",
+    "django_filters",
     "rest_framework",
     "rest_framework.authtoken",
     "profanity",
@@ -263,10 +264,13 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 25,
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "120/min",
+        "anon": "1/sec",
+        "user": "10/sec",
     },
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
     "NUM_PROXIES": 1,
 }
 
