@@ -1,35 +1,15 @@
-from allauth.account.models import EmailAddress
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from gallery.filters import GalleryFilter
 from gallery.models import Gallery, Photo
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from .permissions import IsAuthOrStaff, IsOwnerOrReadOnly
-from .serializers import GallerySerializer, PhotoSerializer, UserSerializer
+from .serializers import GallerySerializer, PhotoSerializer
 
 User = get_user_model()
-
-
-class UserViewSet(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    def get_permissions(self):
-        if self.request.method == "POST":
-            self.permission_classes = (AllowAny,)
-        return super(UserViewSet, self).get_permissions()
-
-    def perform_create(self, serializer):
-        user = serializer.save()
-        if settings.ACCOUNT_EMAIL_VERIFICATION.lower() != "none":
-            email = EmailAddress.objects.create(user=user, email=user.email)
-            email.send_confirmation()
-        return user
 
 
 class GalleryViewSet(ModelViewSet):
