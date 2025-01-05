@@ -24,6 +24,8 @@ class GalleryViewSet(
     def get_queryset(self):
         user = self.request.user
         qs = super().get_queryset()
+        if not user.is_authenticated:
+            return qs.with_public_photos()
         if user.has_perm("gallery.view_gallery"):
             return qs.all()
         # Query Gallery album based on its public status.
@@ -50,6 +52,8 @@ class PhotoViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Dest
     def get_queryset(self):
         user = self.request.user
         qs = super().get_queryset().prefetch_related("tags")
+        if not user.is_authenticated:
+            return qs.with_public_photos()
         if user.has_perm("gallery.view_photo"):
             return qs.all()
         # Query Gallery album based on its public status.
