@@ -44,6 +44,8 @@ class PhotoManager(models.Manager):
 
         return PhotoQueryset(self.model, using=self._db).select_related(
             "gallery",
+            "gallery__category",
+            "gallery__user",
         )
 
     def with_public_photos(self) -> GalleryQueryset:
