@@ -36,18 +36,6 @@ class GalleryViewSet(ModelViewSet):
         self.check_object_permissions(self.request, obj)
         return obj
 
-    def get_serializer_context(self, **kwargs):
-        context = super().get_serializer_context(**kwargs)
-        context["user"] = self.request.user
-        context["request"] = self.request
-        return context
-
-    def perform_create(self, serializer):
-        return serializer.save(user=self.request.user)
-
-    def perform_update(self, serializer):
-        return serializer.save(user=self.request.user)
-
 
 class PhotoViewSet(ModelViewSet):
     queryset = Photo.objects.all()
