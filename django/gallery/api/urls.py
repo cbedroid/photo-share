@@ -7,8 +7,8 @@ from . import views
 app_name = "api"
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r"gallery", views.GalleryViewSet)
-router.register(r"photo", views.PhotoViewSet)
+router.register(r"galleries", views.GalleryViewSet)
+router.register(r"photos", views.PhotoViewSet)
 
 urlpatterns = router.urls
 urlpatterns += [
