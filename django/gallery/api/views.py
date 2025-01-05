@@ -1,32 +1,35 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from gallery.filters import GalleryFilter
+from gallery.filters import GalleryFilter, PhotoFilter
 from gallery.models import Gallery, Photo
+from rest_framework import mixins, viewsets
 from rest_framework.generics import get_object_or_404
-from rest_framework.viewsets import ModelViewSet
 
-from .permissions import IsAuthOrStaff, IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly
 from .serializers import GallerySerializer, PhotoSerializer
 
 User = get_user_model()
 
 
-class GalleryViewSet(ModelViewSet):
+class GalleryViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet
+):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
-    permission_classes = [IsOwnerOrReadOnly, IsAuthOrStaff]
+    permission_classes = (IsOwnerOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
-    filter_class = GalleryFilter
+    filterset_class = GalleryFilter
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_authenticated:
-            # Query Gallery album based on its public status.
-            # If the gallery belongs to the logged in, disregard "public" state
-            # include his/her private galleries as well.
-            return Gallery.objects.filter(Q(public=True) | Q(user=user))
-        return Gallery.objects.with_public_photos()
+        qs = super().get_queryset()
+        if user.has_perm("gallery.view_gallery"):
+            return qs.all()
+        # Query Gallery album based on its public status.
+        # If the gallery belongs to the logged in, disregard "public" state
+        # include his/her private galleries as well.
+        return qs.filter(Q(public=True) | Q(user=user)).all()
 
     def get_object(self):
         # NOTE: Added get_object permission to here to alter HTTP response.
@@ -37,20 +40,22 @@ class GalleryViewSet(ModelViewSet):
         return obj
 
 
-class PhotoViewSet(ModelViewSet):
+class PhotoViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = PhotoFilter
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_authenticated:
-            # Query Gallery album based on its public status.
-            # If the gallery belongs to the logged in, disregard "public" state
-            # include his/her private galleries as well.
-            qs = Photo.objects.filter(Q(gallery__public=True) | Q(gallery__user=user))
-        else:
-            qs = Photo.objects.with_public_photos()
-        return qs.prefetch_related("tags")
+        qs = super().get_queryset().prefetch_related("tags")
+        if user.has_perm("gallery.view_photo"):
+            return qs.all()
+        # Query Gallery album based on its public status.
+        # If the gallery belongs to the logged in, disregard "public" state
+        # include his/her private galleries as well.
+        return qs.filter(Q(gallery__public=True) | Q(gallery__user=user))
 
     def perform_destroy(self, instance):
         instance.delete()
