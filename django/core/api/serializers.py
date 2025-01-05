@@ -11,6 +11,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class GallerySerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
+    created_by = serializers.CharField(source="user.username", read_only=True)
 
     class Meta:
         model = Gallery
@@ -18,7 +19,7 @@ class GallerySerializer(serializers.ModelSerializer):
             "name",
             "public",
             "slug",
-            "user",
+            "created_by",
             "category",
         )
         read_only_fields = fields
