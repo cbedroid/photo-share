@@ -16,6 +16,7 @@ class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
         fields = (
+            "id",
             "name",
             "public",
             "slug",
@@ -25,13 +26,33 @@ class GallerySerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
+class PhotoGallerySerializer(GallerySerializer):
+    category = serializers.CharField(source="category.name", read_only=True)
+
+    class Meta(GallerySerializer.Meta):
+        fields = (
+            "id",
+            "name",
+            "category",
+            "created_by",
+        )
+        read_only_fields = fields
+
+
 class PhotoSerializer(serializers.ModelSerializer):
+    gallery = PhotoGallerySerializer(read_only=True)
+
     class Meta:
         model = Photo
-        exclude = ("slug",)
-        read_only_fields = (
+        fields = (
+            "id",
+            "title",
+            "image",
+            "is_cover",
             "views",
-            "created",
-            "updated",
             "downloads",
+            "slug",
+            "gallery",
+            "tags",
         )
+        read_only_fields = fields
