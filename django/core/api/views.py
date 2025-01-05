@@ -2,6 +2,8 @@ from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
+from gallery.filters import GalleryFilter
 from gallery.models import Gallery, Photo
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny
@@ -34,6 +36,8 @@ class GalleryViewSet(ModelViewSet):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
     permission_classes = [IsOwnerOrReadOnly, IsAuthOrStaff]
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = GalleryFilter
 
     def get_queryset(self):
         user = self.request.user
@@ -42,7 +46,7 @@ class GalleryViewSet(ModelViewSet):
             # If the gallery belongs to the logged in, disregard "public" state
             # include his/her private galleries as well.
             return Gallery.objects.filter(Q(public=True) | Q(user=user))
-        return Gallery.objects.with_public_images()
+        return Gallery.objects.with_public_photos()
 
     def get_object(self):
         # NOTE: Added get_object permission to here to alter HTTP response.
