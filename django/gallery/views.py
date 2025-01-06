@@ -15,7 +15,6 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
-from django.views.generic.list import MultipleObjectMixin
 
 from .mixins import GalleryFormMixin, UserAccessPermissionMixin
 from .models import Category, Gallery, Photo
@@ -24,7 +23,7 @@ if TYPE_CHECKING is True:
     from django.http import HttpRequest
 
 
-class GalleryDetailView(DetailView, MultipleObjectMixin):
+class GalleryDetailView(DetailView):
     model = Gallery
     template_name = "gallery/gallery_detail.html"
     object_list = None
@@ -219,15 +218,20 @@ def photo_cover_update(request: "HttpRequest", pk: Optional[int] = None) -> Unio
 def photo_transfer(request: "HttpRequest", pk: Optional[int] = None) -> HttpResponseRedirect:
     """Transfer a photo to another gallery"""
 
-    new_gallery_id = request.POST["gallery"][0]
     obj = Photo.objects.get(pk=pk)
-    gallery = get_object_or_404(Gallery, id=new_gallery_id)
-    gallery_detail_url = gallery.get_absolute_url()
+    new_gallery = request.POST.get("gallery")
+    if new_gallery:
+        new_gallery_id = int(new_gallery)
+        gallery = get_object_or_404(Gallery, id=new_gallery_id)
+        gallery_detail_url = gallery.get_absolute_url()
 
-    # Assign photo to a new gallery
-    obj.gallery = gallery
-    obj.save(update_fields=("gallery", "updated"))
-    return redirect(gallery_detail_url)
+        # Assign photo to a new gallery
+        obj.gallery = gallery
+        obj.save(update_fields=("gallery", "updated"))
+        return redirect(gallery_detail_url)
+
+    messages.warning(request, "Sorry, the gallery you are trying to transfer does not exist")
+    return redirect(obj.get_absolute_url())
 
 
 class CategoryDetailView(DetailView):
