@@ -1,41 +1,22 @@
+import logging
 import os
 import shutil
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.shortcuts import get_object_or_404
-from django.urls import reverse
+from django.test import TestCase
 from gallery.models import *  # noqa
-from rest_framework.reverse import reverse as api_reverse
+from rest_framework.test import APITestCase
 
 User = get_user_model()
-
+logger = logging.getLogger(__name__)
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 TEST_MEDIA_ROOT = os.path.join(settings.BASE_DIR, "test_media/")
-TEST_IMAGE_DIR = os.path.join(PATH, "FakeImages/")
+TEST_IMAGE_DIR = os.path.join(PATH, "images/")
 
 
-def override_setting_config():
-    # Change django settings for testing
-    global settings
-
-    setattr(settings, "ACCOUNT_EMAIL_VERIFICATION", "none")
-    setattr(settings, "MEDIA_ROOT", TEST_MEDIA_ROOT)
-    setattr(
-        settings,
-        "DEBUG_TOOLBAR_CONFIG",
-        {
-            "INTERCEPT_REDIRECTS": False,
-            "SHOW_TOOLBAR_CALLBACK": lambda enableToolBar: False,
-        },
-    )
-
-
-class BaseObjectUtils(object):
-    override_setting_config()
-    fixtures = ["test_fixtures"]
+class PhotoShareBaseTest(TestCase):
 
     default_formset = {
         "name": "new_gallery",
@@ -55,61 +36,12 @@ class BaseObjectUtils(object):
         "photo-3-image": "",
     }
 
-    user_1_cred = {
-        "username": "test_user_1",
-        "password": "test_password",
-        "email": "test_user1@test.com",
-    }
-    user_2_cred = {
-        "username": "test_user_2",
-        "password": "test_password",
-        "email": "test_user_2@test.com",
-    }
-
-    # Account Urls
-    login_url = reverse("account_login")
-    logout_url = reverse("account_logout")
-
-    # Core Urls
-    index_url = reverse("core:index")  # index
-
-    # API URLS
-    gallery_api_list_url = api_reverse("api:gallery-list")
-    photo_api_list_url = api_reverse("api:photo-list")
-    user_api_list_url = api_reverse("api:user-list")
-
-    # Gallery urls
-    gallery_create_url = reverse("gallery:gallery-create")
-    gallery_detail_url = reverse("gallery:gallery-detail", kwargs={"slug": "test_gallery"})
-    gallery_update_url = reverse("gallery:gallery-update", kwargs={"slug": "test_gallery"})
-    gallery_delete_url = reverse("gallery:gallery-delete", kwargs={"slug": "test_gallery"})
-
-    def setUp(self, *args, **kwargs):
-        # Initialize test objects making them available throughout all tests.
-        # Using setUp, instead of setUpClass to prevent test variable from being affect by previous/other tests
-        super().setUp(*args, **kwargs)
-        self.create_test_objects()
-
     @classmethod
     def tearDownClass(cls):
-        super(BaseObjectUtils, cls).tearDownClass()
+        super().tearDownClass()
         if os.path.isdir(TEST_MEDIA_ROOT):
             shutil.rmtree(TEST_MEDIA_ROOT, ignore_errors=True)
-            print("Test media Removed")
-
-    def create_test_objects(self):
-        """NOTE: This function is needed, otherwise pytest will throw Database not Access Error."""
-
-        # # Test Users
-        self.test_user_1 = get_object_or_404(User, pk=1)
-        self.test_user_2 = get_object_or_404(User, pk=2)
-
-        # # Test Category
-        self.test_category = Category.objects.first()
-
-        # # Test Galleries
-        self.test_gallery_1 = get_object_or_404(Gallery, pk=1)
-        self.test_gallery_2 = get_object_or_404(Gallery, pk=2)
+            logger.info("Test media Removed")
 
     def create_fake_image(self, name, path="test_image.jpg"):
         path = os.path.join(TEST_IMAGE_DIR, path)
@@ -118,25 +50,8 @@ class BaseObjectUtils(object):
         with open(path, "rb") as image_file:
             return SimpleUploadedFile(name=name + ".jpg", content=image_file.read(), content_type="image/jpeg")
 
-    def create_user(self, username="test_user_1", email="test_user_1@test.com", password="test_password"):
-        user, _ = User.objects.get_or_create(username=username, email=email)
-        user.set_password(password)
-        user.save()
-        return user
 
-    def create_gallery(self, user, name="test_gallery_1"):
-        gallery, _ = Gallery.objects.get_or_create(
-            name=name,
-            user=user,
-            public=True,
-            category=self.test_category,
-        )
-        return gallery
+class PSAPITestCase(APITestCase, PhotoShareBaseTest):
+    """Base class for PhotoShare API tests."""
 
-    def create_photo(self, gallery, title="test_image_1", **kwargs):
-        photo, _ = Photo.objects.get_or_create(
-            title=title,
-            image=self.create_fake_image(title, **kwargs),
-            gallery=gallery,
-        )
-        return photo
+    pass

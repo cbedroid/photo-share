@@ -23,7 +23,6 @@ ACCOUNT_FORMS = {
 # --- Sign Up Configuration --#
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_USERNAME_MAX_LENGTH = 60
 ACCOUNT_PRESERVE_USERNAME_CASING = True
@@ -46,7 +45,6 @@ ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 # This is ignored when ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
-ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 60 * 3
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "account_login"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = " "
@@ -55,12 +53,15 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = " "
 # TODO: Delete non-primary email after a given period ... not decided yet, but it's something to keep in mind
 ACCOUNT_MAX_EMAIL_ADDRESSES = 2
 
-
-# Protection from brute force attack -
-# Note that this ONLY fires AFTER a user is locked out due to too many failed attempts
-ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 60 * 5
-ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
-
 # It is crucial that this is set to "False" to prevent malicious attacks on login users
 # See explanation here - https://django-allauth.readthedocs.io/en/latest/views.html#logout-account-logout
 ACCOUNT_LOGOUT_ON_GET = False
+
+# Rate Limit:https://docs.allauth.org/en/latest/account/rate_limits.html
+ACCOUNT_RATE_LIMITS = {
+    # Protection from brute force attack -
+    # Note that this ONLY fires AFTER a user is locked out due to too many failed attempts
+    "login_failed": "15/m/ip,3/15m/key",
+    "confirm_email": "5/20m/ip",
+    "login": "5/10m/ip",
+}

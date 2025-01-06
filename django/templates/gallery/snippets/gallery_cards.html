@@ -3,7 +3,11 @@
     {% for gallery in galleries %}
     <li class="gallery__card  relative shadow" style="height:300px;max-width:500px;">
       <!--card image overlay -->
-      <img class="block rounded-lg w-full h-full p-0" src="{{gallery.cover_photo}}" alt="{{gallery}} {{gallery.cover_photo}}">
+      {% for photo in gallery.photos.all %}
+        {% if photo.is_cover %}
+          <img class="block rounded-lg w-full h-full p-0" src="{{photo.image.url}}" alt="{{gallery}} cover photo">
+        {% endif %}
+      {% endfor %}
       <div class="image-overlay absolute rounded-lg top-0 left-0 overlay--bgdark overlay--hovershow text-white w-full h-full">
         <div class="overlay__content grid grid-flow-rows w-fit p-2">
           <div class="flex-evenly flex-wrap text-xs sm:text-base mx-1 overflow-hidden">
@@ -19,7 +23,7 @@
               <i class="fas fa-images"></i>
             </div>
             <div class="flex-box--right flex place-items-center space-x-2 font-italic text-ellipsis">
-              <img class="inline rounded-full w-6 h-6" src="{{gallery.user.get_profile_pic}}" alt="user">
+              <img class="inline rounded-full w-6 h-6" src="{{gallery.user.profile_pic}}" alt="user">
               <span class="font-semibold">
                 {{gallery.user.username}}
               </span>

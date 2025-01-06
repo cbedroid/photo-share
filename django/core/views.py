@@ -85,3 +85,7 @@ def handle_404_view(request, *args, **kwargs):
 
 def handle_500_view(request, *args, **kwargs):
     return render(request, "errors/500.html", {})
+
+
+def handle_429_view(request, *args, **kwargs):
+    return render(request, "errors/429.html", {})

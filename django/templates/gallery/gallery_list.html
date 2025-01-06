@@ -18,11 +18,11 @@
   <div class="xxl:container mx-auto px-5">
     <!-- Trending Categories-->
     <div class="trend-category">
-      <h4><b>Trending Category</b></h4>
+      <h4><b>Trending Categories</b></h4>
       <ul class="category category--slider">
         {% for category in top_category %}
-        <li class="category__badge badge  {{category.label}} rounded-full h-8 overflow-hidden">
-          <a class="whitespace-nowrap text-sm sm:text-lg p-3 mx-1 text-center w-full" href="{{ category.get_absolute_url }}#gallery-collection">{{category}}</a>
+        <li class="category__badge badge {{category.label}} rounded-full h-8 overflow-hidden p-0 w-0 ">
+          <a class="whitespace-nowrap sm:text-base md:text-xs p-3 mx-1 text-center " href="{{ category.get_absolute_url }}">{{category.get_name_display| title}}</a>
         </li>
         {% endfor %}
       </ul>

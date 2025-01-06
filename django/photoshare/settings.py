@@ -5,12 +5,15 @@ from dotenv import load_dotenv
 
 from .config.allauth_config import *  # noqa: F401
 from .debug_toolbar_config import *  # noqa: F401
+from .envs import DEV
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = int(os.getenv("DEBUG", default=0))
+ENV = os.getenv("ENVIRONMENT") or DEV
+
 
 if DEBUG:
     ACCOUNT_EMAIL_VERIFICATION = "none"
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
     "simple_history",
     "django_social_share",
     "debug_toolbar",
+    "django_filters",
     "rest_framework",
     "rest_framework.authtoken",
     "profanity",
@@ -68,6 +72,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "photoshare.urls"
@@ -95,12 +100,12 @@ WSGI_APPLICATION = "photoshare.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": os.getenv("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.getenv("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
-        "USER": os.getenv("SQL_USER", "user"),
-        "PASSWORD": os.getenv("SQL_PASSWORD", "password"),
-        "HOST": os.getenv("SQL_HOST", "localhost"),
-        "PORT": os.getenv("SQL_PORT", "5432"),
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.getenv("PG_DB"),
+        "HOST": os.getenv("PG_HOST"),
+        "PORT": os.getenv("PG_PORT"),
+        "USER": os.getenv("PG_USER"),
+        "PASSWORD": os.getenv("PG_PW"),
     }
 }
 
@@ -183,9 +188,9 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
-STATIC_ROOT = str(BASE_DIR / "static")
+STATIC_ROOT = os.getenv("DJANGO_STATIC_ROOT", "/app/static")
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static/photoshare"),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
@@ -262,10 +267,13 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 25,
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "120/min",
+        "anon": "1/sec",
+        "user": "10/sec",
     },
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
     "NUM_PROXIES": 1,
 }
 
@@ -278,12 +286,16 @@ TECH_SUPPORT_EMAIL = os.getenv("TECH_SUPPORT_EMAIL")
 # ********************* #
 # *** Email Service *** #
 # ********************* #
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
 EMAIL_HOST = os.getenv("SUPPORT_EMAIL_HOST", "DebuggingServer")
 EMAIL_PORT = os.getenv("SUPPORT_EMAIL_PORT", 587)
 EMAIL_HOST_USER = os.getenv("SUPPORT_EMAIL_ADDRESS")
 EMAIL_HOST_PASSWORD = os.getenv("SUPPORT_EMAIL_PASSWORD")
-DEFAULT_FROM_EMAIL = "no-reply@myMadden.com"
+DEFAULT_FROM_EMAIL = "no-reply@photohare.com"
 EMAIL_USE_TLS = True
 EMAIL_TIMEOUT = 5
 
@@ -294,7 +306,16 @@ SOCIALACCOUNT_PROVIDERS = {
         "SCOPE": ["email", "public_profile"],
         "AUTH_PARAMS": {"auth_type": "reauthenticate"},
         "INIT_PARAMS": {"cookie": True},
-        "FIELDS": ["id", "first_name", "last_name", "middle_name", "name", "name_format", "picture", "short_name"],
+        "FIELDS": [
+            "id",
+            "first_name",
+            "last_name",
+            "middle_name",
+            "name",
+            "name_format",
+            "picture",
+            "short_name",
+        ],
         "EXCHANGE_TOKEN": True,
         "LOCALE_FUNC": "path.to.callable",
         "VERIFIED_EMAIL": False,
