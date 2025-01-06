@@ -3,7 +3,7 @@ from django.test import SimpleTestCase
 from django.urls import resolve, reverse
 
 
-class TestUrls(SimpleTestCase):
+class TestCoreUrls(SimpleTestCase):
     def test_index_url_is_resolved(self):
         url = reverse("core:index")
         self.assertEqual(resolve(url).func.view_class, HomeView)
