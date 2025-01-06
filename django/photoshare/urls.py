@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, re_path
+from photoshare.envs import TEST
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
@@ -15,10 +16,11 @@ urlpatterns += [
     re_path(r"", include("core.urls")),
 ]
 
-handler403 = "core.views.handle_403_view"
-handler404 = "core.views.handle_404_view"
-handler429 = "core.views.handle_429_view"
-handler500 = "core.views.handle_500_view"
+if not settings.ENV == TEST:
+    handler403 = "core.views.handle_403_view"
+    handler404 = "core.views.handle_404_view"
+    handler429 = "core.views.handle_429_view"
+    handler500 = "core.views.handle_500_view"
 
 # DEBUG TOOLBAR
 if settings.DEBUG:

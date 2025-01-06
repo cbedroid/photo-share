@@ -1,4 +1,8 @@
+from photoshare.envs import TEST
 from photoshare.settings import *
+
+DEBUG = True
+ENV = TEST
 
 TEST_PATH = "tests/"
 TEST_MEDIA_ROOT = os.path.join(BASE_DIR, "test_media/")
