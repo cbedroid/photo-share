@@ -35,7 +35,7 @@ class Category(PhotoShareBaseModel):
         self.slug = slugify(self.get_name_display())
         super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("gallery:gallery-list") + f"?q={self.slug}"
 
     def __str__(self):
@@ -45,17 +45,16 @@ class Category(PhotoShareBaseModel):
 class Tag(models.Model):
     """Hash Tags"""
 
-    name = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=False, null=False)
 
     def __str__(self):
-        return self.name or "Tags"
+        return self.name
 
 
 class Gallery(PhotoShareBaseModel):
-    objects = GalleryManager()
     name = models.CharField(max_length=75, validators=[MinLengthValidator(3)], blank=False, null=False)
     user = models.ForeignKey(User, related_name="galleries", on_delete=models.CASCADE)
-    public = models.BooleanField(default=True)
+    public = models.BooleanField(default=True)  # TODO: Update name to `is_public`
     category = models.ForeignKey(
         Category,
         related_name="galleries",
@@ -64,6 +63,8 @@ class Gallery(PhotoShareBaseModel):
         db_index=True,
     )
     slug = models.SlugField(editable=False, db_index=True)
+
+    objects = GalleryManager()
 
     class Meta:
         ordering = ("-created",)
@@ -79,22 +80,22 @@ class Gallery(PhotoShareBaseModel):
         super().save(*args, **kwargs)
 
     @cached_property
-    def cover_photo(self):
+    def cover_photo(self) -> str:
         cover_photo = self.photos.filter(is_cover=True).first()
         if cover_photo is not None:
             return cover_photo.image.url
         return static("assets/defaults/default_image.jpg")
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("gallery:gallery-detail", kwargs={"slug": self.slug})
 
-    def get_update_url(self):
+    def get_update_url(self) -> str:
         return reverse("gallery:gallery-update", kwargs={"slug": self.slug})
 
-    def get_delete_url(self):
+    def get_delete_url(self) -> str:
         return reverse("gallery:gallery-delete", kwargs={"slug": self.slug})
 
-    def get_api_url(self, request=None):
+    def get_api_url(self, request=None) -> str:
         return api_reverse("api:gallery-detail", kwargs={"pk": self.pk}, request=request)
 
     def __str__(self):
@@ -126,33 +127,36 @@ class Photo(PhotoShareBaseModel):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("gallery:photo-detail", kwargs={"slug": self.slug})
 
-    def get_update_url(self):
+    def get_update_url(self) -> str:
         return reverse("gallery:photo-update", kwargs={"slug": self.slug})
 
-    def get_delete_url(self):
+    def get_transfer_url(self) -> str:
+        return reverse("gallery:photo-transfer", kwargs={"pk": self.id})
+
+    def get_delete_url(self) -> str:
         return reverse("gallery:photo-delete", kwargs={"slug": self.slug})
 
-    def get_download_title(self):
+    def get_download_title(self) -> str:
         """Creates filename for download from photo title"""
         user = self.gallery.user
         app_name = settings.ROOT_URLCONF.split(".")[0].title()
         photo = re.sub(" ", "_", str(self))
         return f"{app_name}_{photo}_by_{user}.jpg"
 
-    def mime_type(self):
+    def mime_type(self) -> str:
         image = Image.open(self.image.path)
         return image.get_format_mimetype() or "unknown"
 
-    def dimension(self):
+    def dimension(self) -> str:
         return f"{self.image.height} X {self.image.width}"
 
-    def total_likes(self):
+    def total_likes(self) -> int:
         return self.rate_set.like.filter(like=True).count()
 
-    def total_stars(self):
+    def total_stars(self) -> int:
         return self.rate_set.like.filter(star=True).count()
 
 
