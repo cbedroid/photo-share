@@ -5,12 +5,15 @@ from dotenv import load_dotenv
 
 from .config.allauth_config import *  # noqa: F401
 from .debug_toolbar_config import *  # noqa: F401
+from .envs import DEV
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = int(os.getenv("DEBUG", default=0))
+ENV = os.getenv("ENVIRONMENT") or DEV
+
 
 if DEBUG:
     ACCOUNT_EMAIL_VERIFICATION = "none"
