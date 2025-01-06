@@ -4,14 +4,14 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from gallery.enums import GalleryCategory
 from gallery.models import Gallery, Photo
-from rest_framework.test import APITestCase
 from templates.gallery.factories import GalleryFactory, PhotoFactory, TagFactory
+from tests.base_utils import PSAPITestCase
 from users.factories import PermissionFactory, UserFactory
 
 User = get_user_model()
 
 
-class TestGalleryListAPIViews(APITestCase):
+class TestGalleryListAPIViews(PSAPITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.current_user = UserFactory()
@@ -116,7 +116,7 @@ class TestGalleryListAPIViews(APITestCase):
         self.assertEqual(response.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
 
 
-class TestGalleryDetailAPIViews(APITestCase):
+class TestGalleryDetailAPIViews(PSAPITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.current_user = UserFactory()
@@ -223,7 +223,7 @@ class TestGalleryDetailAPIViews(APITestCase):
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
 
-class TestPhotoListAPIViews(APITestCase):
+class TestPhotoListAPIViews(PSAPITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.current_user = UserFactory()
@@ -330,7 +330,7 @@ class TestPhotoListAPIViews(APITestCase):
         self.assertEqual(response.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
 
 
-class TestPhotoDetailAPIViews(APITestCase):
+class TestPhotoDetailAPIViews(PSAPITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.current_user = UserFactory()
