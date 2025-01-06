@@ -76,7 +76,7 @@ jobs:
 
       - name: Running Django migrations
         run: |
-          export DJANGO_SETTINGS_MODULE=photoshare.settings
+          export DJANGO_SETTINGS_MODULE=photoshare.test
           django/manage.py makemigrations
           django/manage.py migrate
 
@@ -85,4 +85,4 @@ jobs:
         run: pre-commit run --all-files --show-diff-on-failure
 
       - name: Running Django Test
-        run: ./django/manage.py test
+        run: ./django/manage.py --settings=photoshare.test test
